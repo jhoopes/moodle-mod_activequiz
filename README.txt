@@ -64,5 +64,4 @@ Feedback:
 You can contact me (John Hoopes) at hoopes AT wisc DOT edu
 You can contact Davo Smith on 'moodle AT davosmith DOT co DOT uk, or at http://www.davosmith.co.uk/contact.php
 
-This module is provided as is by the University of Wisconsin released under the same license of Moodle (GPL v3) No support is offered by the university, but feel free to open issues on this repository.
-
+This module is provided as is by the University of Wisconsin released under the same license of Moodle (GPL v3) 
