@@ -18,6 +18,8 @@
 /**
  * @package moodlecore
  * @subpackage backup-moodle2
+ * @author    John Hoopes <hoopes@wisc.edu>
+ * @author    Davo Smith
  * @copyright 2014 University of Wisconsin - Madison
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

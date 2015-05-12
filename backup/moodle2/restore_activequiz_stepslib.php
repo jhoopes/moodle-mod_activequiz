@@ -16,8 +16,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package     mod_activequiz
+ * @package   mod_activequiz
  * @author    John Hoopes <hoopes@wisc.edu>
+ * @author    Davo Smith
  * @copyright 2014 University of Wisconsin - Madison
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
