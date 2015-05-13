@@ -73,15 +73,15 @@ class backup_activequiz_activity_task extends backup_activity_task {
     static public function encode_content_links($content) {
         global $CFG;
 
-        $base = preg_quote($CFG->wwwroot,"/");
+        $base = preg_quote($CFG->wwwroot, "/");
 
         // Link to the list of activequizs
-        $search="/(".$base."\/mod\/activequiz\/index.php\?id\=)([0-9]+)/";
-        $content= preg_replace($search, '$@activequizINDEX*$2@$', $content);
+        $search = "/(".$base."\/mod\/activequiz\/index.php\?id\=)([0-9]+)/";
+        $content = preg_replace($search, '$@activequizINDEX*$2@$', $content);
 
         // Link to activequiz view by moduleid
-        $search="/(".$base."\/mod\/activequiz\/view.php\?id\=)([0-9]+)/";
-        $content= preg_replace($search, '$@activequizVIEWBYID*$2@$', $content);
+        $search = "/(".$base."\/mod\/activequiz\/view.php\?id\=)([0-9]+)/";
+        $content = preg_replace($search, '$@activequizVIEWBYID*$2@$', $content);
 
         return $content;
     }

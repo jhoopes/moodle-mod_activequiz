@@ -39,13 +39,13 @@ class backup_activequiz_activity_structure_step extends backup_questions_activit
 
     protected function define_structure() {
 
-        // To know if we are including userinfo
+        // To know if we are including userinfo.
         $userinfo = $this->get_setting_value('userinfo');
 
-        // Define each element separated
+        // Define each element separated.
 
         $activequiz = new backup_nested_element('activequiz', array('id'), array(
-            'name', 'intro', 'introformat','graded', 'scale', 'grademethod', 'workedingroups',
+            'name', 'intro', 'introformat', 'graded', 'scale', 'grademethod', 'workedingroups',
             'grouping', 'groupattendance', 'reviewoptions', 'timecreated', 'timemodified', 'defaultquestiontime',
             'waitforquestiontime', 'questionorder'
         ));
@@ -54,7 +54,6 @@ class backup_activequiz_activity_structure_step extends backup_questions_activit
         $question = new backup_nested_element('question', array('id'), array(
             'questionid', 'notime', 'questiontime', 'tries', 'points', 'showhistoryduringquiz'
         ));
-
 
         $grades = new backup_nested_element('grades');
         $grade = new backup_nested_element('grade', array('id'), array(
@@ -66,7 +65,6 @@ class backup_activequiz_activity_structure_step extends backup_questions_activit
             'name', 'sessionopen', 'status', 'currentquestion', 'currentqnum', 'currentquestiontime',
             'classresult', 'nextstarttime', 'created'
         ));
-
 
         $attempts = new backup_nested_element('attempts');
         $attempt = new backup_nested_element('attempt', array('id'), array(
@@ -82,7 +80,6 @@ class backup_activequiz_activity_structure_step extends backup_questions_activit
         $groupattendance = new backup_nested_element('groupattendance', array('id'), array(
             'activequizid', 'sessionid', 'groupid', 'userid'
         ));
-
 
         // Build the tree
         $activequiz->add_child($questions);
@@ -106,8 +103,8 @@ class backup_activequiz_activity_structure_step extends backup_questions_activit
 
         // if user info backup grades table
         if($userinfo){
-            $grade->set_source_table('activequiz_grades', array('activequizid'=> backup::VAR_PARENTID));
-            $session->set_source_table('activequiz_sessions', array('activequizid'=> backup::VAR_PARENTID));
+            $grade->set_source_table('activequiz_grades', array('activequizid' => backup::VAR_PARENTID));
+            $session->set_source_table('activequiz_sessions', array('activequizid' => backup::VAR_PARENTID));
             $attempt->set_source_table('activequiz_attempts', array('sessionid' => backup::VAR_PARENTID));
             $groupattendance->set_source_table('activequiz_groupattendance', array('attemptid' => backup::VAR_PARENTID));
         }
@@ -126,7 +123,6 @@ class backup_activequiz_activity_structure_step extends backup_questions_activit
 
         // Define file annotations
         $activequiz->annotate_files('mod_activequiz', 'intro', null); // This file area hasn't itemid
-
 
         // Return the root element (activequiz), wrapped into standard activity structure
         return $this->prepare_activity_structure($activequiz);

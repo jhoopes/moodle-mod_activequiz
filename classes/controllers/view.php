@@ -101,7 +101,8 @@ class view
         $PAGE->set_pagelayout('incourse');
         $PAGE->set_context($this->RTQ->getContext());
         $PAGE->set_cm($this->RTQ->getCM());
-        $PAGE->set_title(strip_tags($course->shortname.': '. get_string("modulename", "activequiz") .': '.format_string($quiz->name,true)));
+        $PAGE->set_title(strip_tags($course->shortname . ': ' . get_string("modulename", "activequiz") . ': ' .
+                                                                                    format_string($quiz->name, true)));
         $PAGE->set_heading($course->fullname);
         $PAGE->set_url($this->pageurl);
 
@@ -115,7 +116,8 @@ class view
     public function handle_request(){
         global $DB, $USER, $PAGE;
 
-        // first check if there are questions or not.  If there are no questions display that message instead, regardless of action
+        // first check if there are questions or not.  If there are no questions display that message instead,
+        // regardless of action.
         if(count($this->RTQ->get_questionmanager()->get_questions()) === 0){
             $this->pagevars['action'] = 'noquestions';
             $this->pageurl->param('action', ''); // remove the action
@@ -160,7 +162,8 @@ class view
                     }
 
                     if($cantakequiz){
-                        if(!$this->session->init_attempts($this->RTQ->is_instructor(), $this->pagevars['group'], $this->pagevars['groupmembers'])){
+                        if(!$this->session->init_attempts($this->RTQ->is_instructor(), $this->pagevars['group'],
+                                                                                    $this->pagevars['groupmembers'])){
                             print_error('cantinitattempts', 'activequiz');
                         }
 
@@ -249,7 +252,11 @@ class view
 
                         // first check to see if there are any open sessions
                         // this shouldn't occur, but never hurts to check
-                        $sessions = $DB->get_records('activequiz_sessions', array('activequizid'=>$this->RTQ->getRTQ()->id, 'sessionopen'=>1));
+                        $sessions = $DB->get_records('activequiz_sessions', array(
+                                                                                'activequizid' => $this->RTQ->getRTQ()->id,
+                                                                                'sessionopen'  => 1
+                                                                            )
+                                                    );
 
                         if(!empty($sessions)){
                             // error out with that there are existing sessions
@@ -294,8 +301,8 @@ class view
                             $validgroups = array();
                         }
                     }
-
-                    $studentstartform = new \mod_activequiz\forms\view\student_start_form($this->pageurl, array('rtq'=>$this->RTQ, 'validgroups' => $validgroups));
+                    $studentstartformparams = array('rtq'=>$this->RTQ, 'validgroups' => $validgroups);
+                    $studentstartform = new \mod_activequiz\forms\view\student_start_form($this->pageurl, $studentstartformparams);
                     if($data = $studentstartform->get_data()){
 
                         $quizstarturl = clone($this->pageurl);

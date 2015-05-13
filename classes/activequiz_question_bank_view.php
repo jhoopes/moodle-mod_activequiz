@@ -40,7 +40,6 @@ class activequiz_question_bank_view extends \core_question\bank\view
      */
     protected function wanted_columns() {
 
-
         $defaultqbankcolums = array(
             'question_bank_add_to_rtq_action_column',
             'checkbox_column',
@@ -49,7 +48,6 @@ class activequiz_question_bank_view extends \core_question\bank\view
             'preview_action_column',
         );
 
-
         foreach ($defaultqbankcolums as $fullname) {
             if (!class_exists($fullname)) {
                 if (class_exists('mod_activequiz\\qbanktypes\\' . $fullname)) {
@@ -57,7 +55,7 @@ class activequiz_question_bank_view extends \core_question\bank\view
                 } else if (class_exists('core_question\\bank\\' . $fullname)) {
                     $fullname = 'core_question\\bank\\' . $fullname;
                 } else if (class_exists('question_bank_' . $fullname)) {
-                    //debugging('Legacy question bank column class question_bank_' .
+                    // debugging('Legacy question bank column class question_bank_' .
                     //    $fullname . ' should be renamed to mod_activequiz\\qbanktypes\\' .
                     //    $fullname, DEBUG_DEVELOPER);
                     $fullname = 'question_bank_' . $fullname;

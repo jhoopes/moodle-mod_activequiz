@@ -82,7 +82,6 @@ class viewquizattempt
         $this->pagevars['pageurl'] = $this->pageurl;
 
         $this->RTQ = new \mod_activequiz\activequiz($cm, $course, $quiz, $this->pagevars);
-        //$this->RTQ->require_capability('mod/activequiz:seeresponses');
 
         $this->RTQ->require_capability('mod/activequiz:viewownattempts');
 
@@ -92,7 +91,8 @@ class viewquizattempt
 
         $PAGE->set_pagelayout('popup');
         $PAGE->set_context($this->RTQ->getContext());
-        $PAGE->set_title(strip_tags($course->shortname.': '. get_string("modulename", "activequiz") .': '.format_string($quiz->name,true)));
+        $PAGE->set_title(strip_tags($course->shortname . ': ' . get_string("modulename", "activequiz") . ': ' .
+                                                                                format_string($quiz->name, true)));
         $PAGE->set_heading($course->fullname);
         $PAGE->set_url($this->pageurl);
     }

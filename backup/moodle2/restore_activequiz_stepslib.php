@@ -59,10 +59,11 @@ class restore_activequiz_activity_structure_step extends restore_questions_activ
             // Add states and question usages for the attempts.
             $this->add_question_usages($quizattempt, $paths);
 
-            $paths[] = new restore_path_element('activequiz_groupattendance', '/activity/activequiz/sessions/session/attempts/attempt/groupattendances/groupattendance');
+            $paths[] = new restore_path_element('activequiz_groupattendance',
+                            '/activity/activequiz/sessions/session/attempts/attempt/groupattendances/groupattendance');
         }
 
-        // Return the paths wrapped into standard activity structure
+        // Return the paths wrapped into standard activity structure.
         return $this->prepare_activity_structure($paths);
     }
 
@@ -91,7 +92,7 @@ class restore_activequiz_activity_structure_step extends restore_questions_activ
         $data->activequizid = $this->get_new_parentid('activequiz');
         if($questionid = $this->get_mappingid('question', $data->questionid)){
             $data->questionid = $questionid;
-        }else {
+        } else {
             return;
         }
 
@@ -208,6 +209,6 @@ class restore_activequiz_activity_structure_step extends restore_questions_activ
         }
 
         $newqorder = implode(',', $newqorder);
-        $DB->set_field('activequiz', 'questionorder', $newqorder, array('id'=>$this->get_task()->get_activityid()));
+        $DB->set_field('activequiz', 'questionorder', $newqorder, array('id' => $this->get_task()->get_activityid()));
     }
 }

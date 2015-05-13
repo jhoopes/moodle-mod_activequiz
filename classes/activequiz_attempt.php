@@ -34,7 +34,7 @@ class activequiz_attempt
     /** Constants for the status of the attempt */
     const NOTSTARTED = 0;
     const INPROGRESS = 10;
-    CONST ABANDONED = 20;
+    const ABANDONED = 20;
     const FINISHED = 30;
 
     /** @var \stdClass The attempt record */
@@ -95,7 +95,8 @@ class activequiz_attempt
             $this->attempt = new \stdClass();
 
             // create a new quba since we're creating a new attempt
-            $this->quba = \question_engine::make_questions_usage_by_activity('mod_activequiz', $this->questionmanager->getRTQ()->getContext());
+            $this->quba = \question_engine::make_questions_usage_by_activity('mod_activequiz',
+                                                                $this->questionmanager->getRTQ()->getContext());
             $this->quba->set_preferred_behaviour('immediatefeedback');
 
             $attemptlayout = $this->questionmanager->add_questions_to_quba($this->quba);
@@ -418,8 +419,8 @@ class activequiz_attempt
         }else{
             // insert new record
             try{
-                $newId = $DB->insert_record('activequiz_attempts', $this->attempt);
-                $this->attempt->id = $newId;
+                $newid = $DB->insert_record('activequiz_attempts', $this->attempt);
+                $this->attempt->id = $newid;
             }catch(\Exception $e){
                 return false; // return false on failure
             }
@@ -466,7 +467,8 @@ class activequiz_attempt
 
         // Process any data that was submitted.
         if (data_submitted() && confirm_sesskey()) {
-            if (optional_param('submit', false, PARAM_BOOL) && \question_engine::is_manual_grade_in_range($this->attempt->questionengid, $slot)) {
+            if (optional_param('submit', false, PARAM_BOOL) &&
+                                    \question_engine::is_manual_grade_in_range($this->attempt->questionengid, $slot)) {
                 $transaction = $DB->start_delegated_transaction();
                 $this->quba->process_all_actions(time());
                 $this->save();
@@ -563,9 +565,9 @@ class activequiz_attempt
             $this->responsesummary .= $this->question_attempt_history($questionattempt);
         }
 
-        /** bad way of doing things */
-        //$response = $questionattempt->get_last_step()->get_qt_data();
-        //$this->responsesummary = $question->summarise_response($response);
+        // Bad way of doing things
+        // $response = $questionattempt->get_last_step()->get_qt_data();
+        // $this->responsesummary = $question->summarise_response($response);
     }
 
     /**

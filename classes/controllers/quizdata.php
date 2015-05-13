@@ -335,7 +335,7 @@ class quizdata
                     if(empty($qnum)){
                         $this->jsonlib->send_error('invalid question number');
                     }
-                    IF(!$question = $this->session->goto_question($qnum)){
+                    if(!$question = $this->session->goto_question($qnum)){
                         $this->jsonlib->send_error('invalid question number');
                     }
                     $this->session->set_status('running');
@@ -368,7 +368,8 @@ class quizdata
                 }
 
                 break;
-            case 'endquestion': // update the session status to say that we're ending the question (this will in turn update students
+            case 'endquestion':
+                // update the session status to say that we're ending the question (this will in turn update students
 
                 if($this->RTQ->is_instructor()){
 

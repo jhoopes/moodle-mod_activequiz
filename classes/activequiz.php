@@ -341,15 +341,17 @@ class activequiz
      * @return array
      */
     public function get_closed_sessions(){
-        return $this->get_sessions(array('sessionopen'=>0));
+        return $this->get_sessions(array('sessionopen' => 0));
     }
 
     /**
      * This is a method to invoke the question modifier classes
      *
      * * * while params not explicitly defined, the first two arguments are required
-     * @param string $action The function that will be called on the question modifier classes, function must be defined in basequestionmodifier
-     * @param \mod_activequiz\activequiz_question|null The question that we're going to modifiy.  If null, we'll use all questions defined for this instance
+     * @param string $action The function that will be called on the question modifier classes,
+     *                          function must be defined in basequestionmodifier
+     * @param \mod_activequiz\activequiz_question|null The question that we're going to modifiy.
+     *                                                     If null, we'll use all questions defined for this instance
      *
      * Any parameters passed after the first 2 are passed to the action function
      *

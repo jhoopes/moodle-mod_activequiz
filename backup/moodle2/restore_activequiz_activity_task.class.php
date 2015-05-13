@@ -26,7 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/activequiz/backup/moodle2/restore_activequiz_stepslib.php'); // Because it exists (must)
+require_once($CFG->dirroot . '/mod/activequiz/backup/moodle2/restore_activequiz_stepslib.php');
 
 /**
  * activequiz restore task that provides all the settings and steps to perform one

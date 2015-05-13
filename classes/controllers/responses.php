@@ -89,7 +89,8 @@ class responses
 
         $PAGE->set_pagelayout('incourse');
         $PAGE->set_context($this->RTQ->getContext());
-        $PAGE->set_title(strip_tags($course->shortname.': '. get_string("modulename", "activequiz") .': '.format_string($quiz->name,true)));
+        $PAGE->set_title(strip_tags($course->shortname . ': ' . get_string("modulename", "activequiz") . ': ' .
+                                                                                    format_string($quiz->name, true)));
         $PAGE->set_heading($course->fullname);
         $PAGE->set_url($this->pageurl);
     }
@@ -124,7 +125,8 @@ class responses
 
                 $session = $this->RTQ->get_session($sessionid);
                 $this->pageurl->param('sessionid');
-                $sessionattempts = new \mod_activequiz\tableviews\sessionattempts('sessionattempts', $this->RTQ, $session, $this->pageurl);
+                $sessionattempts = new \mod_activequiz\tableviews\sessionattempts('sessionattempts', $this->RTQ,
+                                                                                            $session, $this->pageurl);
 
                 $sessions = $this->RTQ->get_sessions();
                 $this->RTQ->get_renderer()->responses_header();
