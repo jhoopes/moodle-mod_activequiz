@@ -31,7 +31,7 @@ require_once($CFG->libdir . '/tablelib.php');
  * @copyright 2014 University of Wisconsin - madison
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class ownattempts extends \flexible_table{
+class ownattempts extends \flexible_table {
 
 
     /** @var \mod_activequiz\activequiz $rtq */
@@ -40,11 +40,11 @@ class ownattempts extends \flexible_table{
     /**
      * Contstruct this table class
      *
-     * @param string $uniqueid The unique id for the table
+     * @param string                     $uniqueid The unique id for the table
      * @param \mod_activequiz\activequiz $rtq
-     * @param \moodle_url $pageurl
+     * @param \moodle_url                $pageurl
      */
-    public function __construct($uniqueid, $rtq, $pageurl){
+    public function __construct($uniqueid, $rtq, $pageurl) {
 
         $this->rtq = $rtq;
         $this->baseurl = $pageurl;
@@ -57,32 +57,31 @@ class ownattempts extends \flexible_table{
      * Setup the table, i.e. table headers
      *
      */
-    public function setup(){
+    public function setup() {
         // Set var for is downloading
         $isdownloading = $this->is_downloading();
 
         $this->set_attribute('cellspacing', '0');
 
-        if($this->rtq->group_mode()){
+        if ($this->rtq->group_mode()) {
             $columns = array(
-                'session'     => get_string('sessionname', 'activequiz'),
-                'group'       => get_string('group'),
-                'timestart'   => get_string('startedon', 'activequiz'),
-                'timefinish'  => get_string('timecompleted','activequiz'),
-                'grade'       => get_string('grade'),
+                'session'    => get_string('sessionname', 'activequiz'),
+                'group'      => get_string('group'),
+                'timestart'  => get_string('startedon', 'activequiz'),
+                'timefinish' => get_string('timecompleted', 'activequiz'),
+                'grade'      => get_string('grade'),
             );
-        }else{
+        } else {
             $columns = array(
-                'session'     => get_string('sessionname', 'activequiz'),
-                'timestart'   => get_string('startedon', 'activequiz'),
-                'timefinish'  => get_string('timecompleted','activequiz'),
-                'grade'       => get_string('grade'),
+                'session'    => get_string('sessionname', 'activequiz'),
+                'timestart'  => get_string('startedon', 'activequiz'),
+                'timefinish' => get_string('timecompleted', 'activequiz'),
+                'grade'      => get_string('grade'),
             );
         }
 
 
-
-        if(!$isdownloading){
+        if (!$isdownloading) {
             $columns['attemptview'] = get_string('attemptview', 'activequiz');
         }
 
@@ -108,18 +107,18 @@ class ownattempts extends \flexible_table{
      * Sets the data to the table
      *
      */
-    public function set_data(){
+    public function set_data() {
         global $CFG, $OUTPUT;
 
         $download = $this->is_downloading();
         $tabledata = $this->get_data();
 
-        foreach($tabledata as $item){
+        foreach ($tabledata as $item) {
 
             $row = array();
 
             $row[] = $item->sessionname;
-            if($this->rtq->group_mode()){
+            if ($this->rtq->group_mode()) {
                 $row[] = $item->group;
             }
             $row[] = date('m-d-Y H:i:s', $item->timestart);
@@ -137,7 +136,7 @@ class ownattempts extends \flexible_table{
             $viewattemptpix = new \pix_icon('t/preview', 'preview');
             $popup = new \popup_action('click', $viewattempturl, 'viewquizattempt');
 
-            $actionlink = new \action_link($viewattempturl, '', $popup, array('target'=>'_blank'), $viewattemptpix);
+            $actionlink = new \action_link($viewattempturl, '', $popup, array('target' => '_blank'), $viewattemptpix);
 
             $row[] = $OUTPUT->render($actionlink);
 
@@ -152,7 +151,7 @@ class ownattempts extends \flexible_table{
      *
      * @return array $data The array of data to show
      */
-    protected function get_data(){
+    protected function get_data() {
         global $DB, $USER;
 
 
@@ -160,16 +159,16 @@ class ownattempts extends \flexible_table{
 
         $sessions = $this->rtq->get_sessions();
 
-        foreach($sessions as $session){
+        foreach ($sessions as $session) {
             /** @var \mod_activequiz\activequiz_session $session */
             $sessionattempts = $session->getall_attempts(false, 'closed', $USER->id);
 
-            foreach($sessionattempts as $sattempt){
+            foreach ($sessionattempts as $sattempt) {
                 $ditem = new \stdClass();
                 $ditem->attemptid = $sattempt->id;
                 $ditem->sessionid = $sattempt->sessionid;
                 $ditem->sessionname = $session->get_session()->name;
-                if($this->rtq->group_mode()){
+                if ($this->rtq->group_mode()) {
                     $ditem->group = $this->rtq->get_groupmanager()->get_group_name($sattempt->forgroupid);
                 }
                 $ditem->timestart = $sattempt->timestart;
@@ -177,7 +176,7 @@ class ownattempts extends \flexible_table{
                 $ditem->grade = number_format($this->rtq->get_grader()->calculate_attempt_grade($sattempt), 2);
                 $ditem->totalgrade = $this->rtq->getRTQ()->scale;
 
-                $data[$sattempt->id] = $ditem;
+                $data[ $sattempt->id ] = $ditem;
             }
         }
 

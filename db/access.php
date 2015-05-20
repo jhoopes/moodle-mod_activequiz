@@ -35,73 +35,73 @@ $capabilities = array(
 
     // Can start a quiz and move on to the next question
     // NB: must have 'attempt' as well to be able to see the questions
-    'mod/activequiz:control' => array(
+    'mod/activequiz:control'         => array(
 
-        'captype' => 'write',
+        'captype'      => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
-            'teacher' => CAP_ALLOW,
+        'legacy'       => array(
+            'teacher'        => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
+            'manager'        => CAP_ALLOW
         )
     ),
 
     // Can try to answer the quiz
-    'mod/activequiz:attempt' => array(
+    'mod/activequiz:attempt'         => array(
 
-        'captype' => 'write',
+        'captype'      => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
-            'student' => CAP_ALLOW,
-            'teacher' => CAP_ALLOW,
+        'legacy'       => array(
+            'student'        => CAP_ALLOW,
+            'teacher'        => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
+            'manager'        => CAP_ALLOW
         )
     ),
 
     // Can view own attempts
     'mod/activequiz:viewownattempts' => array(
-        'captype' => 'read',
+        'captype'      => 'read',
         'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
-            'student' => CAP_ALLOW,
-            'teacher' => CAP_ALLOW,
+        'legacy'       => array(
+            'student'        => CAP_ALLOW,
+            'teacher'        => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
+            'manager'        => CAP_ALLOW
         )
     ),
 
     // Can see who gave what answer
-    'mod/activequiz:seeresponses' => array(
+    'mod/activequiz:seeresponses'    => array(
 
-        'captype' => 'read',
+        'captype'      => 'read',
         'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
-            'teacher' => CAP_ALLOW,
+        'legacy'       => array(
+            'teacher'        => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
+            'manager'        => CAP_ALLOW
         )
     ),
 
     // Can add / delete / update questions
-    'mod/activequiz:editquestions' => array(
+    'mod/activequiz:editquestions'   => array(
 
-        'captype' => 'write',
+        'captype'      => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
+        'legacy'       => array(
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
+            'manager'        => CAP_ALLOW
         )
     ),
 
     // Can add an instance of this module to a course
-    'mod/activequiz:addinstance' => array(
-        'captype' => 'write',
+    'mod/activequiz:addinstance'     => array(
+        'captype'      => 'write',
         'contextlevel' => CONTEXT_COURSE,
-        'legacy' => array(
+        'legacy'       => array(
             'editingteacher' => CAP_ALLOW,
-            'coursecreator' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
+            'coursecreator'  => CAP_ALLOW,
+            'manager'        => CAP_ALLOW
         )
     )
 );

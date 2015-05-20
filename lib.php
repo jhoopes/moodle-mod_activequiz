@@ -39,7 +39,7 @@ function activequiz_add_instance($activequiz) {
 
     $activequiz->timemodified = time();
     $activequiz->timecreated = time();
-    if(empty($activequiz->graded)){
+    if (empty($activequiz->graded)) {
         $activequiz->graded = 0;
         $activequiz->scale = 0;
     }
@@ -67,7 +67,7 @@ function activequiz_update_instance($activequiz) {
 
     $activequiz->timemodified = time();
     $activequiz->id = $activequiz->instance;
-    if(empty($activequiz->graded)){
+    if (empty($activequiz->graded)) {
         $activequiz->graded = 0;
         $activequiz->scale = 0;
     }
@@ -79,7 +79,7 @@ function activequiz_update_instance($activequiz) {
     activequiz_after_add_or_update($activequiz);
 
     // after updating grade item we need to re-grade the sessions
-    $activequiz = $DB->get_record('activequiz', array('id'=>$activequiz->id));  // need the actual db record
+    $activequiz = $DB->get_record('activequiz', array('id' => $activequiz->id));  // need the actual db record
     $course = $DB->get_record('course', array('id' => $activequiz->course), '*', MUST_EXIST);
     $cm = get_coursemodule_from_instance('activequiz', $activequiz->id, $course->id, false, MUST_EXIST);
     $rtq = new \mod_activequiz\activequiz($cm, $course, $activequiz, array('pageurl' => $PAGE->url));
@@ -89,7 +89,7 @@ function activequiz_update_instance($activequiz) {
     return true;
 }
 
-function activequiz_process_review_options($activequiz){
+function activequiz_process_review_options($activequiz) {
 
     $afterreviewoptions = \mod_activequiz\activequiz::get_review_options_from_form($activequiz, 'after');
 
@@ -111,17 +111,17 @@ function activequiz_process_review_options($activequiz){
 function activequiz_delete_instance($id) {
     global $DB, $CFG;
 
-    require_once($CFG->dirroot.'/mod/activequiz/locallib.php');
+    require_once($CFG->dirroot . '/mod/activequiz/locallib.php');
     require_once($CFG->libdir . '/questionlib.php');
     require_once($CFG->dirroot . '/question/editlib.php');
 
-    try{
+    try {
         // make sure the record exists
         $activequiz = $DB->get_record('activequiz', array('id' => $id), '*', MUST_EXIST);
 
         // go through each session and then delete them (also deletes all attempts for them)
-        $sessions = $DB->get_records('activequiz_sessions', array('activequizid'=>$activequiz->id));
-        foreach($sessions as $session){
+        $sessions = $DB->get_records('activequiz_sessions', array('activequizid' => $activequiz->id));
+        foreach ($sessions as $session) {
             \mod_activequiz\activequiz_session::delete($session->id);
         }
 
@@ -130,7 +130,7 @@ function activequiz_delete_instance($id) {
 
         // finally delete the activequiz object
         $DB->delete_records('activequiz', array('id' => $activequiz->id));
-    }catch(Exception $e){
+    } catch(Exception $e) {
         return false;
     }
 
@@ -138,7 +138,7 @@ function activequiz_delete_instance($id) {
 }
 
 
-function activequiz_after_add_or_update($activequiz){
+function activequiz_after_add_or_update($activequiz) {
 
     activequiz_grade_item_update($activequiz);
 
@@ -148,15 +148,15 @@ function activequiz_after_add_or_update($activequiz){
  *
  *
  *
- * @param stdClass $activequiz
+ * @param stdClass   $activequiz
  * @param array|null $grades
  *
  * @return int Returns GRADE_UPDATE_OK, GRADE_UPDATE_FAILED, GRADE_UPDATE_MULTIPLE or GRADE_UPDATE_ITEM_LOCKED
  */
-function activequiz_grade_item_update($activequiz, $grades = NULL){
+function activequiz_grade_item_update($activequiz, $grades = NULL) {
     global $CFG;
     if (!function_exists('grade_update')) { //workaround for buggy PHP versions
-        require_once($CFG->libdir.'/gradelib.php');
+        require_once($CFG->libdir . '/gradelib.php');
     }
 
     if (array_key_exists('cmidnumber', $activequiz)) { // May not be always present.
@@ -170,12 +170,12 @@ function activequiz_grade_item_update($activequiz, $grades = NULL){
 
     } else if ($activequiz->graded == 1) {
         $params['gradetype'] = GRADE_TYPE_VALUE;
-        $params['grademax']  = $activequiz->scale;
-        $params['grademin']  = 0;
+        $params['grademax'] = $activequiz->scale;
+        $params['grademin'] = 0;
 
     }
 
-    if ($grades  === 'reset') {
+    if ($grades === 'reset') {
         $params['reset'] = true;
         $grades = NULL;
     }
@@ -187,15 +187,15 @@ function activequiz_grade_item_update($activequiz, $grades = NULL){
 /**
  *
  *
- * @param $activequiz
- * @param int $userid
+ * @param      $activequiz
+ * @param int  $userid
  * @param bool $nullifnone
  *
  * @return int Returns GRADE_UPDATE_OK, GRADE_UPDATE_FAILED, GRADE_UPDATE_MULTIPLE or GRADE_UPDATE_ITEM_LOCKED
  */
-function activequiz_update_grades($activequiz, $userid = 0, $nullifnone = true){
+function activequiz_update_grades($activequiz, $userid = 0, $nullifnone = true) {
     global $CFG, $DB;
-    require_once($CFG->libdir.'/gradelib.php');
+    require_once($CFG->libdir . '/gradelib.php');
 
     if (!$activequiz->graded) {
         return activequiz_grade_item_update($activequiz);
@@ -205,8 +205,9 @@ function activequiz_update_grades($activequiz, $userid = 0, $nullifnone = true){
 
     } else if ($userid and $nullifnone) {
         $grade = new stdClass();
-        $grade->userid   = $userid;
+        $grade->userid = $userid;
         $grade->rawgrade = NULL;
+
         return activequiz_grade_item_update($activequiz, $grade);
 
     } else {
@@ -216,7 +217,7 @@ function activequiz_update_grades($activequiz, $userid = 0, $nullifnone = true){
 }
 
 
-function activequiz_reset_gradebook($courseid, $type = ''){
+function activequiz_reset_gradebook($courseid, $type = '') {
 
 
 }
@@ -231,10 +232,9 @@ function activequiz_reset_gradebook($courseid, $type = ''){
  * @return boolean
  * @todo Finish documenting this function
  **/
-function activequiz_cron () {
+function activequiz_cron() {
     return true;
 }
-
 
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -242,7 +242,7 @@ function activequiz_cron () {
 /// starts with activequiz_
 
 
-function activequiz_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+function activequiz_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array()) {
     global $DB;
 
     if ($context->contextlevel != CONTEXT_MODULE) {
@@ -274,6 +274,7 @@ function activequiz_pluginfile($course, $cm, $context, $filearea, $args, $forced
 
     // finally send the file
     send_stored_file($file);
+
     return false;
 }
 
@@ -285,17 +286,17 @@ function activequiz_pluginfile($course, $cm, $context, $filearea, $args, $forced
  * @category files
  * @param stdClass $course course settings object
  * @param stdClass $context context object
- * @param string $component the name of the component we are serving files for.
- * @param string $filearea the name of the file area.
- * @param int $qubaid the attempt usage id.
- * @param int $slot the id of a question in this quiz attempt.
- * @param array $args the remaining bits of the file path.
- * @param bool $forcedownload whether the user must be forced to download the file.
- * @param array $options additional options affecting the file serving
+ * @param string   $component the name of the component we are serving files for.
+ * @param string   $filearea the name of the file area.
+ * @param int      $qubaid the attempt usage id.
+ * @param int      $slot the id of a question in this quiz attempt.
+ * @param array    $args the remaining bits of the file path.
+ * @param bool     $forcedownload whether the user must be forced to download the file.
+ * @param array    $options additional options affecting the file serving
  * @return bool false if file not found, does not return if found - justsend the file
  */
 function mod_activequiz_question_pluginfile($course, $context, $component,
-                                  $filearea, $qubaid, $slot, $args, $forcedownload, array $options=array()) {
+                                            $filearea, $qubaid, $slot, $args, $forcedownload, array $options = array()) {
     global $CFG;
     //require_once($CFG->dirroot . '/mod/quiz/locallib.php');
 
@@ -340,22 +341,36 @@ function activequiz_supports($feature) {
     // this plugin does support groups, just that the plugin code
     // manages it instead of using the Moodle provided functionality
 
-    switch($feature) {
-    case FEATURE_GROUPS:                  return false;
-    case FEATURE_GROUPINGS:               return false;
-    case FEATURE_GROUPMEMBERSONLY:        return false;
-    case FEATURE_MOD_INTRO:               return true;
-    case FEATURE_COMPLETION_TRACKS_VIEWS: return false;
-    case FEATURE_COMPLETION_HAS_RULES:    return false;
-    case FEATURE_GRADE_HAS_GRADE:         return true;
-    case FEATURE_GRADE_OUTCOMES:          return false;
-    case FEATURE_RATE:                    return false;
-    case FEATURE_BACKUP_MOODLE2:          return true;
-    case FEATURE_SHOW_DESCRIPTION:        return true;
-    case FEATURE_PLAGIARISM:              return false;
-    case FEATURE_USES_QUESTIONS:          return true;
+    switch ($feature) {
+        case FEATURE_GROUPS:
+            return false;
+        case FEATURE_GROUPINGS:
+            return false;
+        case FEATURE_GROUPMEMBERSONLY:
+            return false;
+        case FEATURE_MOD_INTRO:
+            return true;
+        case FEATURE_COMPLETION_TRACKS_VIEWS:
+            return false;
+        case FEATURE_COMPLETION_HAS_RULES:
+            return false;
+        case FEATURE_GRADE_HAS_GRADE:
+            return true;
+        case FEATURE_GRADE_OUTCOMES:
+            return false;
+        case FEATURE_RATE:
+            return false;
+        case FEATURE_BACKUP_MOODLE2:
+            return true;
+        case FEATURE_SHOW_DESCRIPTION:
+            return true;
+        case FEATURE_PLAGIARISM:
+            return false;
+        case FEATURE_USES_QUESTIONS:
+            return true;
 
-    default: return null;
+        default:
+            return null;
     }
 }
 

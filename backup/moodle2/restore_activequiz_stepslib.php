@@ -60,7 +60,7 @@ class restore_activequiz_activity_structure_step extends restore_questions_activ
             $this->add_question_usages($quizattempt, $paths);
 
             $paths[] = new restore_path_element('activequiz_groupattendance',
-                            '/activity/activequiz/sessions/session/attempts/attempt/groupattendances/groupattendance');
+                '/activity/activequiz/sessions/session/attempts/attempt/groupattendances/groupattendance');
         }
 
         // Return the paths wrapped into standard activity structure.
@@ -90,7 +90,7 @@ class restore_activequiz_activity_structure_step extends restore_questions_activ
         $data = (object)$data;
         $oldid = $data->id;
         $data->activequizid = $this->get_new_parentid('activequiz');
-        if($questionid = $this->get_mappingid('question', $data->questionid)){
+        if ($questionid = $this->get_mappingid('question', $data->questionid)) {
             $data->questionid = $questionid;
         } else {
             return;
@@ -161,7 +161,7 @@ class restore_activequiz_activity_structure_step extends restore_questions_activ
         $this->set_mapping('activequiz_attempt', $oldid, $newitemid, false);
     }
 
-    protected function process_activequiz_groupattendance($data){
+    protected function process_activequiz_groupattendance($data) {
         global $DB;
 
         $data = (object)$data;
@@ -194,16 +194,16 @@ class restore_activequiz_activity_structure_step extends restore_questions_activ
      * Also deletes unused question records in case a random question record didn't match up with the question order
      *
      */
-    protected function recode_activequiz_questionorder(){
+    protected function recode_activequiz_questionorder() {
         global $DB;
 
         $oldqorder = explode(',', $this->oldquestionorder);
         $newqorder = array();
 
-        foreach($oldqorder as $oldq){
+        foreach ($oldqorder as $oldq) {
 
             $newqid = $this->get_mappingid('activequiz_question', $oldq);
-            if($newqid){
+            if ($newqid) {
                 $newqorder[] = $newqid;
             }
         }

@@ -42,13 +42,13 @@ class scaletypes {
      *
      * @return array
      */
-    public static function get_types(){
+    public static function get_types() {
 
         return array(
-            'firstattempt'  => self::activequiz_FIRSTSESSION,
-            'lastattempt'   => self::REALTIMQUIZ_LASTSESSION,
-            'average'       => self::activequiz_SESSIONAVERAGE,
-            'highestgrade'  => self::activequiz_HIGHESTSESSIONGRADE,
+            'firstattempt' => self::activequiz_FIRSTSESSION,
+            'lastattempt'  => self::REALTIMQUIZ_LASTSESSION,
+            'average'      => self::activequiz_SESSIONAVERAGE,
+            'highestgrade' => self::activequiz_HIGHESTSESSIONGRADE,
         );
     }
 
@@ -58,11 +58,11 @@ class scaletypes {
      *
      * @return array
      */
-    public static function get_display_types(){
+    public static function get_display_types() {
 
         return array(
             self::activequiz_FIRSTSESSION        => get_string('firstsession', 'activequiz'),
-            self::REALTIMQUIZ_LASTSESSION          => get_string('lastsession', 'activequiz'),
+            self::REALTIMQUIZ_LASTSESSION        => get_string('lastsession', 'activequiz'),
             self::activequiz_SESSIONAVERAGE      => get_string('sessionaverage', 'activequiz'),
             self::activequiz_HIGHESTSESSIONGRADE => get_string('highestsessiongrade', 'activequiz'),
         );

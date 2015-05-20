@@ -80,7 +80,7 @@ class question_manually_graded extends \core\event\base {
      */
     public function get_url() {
         return new \moodle_url('/mod/activequiz/viewquizattempt.php', array('attempt' => $this->other['attemptid'],
-            'slot' => $this->other['slot'], 'sessionid'=>$this->other['sessionid'], 'action' => 'savecomment'));
+                                                                            'slot'    => $this->other['slot'], 'sessionid' => $this->other['sessionid'], 'action' => 'savecomment'));
     }
 
 

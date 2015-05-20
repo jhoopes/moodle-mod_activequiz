@@ -31,8 +31,7 @@ require_once($CFG->dirroot . '/question/editlib.php');
  * @copyright   2014 University of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class edit
-{
+class edit {
     /** @var \mod_activequiz\activequiz Realtime quiz class */
     protected $RTQ;
 
@@ -48,7 +47,7 @@ class edit
     /** @var \moodle_url $pageurl The page url to base other calls on */
     protected $pageurl;
 
-    /** @var array $this->pagevars An array of page options for the page load */
+    /** @var array $this ->pagevars An array of page options for the page load */
     protected $pagevars;
 
     /**
@@ -58,8 +57,7 @@ class edit
      *
      * @return array Array of variables that the page is set up with
      */
-    public function setup_page($baseurl)
-    {
+    public function setup_page($baseurl) {
         global $PAGE, $CFG, $DB;
 
         $this->pagevars = array();
@@ -71,7 +69,7 @@ class edit
         $quizid = optional_param('quizid', false, PARAM_INT);
 
         // get necessary records from the DB
-        if($id) {
+        if ($id) {
             $cm = get_coursemodule_from_id('activequiz', $id, 0, false, MUST_EXIST);
             $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
             $quiz = $DB->get_record('activequiz', array('id' => $cm->instance), '*', MUST_EXIST);
@@ -82,7 +80,7 @@ class edit
         }
         $this->get_parameters(); // get the rest of the parameters and set them in the class
 
-        if($CFG->version < 2011120100) {
+        if ($CFG->version < 2011120100) {
             $this->context = get_context_instance(CONTEXT_MODULE, $cm->id);
         } else {
             $this->context = \context_module::instance($cm->id);
@@ -112,26 +110,26 @@ class edit
      * Handles the action specified
      *
      */
-    public function handle_action(){
+    public function handle_action() {
         global $PAGE;
 
 
-        switch($this->action) {
+        switch ($this->action) {
             case 'dragdrop': // this is a javascript callack case for the drag and drop of questions using ajax
                 $jsonlib = new \mod_activequiz\utils\jsonlib();
 
                 $questionorder = optional_param('questionorder', '', PARAM_RAW);
 
-                if($questionorder === ''){
+                if ($questionorder === '') {
                     $jsonlib->send_error('invalid request');
                 }
 
                 $questionorder = explode(',', $questionorder);
 
-                if($this->RTQ->get_questionmanager()->set_full_order($questionorder) === true){
+                if ($this->RTQ->get_questionmanager()->set_full_order($questionorder) === true) {
                     $jsonlib->set('success', 'true');
                     $jsonlib->send_response();
-                }else{
+                } else {
                     $jsonlib->send_error('unable to re-sort questions');
                 }
 
@@ -140,10 +138,10 @@ class edit
 
                 $questionid = required_param('questionid', PARAM_INT);
 
-                if($this->RTQ->get_questionmanager()->move_question('up', $questionid)){
+                if ($this->RTQ->get_questionmanager()->move_question('up', $questionid)) {
                     $type = 'success';
                     $message = get_string('qmovesuccess', 'activequiz');
-                }else{
+                } else {
                     $type = 'error';
                     $message = get_string('qmoveerror', 'activequiz');
                 }
@@ -158,10 +156,10 @@ class edit
 
                 $questionid = required_param('questionid', PARAM_INT);
 
-                if($this->RTQ->get_questionmanager()->move_question('down', $questionid)){
+                if ($this->RTQ->get_questionmanager()->move_question('down', $questionid)) {
                     $type = 'success';
                     $message = get_string('qmovesuccess', 'activequiz');
-                }else{
+                } else {
                     $type = 'error';
                     $message = get_string('qmoveerror', 'activequiz');
                 }
@@ -187,10 +185,10 @@ class edit
             case 'deletequestion':
 
                 $questionid = required_param('questionid', PARAM_INT);
-                if($this->RTQ->get_questionmanager()->delete_question($questionid)){
+                if ($this->RTQ->get_questionmanager()->delete_question($questionid)) {
                     $type = 'success';
                     $message = get_string('qdeletesucess', 'activequiz');
-                }else{
+                } else {
                     $type = 'error';
                     $message = get_string('qdeleteerror', 'activequiz');
                 }
@@ -215,7 +213,7 @@ class edit
      *
      * @return \mod_activequiz\activequiz
      */
-    public function getRTQ(){
+    public function getRTQ() {
         return $this->RTQ;
     }
 
@@ -223,7 +221,7 @@ class edit
      * Echos the list of questions using the renderer for activequiz
      *
      */
-    protected function list_questions(){
+    protected function list_questions() {
 
         $questionbankview = $this->get_questionbank_view();
         $questions = $this->RTQ->get_questionmanager()->get_questions();
@@ -236,7 +234,7 @@ class edit
      *
      * @return string
      */
-    protected function get_questionbank_view(){
+    protected function get_questionbank_view() {
 
         $qperpage = optional_param('qperpage', 10, PARAM_INT);
         $qpage = optional_param('qpage', 0, PARAM_INT);
@@ -255,7 +253,7 @@ class edit
      * Private function to get parameters
      *
      */
-    private function get_parameters(){
+    private function get_parameters() {
 
         $this->action = optional_param('action', 'listquestions', PARAM_ALPHA);
 

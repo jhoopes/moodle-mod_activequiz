@@ -29,8 +29,8 @@ define('AJAX_SCRIPT', true);
 
 require_once('../../config.php');
 global $CFG;
-require_once($CFG->dirroot.'/mod/activequiz/lib.php');
-require_once($CFG->libdir.'/filelib.php');
+require_once($CFG->dirroot . '/mod/activequiz/lib.php');
+require_once($CFG->libdir . '/filelib.php');
 
 require_login();
 require_sesskey();

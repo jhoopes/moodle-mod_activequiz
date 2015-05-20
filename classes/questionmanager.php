@@ -36,8 +36,7 @@ use \mod_activequiz\forms\edit\add_question_form;
  * @copyright   2014 University of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class questionmanager
-{
+class questionmanager {
 
     /** @var activequiz */
     protected $rtq;
@@ -51,7 +50,7 @@ class questionmanager
     /** @var array internal use only as we'll always just give out the qbank ordered questions */
     protected $rtqQuestions;
 
-    /** @var array  */
+    /** @var array */
     protected $qbankOrderedQuestions;
 
     /** @var \moodle_url */
@@ -61,22 +60,22 @@ class questionmanager
     /**
      * Construct an instance of question manager
      *
-     * @param activequiz $rtq
+     * @param activequiz               $rtq
      * @param \mod_activequiz_renderer $renderer The realtime quiz renderer to render visual elements
-     * @param array $pagevars page variables array
+     * @param array                    $pagevars page variables array
      */
-    public function __construct($rtq, $renderer, $pagevars = array()){
+    public function __construct($rtq, $renderer, $pagevars = array()) {
         global $DB;
 
-        $this->rtq      = $rtq;
+        $this->rtq = $rtq;
         $this->renderer = $renderer;
         $this->pagevars = $pagevars;
         $this->orderedquestions = array();
 
-        if(!empty($this->pagevars)){
+        if (!empty($this->pagevars)) {
             $this->baseurl = $this->pagevars['pageurl'];
-        }else{
-            $params = array('id'=>$this->rtq->getCM()->id);
+        } else {
+            $params = array('id' => $this->rtq->getCM()->id);
             $this->baseurl = new \moodle_url('/mod/activequiz/edit.php', $params);
         }
 
@@ -89,7 +88,7 @@ class questionmanager
      *
      * @return activequiz
      */
-    public function getRTQ(){
+    public function getRTQ() {
         return $this->rtq;
     }
 
@@ -104,11 +103,11 @@ class questionmanager
      *
      * @return mixed
      */
-    public function add_question($questionid){
+    public function add_question($questionid) {
         global $DB;
 
         // first check to see if the question has already been added
-        if($this->is_question_already_present($questionid)){
+        if ($this->is_question_already_present($questionid)) {
             $redurl = clone($this->pagevars['pageurl']);
             /** @var \moodle_url $redurl */
             $redurl->remove_params('action'); // go back to base edit page
@@ -120,23 +119,23 @@ class questionmanager
         $actionurl->param('action', 'addquestion');
         $actionurl->param('questionid', $questionid);
 
-        $qrecord = $DB->get_record('question', array('id'=>$questionid), '*', MUST_EXIST);
+        $qrecord = $DB->get_record('question', array('id' => $questionid), '*', MUST_EXIST);
 
         $mform = new add_question_form($actionurl,
-                                        array(
-                                            'rtq'=>$this->rtq,
-                                            'questionname' => $qrecord->name,
-                                            'defaultmark' => $qrecord->defaultmark,
-                                            'showhistoryduringquiz' => 0,
-                                            'edit'=>false));
+            array(
+                'rtq'                   => $this->rtq,
+                'questionname'          => $qrecord->name,
+                'defaultmark'           => $qrecord->defaultmark,
+                'showhistoryduringquiz' => 0,
+                'edit'                  => false));
 
         // form handling
-        if($mform->is_cancelled()){
+        if ($mform->is_cancelled()) {
             // redirect back to list questions page
             $this->baseurl->remove_params('action');
             redirect($this->baseurl, null, 0);
 
-        }else if ($data = $mform->get_data()){
+        } else if ($data = $mform->get_data()) {
             // process data from the form
 
             $question = new \stdClass();
@@ -156,7 +155,7 @@ class questionmanager
             $this->baseurl->remove_params('action', 'questionid');
             redirect($this->baseurl, null, 0);
 
-        }else{
+        } else {
             // display the form
             $this->renderer->print_editpage_header();
             $this->renderer->editrender_addquestionform($mform);
@@ -171,31 +170,31 @@ class questionmanager
      *
      * @return mixed
      */
-    public function edit_question($questionid){
+    public function edit_question($questionid) {
         global $DB;
 
         $actionurl = clone($this->baseurl);
         $actionurl->param('action', 'editquestion');
         $actionurl->param('rtqquestionid', $questionid);
 
-        $rtqquestion = $DB->get_record('activequiz_questions', array('id'=> $questionid), '*', MUST_EXIST);
-        $qrecord = $DB->get_record('question', array('id'=>$rtqquestion->questionid), '*', MUST_EXIST);
+        $rtqquestion = $DB->get_record('activequiz_questions', array('id' => $questionid), '*', MUST_EXIST);
+        $qrecord = $DB->get_record('question', array('id' => $rtqquestion->questionid), '*', MUST_EXIST);
 
         $mform = new add_question_form($actionurl,
-                                        array(
-                                            'rtq'=>$this->rtq,
-                                            'questionname' => $qrecord->name,
-                                            'defaultmark' => $qrecord->defaultmark,
-                                            'showhistoryduringquiz' => $rtqquestion->showhistoryduringquiz,
-                                            'edit'=>true));
+            array(
+                'rtq'                   => $this->rtq,
+                'questionname'          => $qrecord->name,
+                'defaultmark'           => $qrecord->defaultmark,
+                'showhistoryduringquiz' => $rtqquestion->showhistoryduringquiz,
+                'edit'                  => true));
 
         // form handling
-        if($mform->is_cancelled()){
+        if ($mform->is_cancelled()) {
             // redirect back to list questions page
             $this->baseurl->remove_params('action');
             redirect($this->baseurl, null, 0);
 
-        }else if ($data = $mform->get_data()){
+        } else if ($data = $mform->get_data()) {
             // process data from the form
 
             $question = new \stdClass();
@@ -213,7 +212,7 @@ class questionmanager
             $this->baseurl->remove_params('action', 'questionid');
             redirect($this->baseurl, null, 0);
 
-        }else{
+        } else {
             // display the form
             $mform->set_data(array('indvquestiontime' => $rtqquestion->questiontime, 'notime' => $rtqquestion->notime, 'numberoftries' => $rtqquestion->tries, 'points' => $rtqquestion->points));
             $this->renderer->print_editpage_header();
@@ -229,15 +228,16 @@ class questionmanager
      *
      * @return bool
      */
-    public function delete_question($questionid){
+    public function delete_question($questionid) {
         global $DB;
 
         try {
             $DB->delete_records('activequiz_questions', array('id' => $questionid));
             $this->update_questionorder('deletequestion', $questionid);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false; // return false on error
         }
+
         // if we get here return true
         return true;
     }
@@ -246,13 +246,13 @@ class questionmanager
      * Moves a question on the question order for this quiz
      *
      * @param string $direction 'up'||'down'
-     * @param int $questionid The RTQ questionid
+     * @param int    $questionid The RTQ questionid
      *
      * @return bool
      */
-    public function move_question($direction, $questionid){
+    public function move_question($direction, $questionid) {
 
-        if($direction !== 'up' && $direction != 'down'){
+        if ($direction !== 'up' && $direction != 'down') {
             return false; // return false if the direction is not up or down
         }
 
@@ -267,9 +267,9 @@ class questionmanager
      * @param array $fullorder
      * @return bool
      */
-    public function set_full_order($fullorder = array()){
+    public function set_full_order($fullorder = array()) {
 
-        if(!is_array($fullorder)){
+        if (!is_array($fullorder)) {
             return false;
         }
 
@@ -283,7 +283,7 @@ class questionmanager
      *
      * @return array of the question bank ordered questions of \mod_activequiz\activequiz_question objects
      */
-    public function get_questions(){
+    public function get_questions() {
         return $this->qbankOrderedQuestions;
     }
 
@@ -295,12 +295,12 @@ class questionmanager
      *
      * @return string
      */
-    public function get_questiontype_byqnum($qnum){
+    public function get_questiontype_byqnum($qnum) {
 
         // get the actual key for the qbank question
         $qbankkeys = array_keys($this->qbankOrderedQuestions);
-        $desiredkey = $qbankkeys[$qnum - 1];
-        $rtqQuestion = $this->qbankOrderedQuestions[$desiredkey];
+        $desiredkey = $qbankkeys[ $qnum - 1 ];
+        $rtqQuestion = $this->qbankOrderedQuestions[ $desiredkey ];
 
         return $rtqQuestion->getQuestion()->qtype;
     }
@@ -312,27 +312,27 @@ class questionmanager
      *
      * @return \mod_activequiz\activequiz_question
      */
-    public function get_first_question($attempt){
+    public function get_first_question($attempt) {
         return $this->get_question_with_slot(1, $attempt);
     }
 
     /**
      * Gets a activequiz_question object with the slot set
      *
-     * @param int $slotnum The index of the slot we want, i.e. the question number
+     * @param int                                $slotnum The index of the slot we want, i.e. the question number
      * @param \mod_activequiz\activequiz_attempt $attempt The current attempt
      *
      * @return \mod_activequiz\activequiz_question
      */
-    public function get_question_with_slot($slotnum, $attempt){
+    public function get_question_with_slot($slotnum, $attempt) {
 
         $slots = $attempt->getSlots();
         $quba = $attempt->get_quba();
 
         // first check if this is the last question
-        if(empty($slots[$slotnum])){
+        if (empty($slots[ $slotnum ])) {
             $attempt->islastquestion(true);
-        }else{
+        } else {
             $attempt->islastquestion(false);
         }
 
@@ -341,17 +341,19 @@ class questionmanager
 
 
         // get the first question
-        $qubaQuestion = $quba->get_question($slots[$slotnum]);
+        $qubaQuestion = $quba->get_question($slots[ $slotnum ]);
 
-        foreach($this->qbankOrderedQuestions as $qbankQuestion){
+        foreach ($this->qbankOrderedQuestions as $qbankQuestion) {
             /** @var \mod_activequiz\activequiz_question $qbankQuestion */
 
-            if($qbankQuestion->getQuestion()->id == $qubaQuestion->id) {
+            if ($qbankQuestion->getQuestion()->id == $qubaQuestion->id) {
                 // set the slot on the qbank question as this is the actual id we're using for question number
-                $qbankQuestion->set_slot($slots[$slotnum]);
+                $qbankQuestion->set_slot($slots[ $slotnum ]);
+
                 return $qbankQuestion;
             }
         }
+
         // if we get here return null due to no question
         return null;
     }
@@ -365,14 +367,14 @@ class questionmanager
      *
      * @return array
      */
-    public function add_questions_to_quba(\question_usage_by_activity $quba){
+    public function add_questions_to_quba(\question_usage_by_activity $quba) {
 
         // we need the questionids of our questions
         $questionids = array();
-        foreach($this->qbankOrderedQuestions as $qbankquestion){
+        foreach ($this->qbankOrderedQuestions as $qbankquestion) {
             /** @var activequiz_question $qbankquestion */
 
-            if(!in_array($qbankquestion->getQuestion()->id, $questionids)){
+            if (!in_array($qbankquestion->getQuestion()->id, $questionids)) {
                 $questionids[] = $qbankquestion->getQuestion()->id;
             }
         }
@@ -381,11 +383,11 @@ class questionmanager
         // loop through the ordered question bank questions and add them to the quba
         // object
         $attemptlayout = array();
-        foreach($this->qbankOrderedQuestions as $qbankquestion){
+        foreach ($this->qbankOrderedQuestions as $qbankquestion) {
 
             $questionid = $qbankquestion->getQuestion()->id;
-            $q = \question_bank::make_question($questions[$questionid]);
-            $attemptlayout[$qbankquestion->getId()] = $quba->add_question($q, $qbankquestion->getPoints());
+            $q = \question_bank::make_question($questions[ $questionid ]);
+            $attemptlayout[ $qbankquestion->getId() ] = $quba->add_question($q, $qbankquestion->getPoints());
         }
 
         // start the questions in the quba
@@ -396,6 +398,7 @@ class questionmanager
          * these are what are used during an actual attempt rather than the questionid themselves, since the question engine will handle
          * the translation
          */
+
         return $attemptlayout;
     }
 
@@ -404,7 +407,7 @@ class questionmanager
      *
      * @return string
      */
-    protected function get_question_order(){
+    protected function get_question_order() {
         return $this->rtq->getRTQ()->questionorder;
     }
 
@@ -414,9 +417,10 @@ class questionmanager
      * @param string
      * @return bool
      */
-    protected function set_question_order($questionorder){
+    protected function set_question_order($questionorder) {
 
         $this->rtq->getRTQ()->questionorder = $questionorder;
+
         return $this->rtq->saveRTQ();
 
     }
@@ -425,22 +429,22 @@ class questionmanager
      * Updates the question order for the question manager
      *
      * @param string $action
-     * @param int $questionid the realtime quiz question id, NOT the question engine question id
-     * @param array $fullorder An array of question objects to sort as is.
+     * @param int    $questionid the realtime quiz question id, NOT the question engine question id
+     * @param array  $fullorder An array of question objects to sort as is.
      *                         This is mainly used for the dragdrop callback on the edit page.  If the full order is not specified
      *                         with all questions currently on the quiz, the case will return false
      *
      * @return bool true/false if it was successful
      */
-    protected function update_questionorder($action, $questionid, $fullorder = array()){
+    protected function update_questionorder($action, $questionid, $fullorder = array()) {
 
-        switch($action){
+        switch ($action) {
             case 'addquestion':
 
                 $questionorder = $this->get_question_order();
-                if(empty($questionorder)){
+                if (empty($questionorder)) {
                     $questionorder = $questionid;
-                }else{
+                } else {
                     $questionorder .= ',' . $questionid;
                 }
 
@@ -456,10 +460,10 @@ class questionmanager
                 $questionorder = $this->get_question_order();
                 $questionorder = explode(',', $questionorder);
 
-                foreach($questionorder as $index => $qorder){
+                foreach ($questionorder as $index => $qorder) {
 
-                    if($qorder == $questionid){
-                        unset($questionorder[$index]);
+                    if ($qorder == $questionid) {
+                        unset($questionorder[ $index ]);
                         break;
                     }
                 }
@@ -468,6 +472,7 @@ class questionmanager
                 // set the question order and refresh the questions
                 $this->set_question_order($newquestionorder);
                 $this->refresh_questions();
+
                 return true;
 
                 break;
@@ -476,19 +481,19 @@ class questionmanager
                 $questionorder = $this->get_question_order();
                 $questionorder = explode(',', $questionorder);
 
-                foreach($questionorder as $index=>$qorder){
+                foreach ($questionorder as $index => $qorder) {
 
-                    if($qorder == $questionid){
+                    if ($qorder == $questionid) {
 
-                        if($index == 0){
+                        if ($index == 0) {
                             return false; // can't move first question up
                         }
 
                         // if ids match replace the previous index with the current one
                         // and make the previous index qid the current index
-                        $prevqorder = $questionorder[$index-1];
-                        $questionorder[$index-1] = $questionid;
-                        $questionorder[$index] = $prevqorder;
+                        $prevqorder = $questionorder[ $index - 1 ];
+                        $questionorder[ $index - 1 ] = $questionid;
+                        $questionorder[ $index ] = $prevqorder;
                         break;
                     }
                 }
@@ -509,19 +514,19 @@ class questionmanager
 
                 $questionordercount = count($questionorder);
 
-                foreach($questionorder as $index=>$qorder){
+                foreach ($questionorder as $index => $qorder) {
 
-                    if($qorder == $questionid){
+                    if ($qorder == $questionid) {
 
-                        if($index == $questionordercount - 1){
+                        if ($index == $questionordercount - 1) {
                             return false; // can't move last question down
                         }
 
                         // if ids match replace the next index with the current one
                         // and make the next index qid the current index
-                        $nextqorder = $questionorder[$index+1];
-                        $questionorder[$index+1] = $questionid;
-                        $questionorder[$index] = $nextqorder;
+                        $nextqorder = $questionorder[ $index + 1 ];
+                        $questionorder[ $index + 1 ] = $questionid;
+                        $questionorder[ $index ] = $nextqorder;
                         break;
                     }
                 }
@@ -541,26 +546,26 @@ class questionmanager
                 $questionorder = explode(',', $questionorder);
 
                 // if we don't have the same number of questions return error
-                if(count($fullorder) !== count($questionorder)){
+                if (count($fullorder) !== count($questionorder)) {
                     return false;
                 }
 
                 // next validate that the questions sent all match to a question in the current order
                 $allmatch = true;
-                foreach($questionorder as $qorder){
-                    if(!in_array($qorder, $fullorder)){
+                foreach ($questionorder as $qorder) {
+                    if (!in_array($qorder, $fullorder)) {
                         $allmatch = false;
                     }
                 }
 
-                if($allmatch){
+                if ($allmatch) {
 
                     $newquestionorder = implode(',', $fullorder);
                     $this->set_question_order($newquestionorder);
                     $this->refresh_questions();
 
                     return true;
-                }else{
+                } else {
                     return false;
                 }
 
@@ -577,14 +582,15 @@ class questionmanager
      *
      * @return bool
      */
-    protected function is_question_already_present($questionid){
+    protected function is_question_already_present($questionid) {
 
         // loop through the db rtq questions and see if we find a match
-        foreach($this->rtqQuestions as $dbRTQquestion){
-            if($dbRTQquestion->questionid == $questionid){
+        foreach ($this->rtqQuestions as $dbRTQquestion) {
+            if ($dbRTQquestion->questionid == $questionid) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -595,7 +601,7 @@ class questionmanager
      * in the correct order
      *
      */
-    protected function refresh_questions(){
+    protected function refresh_questions() {
         $this->init_rtq_questions();
         $this->init_qbank_questions();
     }
@@ -604,9 +610,9 @@ class questionmanager
      * Gets the list of questions from the DB
      *
      */
-    private function init_rtq_questions(){
+    private function init_rtq_questions() {
         global $DB;
-        $this->rtqQuestions = $DB->get_records('activequiz_questions', array('activequizid'=>$this->rtq->getRTQ()->id));
+        $this->rtqQuestions = $DB->get_records('activequiz_questions', array('activequizid' => $this->rtq->getRTQ()->id));
     }
 
     /**
@@ -614,28 +620,29 @@ class questionmanager
      * puts question bank ordered questions into the qbankorderedquestions var
      *
      */
-    private function init_qbank_questions(){
+    private function init_qbank_questions() {
         global $DB;
 
         // start by ordering the RTQ question ids into an array
         $questionorder = $this->rtq->getRTQ()->questionorder;
 
         // generate empty array for ordered questions for no question order
-        if(empty($questionorder)){
+        if (empty($questionorder)) {
 
             $this->qbankOrderedQuestions = array();
+
             return;
 
-        }else{ // otherwise explode it and continue on
+        } else { // otherwise explode it and continue on
             $questionorder = explode(',', $questionorder);
         }
 
         // using the question order saved in rtq object, get the qbank question ids from the rtq questions
         $orderedquestionids = array();
-        foreach($questionorder as $qorder){
+        foreach ($questionorder as $qorder) {
             // store the rtq question id as the key so that it can be used later when adding question time to
             // question bank question object
-            $orderedquestionids[$qorder] = $this->rtqQuestions[$qorder]->questionid;
+            $orderedquestionids[ $qorder ] = $this->rtqQuestions[ $qorder ]->questionid;
         }
 
         // get qbank questions based on the question ids from the RTQ questions table
@@ -645,19 +652,19 @@ class questionmanager
 
         // Now order the qbank questions based on the order that we got above
         $qbankOrderedQuestions = array();
-        foreach($orderedquestionids as $rtqqid => $questionid){ // use the ordered question ids we got earlier
-            if(!empty($questions[$questionid])){
+        foreach ($orderedquestionids as $rtqqid => $questionid) { // use the ordered question ids we got earlier
+            if (!empty($questions[ $questionid ])) {
 
                 // create realtime quiz question and add it to the array
                 $quizquestion = new \mod_activequiz\activequiz_question($rtqqid,
-                                                $this->rtqQuestions[$rtqqid]->notime,
-                                                $this->rtqQuestions[$rtqqid]->questiontime,
-                                                $this->rtqQuestions[$rtqqid]->tries,
-                                                $this->rtqQuestions[$rtqqid]->points,
-                                                $this->rtqQuestions[$rtqqid]->showhistoryduringquiz,
-                                                $questions[$questionid]);
+                    $this->rtqQuestions[ $rtqqid ]->notime,
+                    $this->rtqQuestions[ $rtqqid ]->questiontime,
+                    $this->rtqQuestions[ $rtqqid ]->tries,
+                    $this->rtqQuestions[ $rtqqid ]->points,
+                    $this->rtqQuestions[ $rtqqid ]->showhistoryduringquiz,
+                    $questions[ $questionid ]);
 
-                $qbankOrderedQuestions[$rtqqid] = $quizquestion; // add question to the ordered questions
+                $qbankOrderedQuestions[ $rtqqid ] = $quizquestion; // add question to the ordered questions
             }
         }
 

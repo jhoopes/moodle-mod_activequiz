@@ -72,7 +72,7 @@ $string['scale'] = 'Maximum Grade';
 $string['scale_help'] = 'This value (integer) will scale whatever points that are received on the quiz to this value.';
 $string['grademethod'] = 'Session grading method';
 $string['grademethod_help'] = 'This is the method that is used when grading.' .
-                                'This method is for figuring out the grading with multiple sessions in the same activequiz';
+    'This method is for figuring out the grading with multiple sessions in the same activequiz';
 $string['assessed'] = 'Assessed';
 $string['assessed_help'] = 'Check this box to make your quiz assessed';
 
@@ -94,7 +94,6 @@ $string['theattempt_help'] = 'Whether the student can review the attempt at all.
 $string['reviewafter'] = 'After the sessions are closed';
 $string['manualcomment'] = 'Manual Comment';
 $string['manualcomment_help'] = 'The comment that instructors can add when grading an attempt';
-
 
 
 // edit page
@@ -185,7 +184,7 @@ $string['shownotresponded'] = 'Show not responded';
 
 // Instructions
 $string['instructorquizinst'] = '<p>Please wait on this page until students have connected.  Once <b>start quiz</b> is clicked, the quiz will start the first question</p>' .
-'<p>
+    '<p>
 <p>Controls:</p>
     <ul>
         <li>

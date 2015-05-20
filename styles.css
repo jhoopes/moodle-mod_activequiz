@@ -13,13 +13,13 @@
     margin: 10px;
 }
 
-.activequizbox .row{
+.activequizbox .row {
     margin: 5px;
 }
 
 /** Edit page CSS **/
 
-.activequizbox .questionlist li{
+.activequizbox .questionlist li {
     border: 1px solid;
     border-radius: 5px;
     min-height: 30px;
@@ -28,91 +28,89 @@
     background: white;
 }
 
-.activequizbox .questionlist li:hover{
+.activequizbox .questionlist li:hover {
 
     background: #dbdbdb;
 }
 
-.activequizbox .questionlist li div{
+.activequizbox .questionlist li div {
     display: inline-block;
 }
 
-.activequizbox .questionlist .dragquestion{
+.activequizbox .questionlist .dragquestion {
     width: 10%;
     cursor: move;
 }
 
-.activequizbox .questionlist .icon{
+.activequizbox .questionlist .icon {
     width: 10%;
     vertical-align: middle;
 }
 
-.activequizbox .questionlist .name{
+.activequizbox .questionlist .name {
     width: 50%;
     vertical-align: middle;
 }
 
-.activequizbox .questionlist .name p{
+.activequizbox .questionlist .name p {
     margin: 0;
 }
 
-.activequizbox .questionlist .controls{
+.activequizbox .questionlist .controls {
     width: 30%;
     vertical-align: middle;
 }
 
-.activequizbox .questionlist .controls img{
+.activequizbox .questionlist .controls img {
     margin-right: 5px;
 }
 
-.activequizbox .questionlist .controls .space{
+.activequizbox .questionlist .controls .space {
     width: 12px;
 }
 
-.rtqstatusbox{
+.rtqstatusbox {
     border-radius: 20px;
     margin: 10px 5px 10px 35px;
     padding: 10px;
 }
 
-.rtqhiddenstatus{
-    display:none;
+.rtqhiddenstatus {
+    display: none;
 }
 
-.rtqsuccessstatus{
+.rtqsuccessstatus {
     display: block;
     background: #2dff00;
 }
 
-.rtqerrorstatus{
-    display:block;
+.rtqerrorstatus {
+    display: block;
     background: #ff8e89;
 }
 
-.activequizbox .inline-block{
+.activequizbox .inline-block {
     display: inline-block;
 }
 
 /** end edit questions **/
 
-.question_save{
+.question_save {
     height: 30px;
 }
 
-@media(min-width: 480px){
-    .question_save{
+@media (min-width: 480px) {
+    .question_save {
         margin-left: 8em;
     }
 }
 
-
-.loading{
+.loading {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
     width: 30%
 }
-
 
 .activequiz_editicons {
     display: inline-block;
@@ -122,7 +120,6 @@
 .activequiz_highlight_correct {
     background: #81dca3;
 }
-
 
 #quizinfobox {
     background-color: #d9edf7;
@@ -154,18 +151,17 @@
     text-decoration: none;
 }
 
-.activequizbox .submit{
+.activequizbox .submit {
     display: none;
 }
 
-.activequizbox .rtq_inquiz{
+.activequizbox .rtq_inquiz {
     display: inline-block;
 }
 
-.activequizbox .btn-hide{
+.activequizbox .btn-hide {
     display: none;
 }
-
 
 /** Mod form styles **/
 #id_reviewoptionsettings .fitem {
@@ -186,11 +182,13 @@
     clear: left;
     margin: 0 0 1em;
 }
+
 #id_reviewoptionsettings fieldset.fgroup > span {
     float: left;
     clear: left;
     line-height: 1.7;
 }
+
 #id_reviewoptionsettings fieldset.fgroup span label {
     margin-left: 0.4em;
 }
@@ -199,11 +197,9 @@
     float: left;
 }
 
-
 #id_reviewoptionsettings .fitemtitle {
     text-align: left;
 }
-
 
 /** Modal Jump-to-question css **/
 
@@ -214,9 +210,9 @@
     right: 0;
     bottom: 0;
     left: 0;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0, 0, 0, 0.8);
     z-index: 99999;
-    opacity:0;
+    opacity: 0;
     -webkit-transition: opacity 200ms ease-in;
     -moz-transition: opacity 200ms ease-in;
     transition: opacity 200ms ease-in;
@@ -224,7 +220,7 @@
 }
 
 .modalDialog:target {
-    opacity:1;
+    opacity: 1;
     pointer-events: auto;
 }
 
@@ -259,19 +255,21 @@
     box-shadow: 1px 1px 3px #000;
 }
 
-.close:hover { background: #00d9ff; }
+.close:hover {
+    background: #00d9ff;
+}
 
-#notrespondedbox{
+#notrespondedbox {
     background-color: #d9edf7;
 }
 
-#notrespondedlist{
+#notrespondedlist {
     width: 30em;
     padding: 10px;
 }
 
-#notrespondedlist li{
+#notrespondedlist li {
 
-    float:left;
+    float: left;
     width: 10em;
 }

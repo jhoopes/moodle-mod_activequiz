@@ -36,55 +36,55 @@ activequiz.vars = activequiz.vars || {};
  *               interval this function defines.  It is also updated by other functions in conjunction with "inquestion"
  *
  */
-activequiz.getQuizInfo = function(){
+activequiz.getQuizInfo = function () {
 
     var params = {
         'sesskey': activequiz.get('sesskey'),
         'sessionid': activequiz.get('sessionid')
     };
 
-    activequiz.ajax.create_request('/mod/activequiz/quizinfo.php', params, function(status, response){
+    activequiz.ajax.create_request('/mod/activequiz/quizinfo.php', params, function (status, response) {
 
-        if(status == 500){
+        if (status == 500) {
             alert('There was an error....' + response);
-        }else if(status == 200){
-            if(response.status == 'notrunning'){
+        } else if (status == 200) {
+            if (response.status == 'notrunning') {
                 // do nothing as we're not running
                 activequiz.set('endquestion', 'false');
 
-            }else if(response.status == 'running' && activequiz.get('inquestion') != 'true' && activequiz.get('endquestion') != 'true'){
+            } else if (response.status == 'running' && activequiz.get('inquestion') != 'true' && activequiz.get('endquestion') != 'true') {
 
-                if(response.delay <= 0){
+                if (response.delay <= 0) {
                     // only set in question if we're in it, not waiting for it to start
                     activequiz.set('inquestion', 'true');
                 }
 
-            }else if(response.status == 'running' && activequiz.get('inquestion') != 'true'){
+            } else if (response.status == 'running' && activequiz.get('inquestion') != 'true') {
 
                 // set endquestion to false as we're now "waiting" for a new question
                 activequiz.set('endquestion', 'false');
 
-            }else if(response.status == 'running' && activequiz.get('inquestion') == 'true'){
+            } else if (response.status == 'running' && activequiz.get('inquestion') == 'true') {
 
                 // gether the current results
-                if(activequiz.get('delayrefreshresults') === 'undefined' || activequiz.get('delayrefreshresults') === 'false'){
+                if (activequiz.get('delayrefreshresults') === 'undefined' || activequiz.get('delayrefreshresults') === 'false') {
                     activequiz.gather_current_results();
                 }
 
                 // also get the students/groups not responded
-                if(activequiz.get('shownotresponded') !== false){
+                if (activequiz.get('shownotresponded') !== false) {
                     activequiz.getnotresponded();
                 }
 
-            }else if(response.status = 'endquestion'){
+            } else if (response.status = 'endquestion') {
 
                 activequiz.set('inquestion', 'false');
 
-            }else if(response.status == 'reviewing'){
+            } else if (response.status == 'reviewing') {
 
                 activequiz.set('inquestion', 'false');
 
-            }else if(response.status == 'sessionclosed'){
+            } else if (response.status == 'sessionclosed') {
 
                 activequiz.set('inquestion', 'false');
 
@@ -99,22 +99,22 @@ activequiz.getQuizInfo = function(){
 };
 
 
-activequiz.start_quiz = function(){
+activequiz.start_quiz = function () {
 
     // make an ajax callback to quizdata to start the quiz
 
     var params = {
-        'action'   : 'startquiz',
-        'rtqid'    : activequiz.get('rtqid'),
+        'action': 'startquiz',
+        'rtqid': activequiz.get('rtqid'),
         'sessionid': activequiz.get('sessionid'),
         'attemptid': activequiz.get('attemptid'),
-        'sesskey'  : activequiz.get('sesskey')
+        'sesskey': activequiz.get('sesskey')
     };
 
-    this.ajax.create_request('/mod/activequiz/quizdata.php', params, function(status, response){
+    this.ajax.create_request('/mod/activequiz/quizdata.php', params, function (status, response) {
 
         // if there's only 1 question this will return true
-        if(response.lastquestion == 'true'){
+        if (response.lastquestion == 'true') {
             // disable the next question button
             var nextquestionbtn = document.getElementById('nextquestion');
             nextquestionbtn.disabled = true;
@@ -132,7 +132,7 @@ activequiz.start_quiz = function(){
 };
 
 
-activequiz.handle_question = function(questionid) {
+activequiz.handle_question = function (questionid) {
 
     this.loading(M.util.get_string('gatheringresults', 'activequiz'), 'show');
 
@@ -151,7 +151,7 @@ activequiz.handle_question = function(questionid) {
     // submit the form
     activequiz.ajax.create_request('/mod/activequiz/quizdata.php', formdata, function (status, response) {
 
-        if(status == 500){
+        if (status == 500) {
             window.alert('there was an error with your request ... ' + response.error);
             return;
         }
@@ -168,24 +168,24 @@ activequiz.handle_question = function(questionid) {
         activequiz.set('inquestion', 'false');
 
         var params = {
-            'action'   : 'endquestion',
-            'question' : activequiz.get('currentquestion'),
-            'rtqid'    : activequiz.get('rtqid'),
+            'action': 'endquestion',
+            'question': activequiz.get('currentquestion'),
+            'rtqid': activequiz.get('rtqid'),
             'sessionid': activequiz.get('sessionid'),
             'attemptid': activequiz.get('attemptid'),
-            'sesskey'  : activequiz.get('sesskey')
+            'sesskey': activequiz.get('sesskey')
         };
 
         // make sure we end the question (on end_question function call this is re-doing what we just did)
         // but handle_request is also called on ending of the question timer in core.js
-        activequiz.ajax.create_request('/mod/activequiz/quizdata.php', params, function(status, response){
+        activequiz.ajax.create_request('/mod/activequiz/quizdata.php', params, function (status, response) {
 
-            if(status == 500){
+            if (status == 500) {
                 var loadingbox = document.getElementById('loadingbox');
                 loadingbox.classList.add('hidden');
 
                 activequiz.quiz_info('There was an error with your request', true);
-            }else if (status == 200){
+            } else if (status == 200) {
 
                 var currentquestion = activequiz.get('currentquestion');
                 var questiontimertext = document.getElementById('q' + currentquestion + '_questiontimetext');
@@ -208,30 +208,30 @@ activequiz.handle_question = function(questionid) {
  * but just get the results of the quesiton and display them in the quiz info box
  *
  */
-activequiz.gather_current_results = function(){
+activequiz.gather_current_results = function () {
 
 
-    if(activequiz.get('showstudentresponses') === false){
+    if (activequiz.get('showstudentresponses') === false) {
         return; // return if there we aren't showing student responses
     }
 
     var params = {
-        'action'   : 'getcurrentresults',
-        'rtqid'    : activequiz.get('rtqid'),
+        'action': 'getcurrentresults',
+        'rtqid': activequiz.get('rtqid'),
         'sessionid': activequiz.get('sessionid'),
         'attemptid': activequiz.get('attemptid'),
-        'sesskey'  : activequiz.get('sesskey')
+        'sesskey': activequiz.get('sesskey')
     };
 
-    activequiz.ajax.create_request('/mod/activequiz/quizdata.php', params, function(status, response){
+    activequiz.ajax.create_request('/mod/activequiz/quizdata.php', params, function (status, response) {
 
-        if(status == '500'){
+        if (status == '500') {
             activequiz.quiz_info('there was an error getting current results', true);
-        }else if(status == 200){
+        } else if (status == 200) {
             activequiz.quiz_info(response.responses, true);
 
             // after the responses have been inserted, we see if any question type javascript was added and evaluate
-            if(document.getElementById(response.qtype + '_js') !== null){
+            if (document.getElementById(response.qtype + '_js') !== null) {
                 eval(document.getElementById(response.qtype + '_js').innerHTML);
             }
         }
@@ -244,17 +244,17 @@ activequiz.gather_current_results = function(){
  * updates the instructor's interface with the buttons allowed for this state of the quiz
  *
  */
-activequiz.gather_results = function(){
+activequiz.gather_results = function () {
 
     var params = {
-        'action'     : 'getresults',
-        'rtqid'      : activequiz.get('rtqid'),
-        'sessionid'  : activequiz.get('sessionid'),
-        'attemptid'  : activequiz.get('attemptid'),
-        'sesskey'    : activequiz.get('sesskey'),
+        'action': 'getresults',
+        'rtqid': activequiz.get('rtqid'),
+        'sessionid': activequiz.get('sessionid'),
+        'attemptid': activequiz.get('attemptid'),
+        'sesskey': activequiz.get('sesskey'),
     };
 
-    activequiz.ajax.create_request('/mod/activequiz/quizdata.php', params, function(status, response){
+    activequiz.ajax.create_request('/mod/activequiz/quizdata.php', params, function (status, response) {
 
         activequiz.loading('', 'hide');
 
@@ -262,30 +262,30 @@ activequiz.gather_results = function(){
         questionbox.classList.remove('hidden');
 
         // don't change buttons during the question
-        if(activequiz.get('endquestion') == 'true'){
+        if (activequiz.get('endquestion') == 'true') {
 
-            if(activequiz.get('lastquestion') != 'undefined'){
+            if (activequiz.get('lastquestion') != 'undefined') {
 
-                if(activequiz.get('lastquestion') == 'true'){ // don't enable the next question button
+                if (activequiz.get('lastquestion') == 'true') { // don't enable the next question button
 
                     activequiz.control_buttons(['closesession', 'reloadresults', 'jumptoquestion', 'repollquestion', 'showcorrectanswer', 'toggleresponses']);
-                }else{
+                } else {
                     //otherwise enable the next question button and repoll question
 
                     activequiz.control_buttons(['closesession', 'nextquestion', 'jumptoquestion', 'repollquestion', 'reloadresults', 'showcorrectanswer', 'toggleresponses']);
                 }
-            }else{
+            } else {
                 activequiz.control_buttons(['closesession', 'nextquestion', 'jumptoquestion', 'repollquestion', 'reloadresults', 'showcorrectanswer', 'toggleresponses']);
             }
         }
 
         // only put results into the screen if
-        if(activequiz.get('showstudentresponses') !== false) {
+        if (activequiz.get('showstudentresponses') !== false) {
 
             activequiz.quiz_info(response.responses);
 
             // after the responses have been inserted, we see if any question type javascript was added and evaluate
-            if(document.getElementById(response.qtype + '_js') !== null){
+            if (document.getElementById(response.qtype + '_js') !== null) {
                 eval(document.getElementById(response.qtype + '_js').innerHTML);
             }
         }
@@ -293,7 +293,7 @@ activequiz.gather_results = function(){
 
 };
 
-activequiz.reload_results = function(){
+activequiz.reload_results = function () {
 
     this.hide_all_questionboxes();
     this.clear_and_hide_qinfobox();
@@ -303,7 +303,7 @@ activequiz.reload_results = function(){
     this.gather_results();
 };
 
-activequiz.repoll_question = function(){
+activequiz.repoll_question = function () {
 
     this.hide_all_questionboxes();
     this.clear_and_hide_qinfobox();
@@ -311,16 +311,16 @@ activequiz.repoll_question = function(){
 
     // we want to send a request to re-poll the previous question, or the one we're reviewing now
     var params = {
-        'action'   : 'repollquestion',
-        'rtqid'    : activequiz.get('rtqid'),
+        'action': 'repollquestion',
+        'rtqid': activequiz.get('rtqid'),
         'sessionid': activequiz.get('sessionid'),
         'attemptid': activequiz.get('attemptid'),
-        'sesskey'  : activequiz.get('sesskey')
+        'sesskey': activequiz.get('sesskey')
     };
 
-    activequiz.ajax.create_request('/mod/activequiz/quizdata.php', params, function(status, response){
+    activequiz.ajax.create_request('/mod/activequiz/quizdata.php', params, function (status, response) {
 
-        if(status == 500){
+        if (status == 500) {
             var loadingbox = document.getElementById('loadingbox');
             loadingbox.classList.add('hidden');
 
@@ -330,10 +330,10 @@ activequiz.repoll_question = function(){
             return;
         }
 
-        if(response.lastquestion == 'true'){
+        if (response.lastquestion == 'true') {
             // set a var to signify this is the last question
             activequiz.set('lastquestion', 'true');
-        }else{
+        } else {
             activequiz.set('lastquestion', 'false');
         }
         activequiz.control_buttons(['endquestion', 'toggleresponses', 'togglenotresponded']);
@@ -342,7 +342,7 @@ activequiz.repoll_question = function(){
 
 };
 
-activequiz.next_question = function(){
+activequiz.next_question = function () {
 
     // hide all question boxes and disable certain buttons
 
@@ -351,22 +351,22 @@ activequiz.next_question = function(){
     this.control_buttons([]);
 
     // ensure that the previous question's form is hidden
-    if(activequiz.get('currentquestion') != 'undefined'){
+    if (activequiz.get('currentquestion') != 'undefined') {
         var qformbox = document.getElementById('q' + activequiz.get('currentquestion') + '_container');
         qformbox.classList.add('hidden');
     }
 
     var params = {
-        'action'   : 'nextquestion',
-        'rtqid'    : activequiz.get('rtqid'),
+        'action': 'nextquestion',
+        'rtqid': activequiz.get('rtqid'),
         'sessionid': activequiz.get('sessionid'),
         'attemptid': activequiz.get('attemptid'),
-        'sesskey'  : activequiz.get('sesskey')
+        'sesskey': activequiz.get('sesskey')
     };
 
-    activequiz.ajax.create_request('/mod/activequiz/quizdata.php', params, function(status, response){
+    activequiz.ajax.create_request('/mod/activequiz/quizdata.php', params, function (status, response) {
 
-        if(status == 500){
+        if (status == 500) {
             var loadingbox = document.getElementById('loadingbox');
             loadingbox.classList.add('hidden');
 
@@ -376,10 +376,10 @@ activequiz.next_question = function(){
             return;
         }
 
-        if(response.lastquestion == 'true'){
+        if (response.lastquestion == 'true') {
             // set a var to signify this is the last question
             activequiz.set('lastquestion', 'true');
-        }else{
+        } else {
             activequiz.set('lastquestion', 'false');
         }
         activequiz.control_buttons(['endquestion', 'toggleresponses', 'togglenotresponded']);
@@ -387,21 +387,21 @@ activequiz.next_question = function(){
     });
 };
 
-activequiz.end_question = function(){
+activequiz.end_question = function () {
 
     // we want to send a request to re-poll the previous question, or the one we're reviewing now
     var params = {
-        'action'   : 'endquestion',
-        'question' : activequiz.get('currentquestion'),
-        'rtqid'    : activequiz.get('rtqid'),
+        'action': 'endquestion',
+        'question': activequiz.get('currentquestion'),
+        'rtqid': activequiz.get('rtqid'),
         'sessionid': activequiz.get('sessionid'),
         'attemptid': activequiz.get('attemptid'),
-        'sesskey'  : activequiz.get('sesskey')
+        'sesskey': activequiz.get('sesskey')
     };
 
-    activequiz.ajax.create_request('/mod/activequiz/quizdata.php', params, function(status, response){
+    activequiz.ajax.create_request('/mod/activequiz/quizdata.php', params, function (status, response) {
 
-        if(status == 500){
+        if (status == 500) {
             var loadingbox = document.getElementById('loadingbox');
             loadingbox.classList.add('hidden');
 
@@ -412,7 +412,7 @@ activequiz.end_question = function(){
         }
 
         // clear the activequiz counter interval
-        if(activequiz.qcounter){
+        if (activequiz.qcounter) {
             clearInterval(activequiz.qcounter);
         }
         var currentquestion = activequiz.get('currentquestion');
@@ -430,21 +430,21 @@ activequiz.end_question = function(){
     });
 };
 
-activequiz.close_session = function(){
+activequiz.close_session = function () {
 
     activequiz.loading(M.util.get_string('closingsession', 'activequiz'), 'show');
 
     var params = {
-        'action'   : 'closesession',
-        'rtqid'    : activequiz.get('rtqid'),
+        'action': 'closesession',
+        'rtqid': activequiz.get('rtqid'),
         'sessionid': activequiz.get('sessionid'),
         'attemptid': activequiz.get('attemptid'),
-        'sesskey'  : activequiz.get('sesskey')
+        'sesskey': activequiz.get('sesskey')
     };
 
-    activequiz.ajax.create_request('/mod/activequiz/quizdata.php', params, function(status, response){
+    activequiz.ajax.create_request('/mod/activequiz/quizdata.php', params, function (status, response) {
 
-        if(status == 500){
+        if (status == 500) {
             var loadingbox = document.getElementById('loadingbox');
             loadingbox.classList.add('hidden');
 
@@ -468,94 +468,94 @@ activequiz.close_session = function(){
 
 };
 
-activequiz.jumpto_question = function(){
+activequiz.jumpto_question = function () {
 
-  if(window.location.hash === '#jumptoquestion-dialog'){
-      // if the dialog is open, assume that we want to go to that the question in the select (as the x/close removes the hash and doesn't re-call this function)
-      // it is only called on "go to question" button click when dialog is open
+    if (window.location.hash === '#jumptoquestion-dialog') {
+        // if the dialog is open, assume that we want to go to that the question in the select (as the x/close removes the hash and doesn't re-call this function)
+        // it is only called on "go to question" button click when dialog is open
 
-      var select = document.getElementById('jtq-selectquestion');
-      var qnum = select.options[select.selectedIndex].value;
+        var select = document.getElementById('jtq-selectquestion');
+        var qnum = select.options[select.selectedIndex].value;
 
-      this.hide_all_questionboxes();
-      this.clear_and_hide_qinfobox();
-      this.control_buttons([]);
+        this.hide_all_questionboxes();
+        this.clear_and_hide_qinfobox();
+        this.control_buttons([]);
 
-      var params = {
-          'action'   : 'gotoquestion',
-          'qnum'     : qnum,
-          'rtqid'    : activequiz.get('rtqid'),
-          'sessionid': activequiz.get('sessionid'),
-          'attemptid': activequiz.get('attemptid'),
-          'sesskey'  : activequiz.get('sesskey')
-      };
+        var params = {
+            'action': 'gotoquestion',
+            'qnum': qnum,
+            'rtqid': activequiz.get('rtqid'),
+            'sessionid': activequiz.get('sessionid'),
+            'attemptid': activequiz.get('attemptid'),
+            'sesskey': activequiz.get('sesskey')
+        };
 
-      activequiz.ajax.create_request('/mod/activequiz/quizdata.php', params, function(status, response){
+        activequiz.ajax.create_request('/mod/activequiz/quizdata.php', params, function (status, response) {
 
-          if(status == 500){
-              var loadingbox = document.getElementById('loadingbox');
-              loadingbox.classList.add('hidden');
+            if (status == 500) {
+                var loadingbox = document.getElementById('loadingbox');
+                loadingbox.classList.add('hidden');
 
-              activequiz.quiz_info('There was an error with your request', true);
+                activequiz.quiz_info('There was an error with your request', true);
 
-              window.alert('there was an error with your request ... ');
-              return;
-          }
+                window.alert('there was an error with your request ... ');
+                return;
+            }
 
-          if(response.lastquestion == 'true'){
-              // set a var to signify this is the last question
-              activequiz.set('lastquestion', 'true');
-          }else{
-              activequiz.set('lastquestion', 'false');
-          }
+            if (response.lastquestion == 'true') {
+                // set a var to signify this is the last question
+                activequiz.set('lastquestion', 'true');
+            } else {
+                activequiz.set('lastquestion', 'false');
+            }
 
-          // reset location.hash to nothing so that the modal dialog disappears
-          window.location.hash = '';
+            // reset location.hash to nothing so that the modal dialog disappears
+            window.location.hash = '';
 
-          // now go to the question
-          activequiz.control_buttons(['endquestion', 'toggleresponses', 'togglenotresponded']);
-          activequiz.waitfor_question(response.questionid, response.questiontime, response.delay, response.nextstarttime);
-      });
+            // now go to the question
+            activequiz.control_buttons(['endquestion', 'toggleresponses', 'togglenotresponded']);
+            activequiz.waitfor_question(response.questionid, response.questiontime, response.delay, response.nextstarttime);
+        });
 
 
-  }else{ // otherwise open the dialog
-      window.location.hash = 'jumptoquestion-dialog';
-  }
+    } else { // otherwise open the dialog
+        window.location.hash = 'jumptoquestion-dialog';
+    }
 
 };
 
-activequiz.show_correct_answer = function(){
+activequiz.show_correct_answer = function () {
 
     var hide = false;
-    if(activequiz.get('showingcorrectanswer') != "undefined"){
-        if(activequiz.get('showingcorrectanswer') == 'true'){
+    if (activequiz.get('showingcorrectanswer') != "undefined") {
+        if (activequiz.get('showingcorrectanswer') == 'true') {
             hide = true;
         }
     }
 
-    if(hide){
+    if (hide) {
         activequiz.quiz_info(null, '');
         // change button text
         var scaBtn = document.getElementById('showcorrectanswer');
         scaBtn.innerHTML = M.util.get_string('show_correct_answer', 'activequiz');
         activequiz.set('showingcorrectanswer', 'false');
         this.reload_results();
-    }else{
+    } else {
         activequiz.loading(M.util.get_string('loading', 'activequiz'), 'show');
 
         var params = {
-            'action'   : 'getrightresponse',
-            'rtqid'    : activequiz.get('rtqid'),
+            'action': 'getrightresponse',
+            'rtqid': activequiz.get('rtqid'),
             'sessionid': activequiz.get('sessionid'),
             'attemptid': activequiz.get('attemptid'),
-            'sesskey'  : activequiz.get('sesskey')
+            'sesskey': activequiz.get('sesskey')
         };
 
         // make sure we end the question (on end_question function call this is re-doing what we just did)
         // but handle_request is also called on ending of the question timer in core.js
-        activequiz.ajax.create_request('/mod/activequiz/quizdata.php', params, function(status, response) {
+        activequiz.ajax.create_request('/mod/activequiz/quizdata.php', params, function (status, response) {
 
-            if(status == 500){
+            if (status == 500) {
                 var loadingbox = document.getElementById('loadingbox');
                 loadingbox.classList.add('hidden');
 
@@ -586,17 +586,17 @@ activequiz.show_correct_answer = function(){
 /**
  * Toggles the "show student responses" variable
  */
-activequiz.toggle_responses = function(){
+activequiz.toggle_responses = function () {
 
     var toggleresponsesBtn = document.getElementById('toggleresponses');
 
-    if(activequiz.get('showstudentresponses') === false){ // if it is false, set it back to true for the student responses to show
+    if (activequiz.get('showstudentresponses') === false) { // if it is false, set it back to true for the student responses to show
 
         toggleresponsesBtn.innerHTML = M.util.get_string('hidestudentresponses', 'activequiz');
 
         activequiz.set('showstudentresponses', true);
         activequiz.gather_current_results();
-    }else{ // if it's set to true, or not set at all, then set it to false when this button is clicked
+    } else { // if it's set to true, or not set at all, then set it to false when this button is clicked
 
         toggleresponsesBtn.innerHTML = M.util.get_string('showstudentresponses', 'activequiz');
         activequiz.set('showstudentresponses', false);
@@ -608,17 +608,17 @@ activequiz.toggle_responses = function(){
 /**
  * Toggles the "show not responded" variable
  */
-activequiz.toggle_notresponded = function(){
+activequiz.toggle_notresponded = function () {
 
     var togglenotrespondedBtn = document.getElementById('togglenotresponded');
 
-    if(activequiz.get('shownotresponded') === false){ // if it is false, set it back to true for the student responses to show
+    if (activequiz.get('shownotresponded') === false) { // if it is false, set it back to true for the student responses to show
 
         togglenotrespondedBtn.innerHTML = M.util.get_string('hidenotresponded', 'activequiz');
 
         activequiz.set('shownotresponded', true);
         activequiz.getnotresponded();
-    }else{ // if it's set to true, or not set at all, then set it to false when this button is clicked
+    } else { // if it's set to true, or not set at all, then set it to false when this button is clicked
 
         togglenotrespondedBtn.innerHTML = M.util.get_string('shownotresponded', 'activequiz');
         activequiz.set('shownotresponded', false);
@@ -627,21 +627,21 @@ activequiz.toggle_notresponded = function(){
 };
 
 
-activequiz.getnotresponded = function(){
+activequiz.getnotresponded = function () {
 
     var params = {
-        'action'   : 'getnotresponded',
-        'rtqid'    : activequiz.get('rtqid'),
+        'action': 'getnotresponded',
+        'rtqid': activequiz.get('rtqid'),
         'sessionid': activequiz.get('sessionid'),
         'attemptid': activequiz.get('attemptid'),
-        'sesskey'  : activequiz.get('sesskey')
+        'sesskey': activequiz.get('sesskey')
     };
 
-    activequiz.ajax.create_request('/mod/activequiz/quizdata.php', params, function(status, response){
+    activequiz.ajax.create_request('/mod/activequiz/quizdata.php', params, function (status, response) {
 
-        if(status == '500'){
+        if (status == '500') {
             activequiz.not_responded_info('there was an error getting not responded students', true);
-        }else if(status == 200){
+        } else if (status == 200) {
             activequiz.not_responded_info(response.notresponded, true);
         }
 
@@ -655,60 +655,60 @@ activequiz.getnotresponded = function(){
  *
  * @param buttons An array of button ids to have enabled in the in quiz controls buttons
  */
-activequiz.control_buttons = function(buttons){
+activequiz.control_buttons = function (buttons) {
 
     var btns = document.getElementById('inquizcontrols').getElementsByClassName('btn');
 
     // loop through the btns array and find if their id is in the requested buttons
-    for(var i=0; i < btns.length; i++){
+    for (var i = 0; i < btns.length; i++) {
         var elemid = btns[i].getAttribute("id");
 
-        if(buttons.indexOf(elemid) === -1){
+        if (buttons.indexOf(elemid) === -1) {
             // it's not in our buttons array
             btns[i].disabled = true;
-        }else{
+        } else {
             btns[i].disabled = false;
         }
     }
 };
 
 
-activequiz.not_responded_info = function(notresponded, clear){
+activequiz.not_responded_info = function (notresponded, clear) {
 
     var notrespondedbox = document.getElementById('notrespondedbox');
 
     // if clear, make the quizinfobox be empty
-    if(clear){
+    if (clear) {
         notrespondedbox.innerHTML = '';
     }
 
-    if(notresponded == null){
+    if (notresponded == null) {
         notresponded = '';
     }
 
-    if(notresponded == ''){
+    if (notresponded == '') {
         return; // return if there is nothing to display
     }
 
-    if(typeof notresponded == 'object'){
+    if (typeof notresponded == 'object') {
         notrespondedbox.appendChild(notresponded);
-    }else{
+    } else {
         notrespondedbox.innerHTML = notresponded;
     }
 
     // if it's hidden remove the hidden class
-    if(notrespondedbox.classList.contains('hidden')){
+    if (notrespondedbox.classList.contains('hidden')) {
         notrespondedbox.classList.remove('hidden');
     }
 };
 
-activequiz.clear_and_hide_notresponded = function(){
+activequiz.clear_and_hide_notresponded = function () {
 
     var notrespondedbox = document.getElementById('notrespondedbox');
 
     notrespondedbox.innerHTML = '';
 
-    if(!notrespondedbox.classList.contains('hidden')){
+    if (!notrespondedbox.classList.contains('hidden')) {
         notrespondedbox.classList.add('hidden');
     }
 

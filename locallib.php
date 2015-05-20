@@ -29,7 +29,7 @@
  * Prints local lib tabs
  *
  * @param \mod_activequiz\activequiz $RTQ Realtime quiz class
- * @param $currenttab
+ * @param                            $currenttab
  *
  * @return string HTML string of the tabs
  */
@@ -39,7 +39,7 @@ function activequiz_view_tabs($RTQ, $currenttab) {
     $inactive = array();
     $activated = array();
 
-    if($RTQ->has_capability('mod/activequiz:attempt')){
+    if ($RTQ->has_capability('mod/activequiz:attempt')) {
         $row[] = new tabobject('view', new moodle_url('/mod/activequiz/view.php', array('id' => $RTQ->getCM()->id)), get_string('view', 'activequiz'));
     }
     if ($RTQ->has_capability('mod/activequiz:editquestions')) {

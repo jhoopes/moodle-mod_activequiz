@@ -26,8 +26,8 @@
  */
 
 require_once("../../config.php");
-require_once($CFG->dirroot.'/mod/activequiz/lib.php');
-require_once($CFG->dirroot.'/mod/activequiz/locallib.php');
+require_once($CFG->dirroot . '/mod/activequiz/lib.php');
+require_once($CFG->dirroot . '/mod/activequiz/locallib.php');
 require_once($CFG->libdir . '/questionlib.php');
 require_once($CFG->dirroot . '/question/editlib.php');
 global $CFG, $DB, $PAGE, $OUTPUT;

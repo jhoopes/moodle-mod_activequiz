@@ -27,8 +27,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright   2014 University of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class viewquizattempt
-{
+class viewquizattempt {
 
     /** @var \mod_activequiz\activequiz Realtime quiz class */
     protected $RTQ;
@@ -39,7 +38,7 @@ class viewquizattempt
     /** @var \moodle_url $pageurl The page url to base other calls on */
     protected $pageurl;
 
-    /** @var array $this->pagevars An array of page options for the page load */
+    /** @var array $this ->pagevars An array of page options for the page load */
     protected $pagevars;
 
     /**
@@ -47,7 +46,7 @@ class viewquizattempt
      *
      * @param string $baseurl the base url of the page
      */
-    public function setup_page($baseurl){
+    public function setup_page($baseurl) {
         global $PAGE, $CFG, $DB;
 
         $this->pagevars = array();
@@ -59,7 +58,7 @@ class viewquizattempt
         $quizid = optional_param('quizid', false, PARAM_INT);
 
         // get necessary records from the DB
-        if($id) {
+        if ($id) {
             $cm = get_coursemodule_from_id('activequiz', $id, 0, false, MUST_EXIST);
             $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
             $quiz = $DB->get_record('activequiz', array('id' => $cm->instance), '*', MUST_EXIST);
@@ -70,7 +69,6 @@ class viewquizattempt
         }
 
         $this->get_parameters(); // get the rest of the parameters and set them in the class
-
 
 
         require_login($course->id, false, $cm);
@@ -92,7 +90,7 @@ class viewquizattempt
         $PAGE->set_pagelayout('popup');
         $PAGE->set_context($this->RTQ->getContext());
         $PAGE->set_title(strip_tags($course->shortname . ': ' . get_string("modulename", "activequiz") . ': ' .
-                                                                                format_string($quiz->name, true)));
+            format_string($quiz->name, true)));
         $PAGE->set_heading($course->fullname);
         $PAGE->set_url($this->pageurl);
     }
@@ -102,10 +100,10 @@ class viewquizattempt
      * handle the attempt action
      *
      */
-    public function handle_request(){
+    public function handle_request() {
         global $OUTPUT, $USER;
 
-        switch($this->pagevars['action']){
+        switch ($this->pagevars['action']) {
 
             case 'savecomment':
                 // save a comment for a particular attempt
@@ -116,13 +114,13 @@ class viewquizattempt
                 $success = $attempt->process_comment($this->pagevars['slot'], $this->RTQ);
 
 
-                if($success){
+                if ($success) {
                     // if successful recalculate the grade for the attempt's userid as the grader can update grades on the questions
                     $this->RTQ->get_grader()->save_user_grades($attempt->userid);
 
                     $this->RTQ->get_renderer()->setMessage('success', 'Successfully saved comment/grade');
                     $this->RTQ->get_renderer()->render_attempt($attempt, $session);
-                }else{
+                } else {
                     $this->RTQ->get_renderer()->setMessage('error', 'Couldn\'t save comment/grade');
                     $this->RTQ->get_renderer()->render_attempt($attempt, $session);
                 }
@@ -137,39 +135,39 @@ class viewquizattempt
 
                 $hascapability = true;
 
-                if(!$this->RTQ->has_capability('mod/activequiz:seeresponses')){
+                if (!$this->RTQ->has_capability('mod/activequiz:seeresponses')) {
 
                     // if the current user doesn't have the ability to see responses (or all responses)
                     // check that the current one is theirs
 
-                    if($attempt->userid != $USER->id){ // first check if attempts userid and current userid match
+                    if ($attempt->userid != $USER->id) { // first check if attempts userid and current userid match
 
                         // if not, next check group settings if we're in group mode
-                        if($this->RTQ->group_mode()){
+                        if ($this->RTQ->group_mode()) {
 
                             // get user groups and check if the forgroupid is in one of them
                             $usergroups = $this->RTQ->get_groupmanager()->get_user_groups();
                             $usergroupids = array_keys($usergroups);
-                            if(!in_array($attempt->forgroupid, $usergroupids)){
+                            if (!in_array($attempt->forgroupid, $usergroupids)) {
                                 $this->RTQ->get_renderer()->render_popup_error(get_string('invalidattemptaccess', 'activequiz'));
                                 $hascapability = false;
                             }
-                        }else{
+                        } else {
                             $this->RTQ->get_renderer()->render_popup_error(get_string('invalidattemptaccess', 'activequiz'));
                             $hascapability = false;
                         }
                     }
                 }
 
-                if($hascapability){
+                if ($hascapability) {
 
                     $params = array(
                         'relateduserid' => $attempt->userid,
-                        'objectid' => $attempt->id,
-                        'context' => $this->RTQ->getContext(),
-                        'other' => array(
+                        'objectid'      => $attempt->id,
+                        'context'       => $this->RTQ->getContext(),
+                        'other'         => array(
                             'activequizid' => $this->RTQ->getRTQ()->id,
-                            'sessionid' => $attempt->sessionid
+                            'sessionid'    => $attempt->sessionid
                         )
                     );
 
@@ -189,7 +187,7 @@ class viewquizattempt
      * Gets other parameters and adding them to the pagevars array
      *
      */
-    public function get_parameters(){
+    public function get_parameters() {
 
         $this->pagevars['action'] = optional_param('action', '', PARAM_ALPHAEXT);
         $this->pagevars['attemptid'] = required_param('attemptid', PARAM_INT);

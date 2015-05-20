@@ -22,6 +22,7 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 require_once($CFG->libdir . '/tablelib.php');
+
 /**
  * Table lib subclass for showing a session attempts
  *
@@ -30,7 +31,7 @@ require_once($CFG->libdir . '/tablelib.php');
  * @copyright   2014 University of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class sessionattempts extends \flexible_table implements \renderable{
+class sessionattempts extends \flexible_table implements \renderable {
 
 
     /** @var \mod_activequiz\activequiz $rtq */
@@ -42,12 +43,12 @@ class sessionattempts extends \flexible_table implements \renderable{
     /**
      * Contstruct this table class
      *
-     * @param string $uniqueid The unique id for the table
-     * @param \mod_activequiz\activequiz $rtq
+     * @param string                             $uniqueid The unique id for the table
+     * @param \mod_activequiz\activequiz         $rtq
      * @param \mod_activequiz\activequiz_session $session
-     * @param \moodle_url $pageurl
+     * @param \moodle_url                        $pageurl
      */
-    public function __construct($uniqueid, $rtq, $session, $pageurl){
+    public function __construct($uniqueid, $rtq, $session, $pageurl) {
 
         $this->rtq = $rtq;
         $this->session = $session;
@@ -61,24 +62,24 @@ class sessionattempts extends \flexible_table implements \renderable{
      * Setup the table, i.e. table headers
      *
      */
-    public function setup(){
+    public function setup() {
         // Set var for is downloading
         $isdownloading = $this->is_downloading();
 
         $this->set_attribute('cellspacing', '0');
 
         $columns = array(
-            'fullname'    => get_string('name'),
-            'attempt'     => get_string('attemptno', 'activequiz'),
-            'preview'     => get_string('preview'),
-            'timestart'   => get_string('startedon', 'activequiz'),
-            'timefinish'  => get_string('timecompleted','activequiz'),
-            'timemodified'=> get_string('timemodified', 'activequiz'),
-            'status'      => get_string('status'),
-            'attemptgrade'=> get_string('attempt_grade', 'activequiz'),
+            'fullname'     => get_string('name'),
+            'attempt'      => get_string('attemptno', 'activequiz'),
+            'preview'      => get_string('preview'),
+            'timestart'    => get_string('startedon', 'activequiz'),
+            'timefinish'   => get_string('timecompleted', 'activequiz'),
+            'timemodified' => get_string('timemodified', 'activequiz'),
+            'status'       => get_string('status'),
+            'attemptgrade' => get_string('attempt_grade', 'activequiz'),
         );
 
-        if(!$isdownloading){
+        if (!$isdownloading) {
             $columns['edit'] = get_string('response_attempt_controls', 'activequiz');
         }
 
@@ -105,32 +106,32 @@ class sessionattempts extends \flexible_table implements \renderable{
      * Sets the data to the table
      *
      */
-    public function set_data(){
+    public function set_data() {
         global $CFG, $OUTPUT;
 
         $download = $this->is_downloading();
         $tabledata = $this->get_data();
 
-        foreach($tabledata as $item){
+        foreach ($tabledata as $item) {
 
             $row = array();
 
-            if (!$download){
+            if (!$download) {
 
-                if($this->rtq->group_mode()){
+                if ($this->rtq->group_mode()) {
 
-                    $userlink = $item->groupname . ' (<a href="'.$CFG->wwwroot.'/user/view.php?id='.$item->userid.
-                        '&amp;course='.$this->rtq->getCourse()->id.'">'.$item->takenby.'</a>)';
+                    $userlink = $item->groupname . ' (<a href="' . $CFG->wwwroot . '/user/view.php?id=' . $item->userid .
+                        '&amp;course=' . $this->rtq->getCourse()->id . '">' . $item->takenby . '</a>)';
 
-                }else{
-                    $userlink = '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$item->userid.
-                        '&amp;course='.$this->rtq->getCourse()->id.'">'.$item->username.'</a>';
+                } else {
+                    $userlink = '<a href="' . $CFG->wwwroot . '/user/view.php?id=' . $item->userid .
+                        '&amp;course=' . $this->rtq->getCourse()->id . '">' . $item->username . '</a>';
                 }
                 $row[] = $userlink;
             } else {
-                if($this->rtq->group_mode()){
+                if ($this->rtq->group_mode()) {
                     $row [] = $item->groupname . ' (' . $item->takenby . ')';
-                }else{
+                } else {
                     $row[] = $item->username;
                 }
             }
@@ -138,17 +139,17 @@ class sessionattempts extends \flexible_table implements \renderable{
             $row[] = $item->attemptno;
             $row[] = $item->preview;
             $row[] = date('m-d-Y H:i:s', $item->timestart);
-            if(!empty($item->timefinish)){
+            if (!empty($item->timefinish)) {
                 $row[] = date('m-d-Y H:i:s', $item->timefinish);
-            }else{
+            } else {
                 $row[] = ' - ';
             }
             $row[] = date('m-d-Y H:i:s', $item->timemodified);
             $row[] = $item->status;
 
-            if(is_null($item->grade)){
+            if (is_null($item->grade)) {
                 $totalmark = ' - ';
-            }else{
+            } else {
                 $totalmark = $item->grade . ' / ' . $item->totalgrade;
             }
             $row[] = $totalmark;
@@ -164,7 +165,7 @@ class sessionattempts extends \flexible_table implements \renderable{
             $viewattemptpix = new \pix_icon('t/preview', 'preview');
             $popup = new \popup_action('click', $viewattempturl, 'viewquizattempt');
 
-            $actionlink = new \action_link($viewattempturl, '', $popup, array('target'=>'_blank'), $viewattemptpix);
+            $actionlink = new \action_link($viewattempturl, '', $popup, array('target' => '_blank'), $viewattemptpix);
 
             $row[] = $OUTPUT->render($actionlink);
 
@@ -179,7 +180,7 @@ class sessionattempts extends \flexible_table implements \renderable{
      *
      * @return array $data The array of data to show
      */
-    protected function get_data(){
+    protected function get_data() {
         global $DB;
 
 
@@ -187,33 +188,33 @@ class sessionattempts extends \flexible_table implements \renderable{
 
         $attempts = $this->session->getall_attempts(true);
         $userids = array();
-        foreach($attempts as $attempt){
+        foreach ($attempts as $attempt) {
             $userids[] = $attempt->userid;
         }
 
         // get user records to get the full name
-        if(!empty($userids)){
+        if (!empty($userids)) {
             list($useridsql, $params) = $DB->get_in_or_equal($userids);
             $sql = 'SELECT * FROM {user} WHERE id ' . $useridsql;
             $userrecs = $DB->get_records_sql($sql, $params);
-        }else{
+        } else {
             $userrecs = array();
         }
 
-        foreach($attempts as $attempt){
+        foreach ($attempts as $attempt) {
             /** @var \mod_activequiz\activequiz_attempt $attempt */
             $ditem = new \stdClass();
             $ditem->attemptid = $attempt->id;
             $ditem->sessionid = $attempt->sessionid;
-            if($this->rtq->group_mode()){
+            if ($this->rtq->group_mode()) {
 
                 $ditem->userid = $attempt->userid;
-                $ditem->takenby = fullname($userrecs[$attempt->userid]);
+                $ditem->takenby = fullname($userrecs[ $attempt->userid ]);
                 $ditem->groupname = $this->rtq->get_groupmanager()->get_group_name($attempt->forgroupid);
 
-            }else{
+            } else {
                 $ditem->userid = $attempt->userid;
-                $userrec = $userrecs[$attempt->userid];
+                $userrec = $userrecs[ $attempt->userid ];
                 $ditem->username = fullname($userrec);
             }
 
@@ -225,7 +226,7 @@ class sessionattempts extends \flexible_table implements \renderable{
             $ditem->timemodified = $attempt->timemodified;
             $ditem->grade = number_format($this->rtq->get_grader()->calculate_attempt_grade($attempt), 2);
             $ditem->totalgrade = $this->rtq->getRTQ()->scale;
-            $data[$attempt->id] = $ditem;
+            $data[ $attempt->id ] = $ditem;
         }
 
         return $data;

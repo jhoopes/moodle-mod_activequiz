@@ -57,7 +57,7 @@ class backup_activequiz_activity_structure_step extends backup_questions_activit
 
         $grades = new backup_nested_element('grades');
         $grade = new backup_nested_element('grade', array('id'), array(
-             'userid', 'gradeval', 'timemodified'
+            'userid', 'gradeval', 'timemodified'
         ));
 
         $sessions = new backup_nested_element('sessions');
@@ -102,7 +102,7 @@ class backup_activequiz_activity_structure_step extends backup_questions_activit
         $question->set_source_table('activequiz_questions', array('activequizid' => backup::VAR_PARENTID));
 
         // if user info backup grades table
-        if($userinfo){
+        if ($userinfo) {
             $grade->set_source_table('activequiz_grades', array('activequizid' => backup::VAR_PARENTID));
             $session->set_source_table('activequiz_sessions', array('activequizid' => backup::VAR_PARENTID));
             $attempt->set_source_table('activequiz_attempts', array('sessionid' => backup::VAR_PARENTID));

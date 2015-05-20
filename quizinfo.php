@@ -38,31 +38,31 @@ $sessionid = required_param('sessionid', PARAM_INT);
 $jsonlib = new \mod_activequiz\utils\jsonlib();
 
 
-if(!$session = $DB->get_record('activequiz_sessions', array('id'=>$sessionid))){
+if (!$session = $DB->get_record('activequiz_sessions', array('id' => $sessionid))) {
     $jsonlib->send_error('invalid session');
 }
 
 // if we have a session determine the response
-if($session->sessionopen == 0){
+if ($session->sessionopen == 0) {
 
     $jsonlib->set('status', 'sessionclosed');
     $jsonlib->send_response();
 
-}else if(empty($session->currentquestion)){
+} else if (empty($session->currentquestion)) {
     // send a status of quiz not running
     $jsonlib->set('status', 'notrunning');
     $jsonlib->send_response();
-}else if($session->status == 'reviewing') {
+} else if ($session->status == 'reviewing') {
 
     $jsonlib->set('status', 'reviewing');
     $jsonlib->send_response();
 
-}else if($session->status == 'endquestion'){
+} else if ($session->status == 'endquestion') {
 
     $jsonlib->set('status', 'endquestion');
     $jsonlib->send_response();
 
-}else {
+} else {
     // otherwise send a response of the current question with the next start time
     $jsonlib->set('status', 'running');
     $jsonlib->set('currentquestion', $session->currentquestion);

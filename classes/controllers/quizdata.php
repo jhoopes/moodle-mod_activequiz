@@ -27,8 +27,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright   2014 University of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class quizdata
-{
+class quizdata {
 
     /** @var \mod_activequiz\activequiz Realtime quiz class */
     protected $RTQ;
@@ -45,10 +44,10 @@ class quizdata
     /** @var \moodle_url $pageurl The page url to base other calls on */
     protected $pageurl;
 
-    /** @var array $this->pagevars An array of page options for the page load */
+    /** @var array $this ->pagevars An array of page options for the page load */
     protected $pagevars = array();
 
-    /** @var \mod_activequiz\utils\jsonlib $jsonlib The jsonlib for returning json  */
+    /** @var \mod_activequiz\utils\jsonlib $jsonlib The jsonlib for returning json */
     protected $jsonlib;
 
     /**
@@ -56,7 +55,7 @@ class quizdata
      *
      * @throws \moodle_exception throws exception on error in setting up initial vars when debugging
      */
-    public function setup_page(){
+    public function setup_page() {
         global $DB, $PAGE;
 
         // no page url as this is just a callback
@@ -66,7 +65,7 @@ class quizdata
 
         // first check if this is a jserror, if so, log it and end execution so we're not wasting time
         $jserror = optional_param('jserror', '', PARAM_ALPHANUMEXT);
-        if(!empty($jserror)){
+        if (!empty($jserror)) {
             // log the js error on the apache error logs
             error_log($jserror);
 
@@ -76,7 +75,7 @@ class quizdata
         }
 
         // use try/catch in order to catch errors and not display them on a javascript callback
-        try{
+        try {
             $rtqid = required_param('rtqid', PARAM_INT);
             $sessionid = required_param('sessionid', PARAM_INT);
             $attemptid = required_param('attemptid', PARAM_INT);
@@ -87,17 +86,17 @@ class quizdata
             $quiz = $DB->get_record('activequiz', array('id' => $rtqid), '*', MUST_EXIST);
             $course = $DB->get_record('course', array('id' => $quiz->course), '*', MUST_EXIST);
             $cm = get_coursemodule_from_instance('activequiz', $quiz->id, $course->id, false, MUST_EXIST);
-            $session = $DB->get_record('activequiz_sessions', array('id'=> $sessionid), '*', MUST_EXIST);
-        }catch(\moodle_exception $e){
-            if(debugging()){ // if debugging throw error as normal
+            $session = $DB->get_record('activequiz_sessions', array('id' => $sessionid), '*', MUST_EXIST);
+        } catch(\moodle_exception $e) {
+            if (debugging()) { // if debugging throw error as normal
                 throw new $e;
-            }else{
+            } else {
                 $this->jsonlib->send_error('invalid request');
             }
             exit(); // stop execution
         }
         // check to make sure asked for session is open
-        if((int)$session->sessionopen !== 1){
+        if ((int)$session->sessionopen !== 1) {
             $this->jsonlib->send_error('invalidsession');
         }
 
@@ -117,12 +116,11 @@ class quizdata
         // get and validate the attempt
         $attempt = $this->session->get_user_attempt($attemptid);
 
-        if($attempt->getStatus() != 'inprogress'){
+        if ($attempt->getStatus() != 'inprogress') {
             $this->jsonlib->send_error('invalidattempt');
         }
         // if the attempt validates, make it the open attempt on the session
         $this->session->set_open_attempt($attempt);
-
 
 
     }
@@ -131,15 +129,15 @@ class quizdata
      * Handles the incoming request
      *
      */
-    public function handle_request(){
+    public function handle_request() {
         global $USER;
 
-        switch($this->action){
+        switch ($this->action) {
             case 'startquiz':
 
                 // only allow instructors to perform this action
-                if($this->RTQ->is_instructor()){
-                    $firstquestion =$this->session->start_quiz();
+                if ($this->RTQ->is_instructor()) {
+                    $firstquestion = $this->session->start_quiz();
 
                     $this->jsonlib->set('status', 'startedquiz');
                     $this->jsonlib->set('questionid', $firstquestion->get_slot());
@@ -147,16 +145,16 @@ class quizdata
 
 
                     $this->jsonlib->set('notime', $firstquestion->getNoTime());
-                    if($firstquestion->getNoTime() == 0){
+                    if ($firstquestion->getNoTime() == 0) {
                         // this question has a time limit
 
-                        if($firstquestion->getQuestionTime() == 0){
+                        if ($firstquestion->getQuestionTime() == 0) {
                             $questiontime = $this->RTQ->getRTQ()->defaultquestiontime;
-                        }else{
+                        } else {
                             $questiontime = $firstquestion->getQuestionTime();
                         }
                         $this->jsonlib->set('questiontime', $questiontime);
-                    }else{
+                    } else {
                         $this->jsonlib->set('questiontime', 0);
                     }
                     $delay = $this->session->get_session()->nextstarttime - time();
@@ -166,7 +164,7 @@ class quizdata
                     $this->jsonlib->set('lastquestion', ($qattempt->lastquestion ? 'true' : 'false'));
                     $this->jsonlib->send_response();
 
-                }else{
+                } else {
                     $this->jsonlib->send_error('invalidaction');
                 }
 
@@ -176,7 +174,7 @@ class quizdata
                 // check if we're working on the current question for the session
                 $currentquestion = $this->session->get_session()->currentquestion;
                 $jscurrentquestion = required_param('questionid', PARAM_INT);
-                if($currentquestion != $jscurrentquestion){
+                if ($currentquestion != $jscurrentquestion) {
                     $this->jsonlib->send_error('invalid question');
                 }
 
@@ -184,11 +182,11 @@ class quizdata
                 $qattempt = $this->session->get_open_attempt();
 
                 // make sure the attempt belongs to the current user
-                if($qattempt->userid != $USER->id){
+                if ($qattempt->userid != $USER->id) {
                     $this->jsonlib->send_error('invalid user');
                 }
 
-                if($qattempt->save_question()){
+                if ($qattempt->save_question()) {
 
                     $this->jsonlib->set('status', 'success');
                     $this->jsonlib->set('feedback', $qattempt->get_question_feedback());
@@ -197,10 +195,10 @@ class quizdata
                     // the sequence check on the question form.  this allows the question to be resubmitted again
                     list($seqname, $seqvalue) = $qattempt->get_sequence_check($this->session->get_session()->currentqnum);
 
-                    $this->jsonlib->set('seqcheckname',$seqname);
+                    $this->jsonlib->set('seqcheckname', $seqname);
                     $this->jsonlib->set('seqcheckval', $seqvalue);
                     $this->jsonlib->send_response();
-                }else{
+                } else {
                     $this->jsonlib->send_error('unable to save question');
                 }
 
@@ -208,7 +206,7 @@ class quizdata
             case 'getresults':
 
                 // only allow instructors to perform this action
-                if($this->RTQ->is_instructor()){
+                if ($this->RTQ->is_instructor()) {
 
                     $this->session->set_status('reviewing');
                     // get the current question results
@@ -219,30 +217,30 @@ class quizdata
                     $this->jsonlib->set('qtype', $this->RTQ->get_questionmanager()->get_questiontype_byqnum($this->session->get_session()->currentqnum));
                     $this->jsonlib->send_response();
 
-                }else{
+                } else {
                     $this->jsonlib->send_error('invalidaction');
                 }
 
                 break;
             case 'getcurrentresults': // case to get the results of the question currently going
 
-                    if($this->RTQ->is_instructor()){
-                        $responses = $this->session->get_question_results();
+                if ($this->RTQ->is_instructor()) {
+                    $responses = $this->session->get_question_results();
 
-                        $this->jsonlib->set('responses', $responses);
-                        $this->jsonlib->set('status', 'success');
-                        $this->jsonlib->set('qtype', $this->RTQ->get_questionmanager()->get_questiontype_byqnum($this->session->get_session()->currentqnum));
-                        $this->jsonlib->send_response();
+                    $this->jsonlib->set('responses', $responses);
+                    $this->jsonlib->set('status', 'success');
+                    $this->jsonlib->set('qtype', $this->RTQ->get_questionmanager()->get_questiontype_byqnum($this->session->get_session()->currentqnum));
+                    $this->jsonlib->send_response();
 
-                    }else{
-                        $this->jsonlib->send_error('invalidaction');
-                    }
+                } else {
+                    $this->jsonlib->send_error('invalidaction');
+                }
 
                 break;
             case 'getnotresponded':
 
                 // only allow instructors to perform this action
-                if($this->RTQ->is_instructor()){
+                if ($this->RTQ->is_instructor()) {
 
                     $notrespondedHTML = $this->session->get_not_responded();
 
@@ -250,7 +248,7 @@ class quizdata
                     $this->jsonlib->set('status', 'success');
                     $this->jsonlib->send_response();
 
-                }else{
+                } else {
                     $this->jsonlib->send_error('invalidaction');
                 }
 
@@ -258,7 +256,7 @@ class quizdata
             case 'nextquestion':
 
                 // only allow instructors to perform this action
-                if($this->RTQ->is_instructor()){
+                if ($this->RTQ->is_instructor()) {
 
                     $nextquestion = $this->session->next_question();
                     $this->session->set_status('running');
@@ -269,16 +267,16 @@ class quizdata
                     $this->jsonlib->set('nextstarttime', $this->session->get_session()->nextstarttime);
 
                     $this->jsonlib->set('notime', $nextquestion->getNoTime());
-                    if($nextquestion->getNoTime() == 0){
+                    if ($nextquestion->getNoTime() == 0) {
                         // this question has a time limit
 
-                        if($nextquestion->getQuestionTime() == 0){
+                        if ($nextquestion->getQuestionTime() == 0) {
                             $questiontime = $this->RTQ->getRTQ()->defaultquestiontime;
-                        }else{
+                        } else {
                             $questiontime = $nextquestion->getQuestionTime();
                         }
                         $this->jsonlib->set('questiontime', $questiontime);
-                    }else{
+                    } else {
                         $this->jsonlib->set('questiontime', 0);
                     }
                     $delay = $this->session->get_session()->nextstarttime - time();
@@ -286,14 +284,14 @@ class quizdata
 
                     $this->jsonlib->send_response();
 
-                }else{
+                } else {
                     $this->jsonlib->send_error('invalidaction');
                 }
 
                 break;
             case 'repollquestion':
 
-                if($this->RTQ->is_instructor()){
+                if ($this->RTQ->is_instructor()) {
 
                     $repollquestion = $this->session->repoll_question();
                     $this->session->set_status('running');
@@ -304,16 +302,16 @@ class quizdata
                     $this->jsonlib->set('nextstarttime', $this->session->get_session()->nextstarttime);
 
                     $this->jsonlib->set('notime', $repollquestion->getNoTime());
-                    if($repollquestion->getNoTime() == 0){
+                    if ($repollquestion->getNoTime() == 0) {
                         // this question has a time limit
 
-                        if($repollquestion->getQuestionTime() == 0){
+                        if ($repollquestion->getQuestionTime() == 0) {
                             $questiontime = $this->RTQ->getRTQ()->defaultquestiontime;
-                        }else{
+                        } else {
                             $questiontime = $repollquestion->getQuestionTime();
                         }
                         $this->jsonlib->set('questiontime', $questiontime);
-                    }else{
+                    } else {
                         $this->jsonlib->set('questiontime', 0);
                     }
                     $delay = $this->session->get_session()->nextstarttime - time();
@@ -321,21 +319,21 @@ class quizdata
 
                     $this->jsonlib->send_response();
 
-                }else{
+                } else {
                     $this->jsonlib->send_error('invalidaction');
                 }
 
                 break;
             case 'gotoquestion':
 
-                if($this->RTQ->is_instructor()){
+                if ($this->RTQ->is_instructor()) {
 
                     $qnum = optional_param('qnum', '', PARAM_INT);
 
-                    if(empty($qnum)){
+                    if (empty($qnum)) {
                         $this->jsonlib->send_error('invalid question number');
                     }
-                    if(!$question = $this->session->goto_question($qnum)){
+                    if (!$question = $this->session->goto_question($qnum)) {
                         $this->jsonlib->send_error('invalid question number');
                     }
                     $this->session->set_status('running');
@@ -346,16 +344,16 @@ class quizdata
                     $this->jsonlib->set('nextstarttime', $this->session->get_session()->nextstarttime);
 
                     $this->jsonlib->set('notime', $question->getNoTime());
-                    if($question->getNoTime() == 0){
+                    if ($question->getNoTime() == 0) {
                         // this question has a time limit
 
-                        if($question->getQuestionTime() == 0){
+                        if ($question->getQuestionTime() == 0) {
                             $questiontime = $this->RTQ->getRTQ()->defaultquestiontime;
-                        }else{
+                        } else {
                             $questiontime = $question->getQuestionTime();
                         }
                         $this->jsonlib->set('questiontime', $questiontime);
-                    }else{
+                    } else {
                         $this->jsonlib->set('questiontime', 0);
                     }
                     $delay = $this->session->get_session()->nextstarttime - time();
@@ -363,7 +361,7 @@ class quizdata
 
                     $this->jsonlib->send_response();
 
-                }else{
+                } else {
                     $this->jsonlib->send_error('invalidaction');
                 }
 
@@ -371,20 +369,20 @@ class quizdata
             case 'endquestion':
                 // update the session status to say that we're ending the question (this will in turn update students
 
-                if($this->RTQ->is_instructor()){
+                if ($this->RTQ->is_instructor()) {
 
                     $this->session->end_question();
                     $this->jsonlib->set('status', 'success');
                     $this->jsonlib->send_response();
 
-                }else{
+                } else {
                     $this->jsonlib->send_error('invalidaction');
                 }
 
                 break;
             case 'getrightresponse':
 
-                if($this->RTQ->is_instructor()){
+                if ($this->RTQ->is_instructor()) {
 
                     $rightresponsequestion = $this->session->get_question_right_response();
 
@@ -392,7 +390,7 @@ class quizdata
                     $this->jsonlib->set('status', 'success');
                     $this->jsonlib->send_response();
 
-                }else{
+                } else {
                     $this->jsonlib->send_error('invalidaction');
                 }
 
@@ -400,19 +398,19 @@ class quizdata
             case 'closesession':
 
                 // only allow instructors to perform this action
-                if($this->RTQ->is_instructor()){
+                if ($this->RTQ->is_instructor()) {
 
                     $this->session->end_session();
 
                     // next calculate and save grades
 
-                    if(!$this->RTQ->get_grader()->save_all_grades()){
+                    if (!$this->RTQ->get_grader()->save_all_grades()) {
                         $this->jsonlib->send_error('can\'t save grades');
                     }
 
                     $this->jsonlib->set('status', 'success');
                     $this->jsonlib->send_response();
-                }else{
+                } else {
                     $this->jsonlib->send_error('invalidaction');
                 }
 

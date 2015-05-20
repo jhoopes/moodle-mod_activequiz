@@ -28,8 +28,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright   2014 University of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class activequiz_attempt
-{
+class activequiz_attempt {
 
     /** Constants for the status of the attempt */
     const NOTSTARTED = 0;
@@ -43,13 +42,13 @@ class activequiz_attempt
     /** @var questionmanager $questionmanager $the queestion manager for the class */
     protected $questionmanager;
 
-    /** @var \question_usage_by_activity $quba the question usage by activity for this attempt  */
+    /** @var \question_usage_by_activity $quba the question usage by activity for this attempt */
     protected $quba;
 
-    /** @var int $qnum The question number count when rendering questions*/
+    /** @var int $qnum The question number count when rendering questions */
     protected $qnum;
 
-    /** @var bool $lastquestion  Signifies if this is the last question
+    /** @var bool $lastquestion Signifies if this is the last question
      *                              Is used during quiz callbacks to help with instructor control
      */
     public $lastquestion;
@@ -60,7 +59,7 @@ class activequiz_attempt
     /** @var string $response summary HTML fragment of the response summary for the current question */
     public $responsesummary;
 
-    /** @var  array $slotsbyquestionid array of slots keyed by the questionid that they match to*/
+    /** @var  array $slotsbyquestionid array of slots keyed by the questionid that they match to */
     protected $slotsbyquestionid;
 
 
@@ -71,10 +70,11 @@ class activequiz_attempt
      * @param \mod_activequiz\activequiz_attempt $b
      * @return int
      */
-    public static function sortby_timefinish($a, $b){
+    public static function sortby_timefinish($a, $b) {
         if ($a->timefinish == $b->timefinish) {
             return 0;
         }
+
         return ($a->timefinish < $b->timefinish) ? -1 : 1;
     }
 
@@ -85,18 +85,17 @@ class activequiz_attempt
      * @param \stdClass
      * @param \context_module $context
      */
-    public function __construct($questionmanager, $dbattempt = NULL, $context = NULL)
-    {
+    public function __construct($questionmanager, $dbattempt = NULL, $context = NULL) {
         $this->questionmanager = $questionmanager;
         $this->context = $context;
 
         // if empty create new attempt
-        if(empty($dbattempt)) {
+        if (empty($dbattempt)) {
             $this->attempt = new \stdClass();
 
             // create a new quba since we're creating a new attempt
             $this->quba = \question_engine::make_questions_usage_by_activity('mod_activequiz',
-                                                                $this->questionmanager->getRTQ()->getContext());
+                $this->questionmanager->getRTQ()->getContext());
             $this->quba->set_preferred_behaviour('immediatefeedback');
 
             $attemptlayout = $this->questionmanager->add_questions_to_quba($this->quba);
@@ -117,7 +116,7 @@ class activequiz_attempt
      *
      * @return null|\stdClass
      */
-    public function get_attempt(){
+    public function get_attempt() {
         return $this->attempt;
     }
 
@@ -127,9 +126,9 @@ class activequiz_attempt
      * @return string
      * @throws \Exception throws exception upon an undefined status
      */
-    public function getStatus(){
+    public function getStatus() {
 
-        switch($this->attempt->status){
+        switch ($this->attempt->status) {
             case self::NOTSTARTED:
                 return 'notstarted';
             case self::INPROGRESS:
@@ -151,9 +150,9 @@ class activequiz_attempt
      *
      * @return bool
      */
-    public function setStatus($status){
+    public function setStatus($status) {
 
-        switch($status){
+        switch ($status) {
             case 'notstarted':
                 $this->attempt->status = self::NOTSTARTED;
                 break;
@@ -170,6 +169,7 @@ class activequiz_attempt
                 return false;
                 break;
         }
+
         // save the attempt
         return $this->save();
     }
@@ -179,23 +179,24 @@ class activequiz_attempt
      *
      * @return \question_usage_by_activity
      */
-    public function get_quba(){
+    public function get_quba() {
         return $this->quba;
     }
 
     /**
      * Uses the quba object to render the slotid's question
      *
-     * @param int $slotid
-     * @param bool $review Whether or not we're reviewing the attempt
+     * @param int              $slotid
+     * @param bool             $review Whether or not we're reviewing the attempt
      * @param string|\stdClass $reviewoptions Can be string for overall actions like "edit" or an object of review options
      * @return string the HTML fragment for the question
      */
-    public function render_question($slotid, $review = false, $reviewoptions = ''){
+    public function render_question($slotid, $review = false, $reviewoptions = '') {
         $displayoptions = $this->get_display_options($review, $reviewoptions);
 
         $questionnum = $this->get_question_number();
         $this->add_question_number();
+
         return $this->quba->render_question($slotid, $displayoptions, $questionnum);
     }
 
@@ -204,13 +205,13 @@ class activequiz_attempt
      *
      * @return \question_display_options
      */
-    protected function get_display_options($review = false, $reviewoptions = ''){
+    protected function get_display_options($review = false, $reviewoptions = '') {
         $options = new \question_display_options();
         $options->flags = \question_display_options::HIDDEN;
         $options->context = $this->context;
 
         // if we're reviewing set up display options for review
-        if($review){
+        if ($review) {
 
             // default display options for review
             $options->readonly = true;
@@ -218,7 +219,7 @@ class activequiz_attempt
             $options->hide_all_feedback();
 
             // special case for "edit" reviewoptions value
-            if($reviewoptions === 'edit'){
+            if ($reviewoptions === 'edit') {
                 $options->correctness = \question_display_options::VISIBLE;
                 $options->marks = \question_display_options::MARK_AND_MAX;
                 $options->feedback = \question_display_options::VISIBLE;
@@ -227,23 +228,23 @@ class activequiz_attempt
                 $options->generalfeedback = \question_display_options::VISIBLE;
                 $options->rightanswer = \question_display_options::VISIBLE;
                 $options->history = \question_display_options::VISIBLE;
-            }else if($reviewoptions instanceof \stdClass){
+            } else if ($reviewoptions instanceof \stdClass) {
 
-                foreach(\mod_activequiz\activequiz::$reviewfields as $field => $notused){
-                    if($reviewoptions->$field == 1){
-                        if($field == 'specificfeedback'){
+                foreach (\mod_activequiz\activequiz::$reviewfields as $field => $notused) {
+                    if ($reviewoptions->$field == 1) {
+                        if ($field == 'specificfeedback') {
                             $field = 'feedback';
                         }
-                        if($field == 'marks'){
+                        if ($field == 'marks') {
                             $options->$field = \question_display_options::MARK_AND_MAX;
-                        }else{
+                        } else {
                             $options->$field = \question_display_options::VISIBLE;
                         }
 
                     }
                 }
             }
-        }else{ // otherwise default options for during quiz
+        } else { // otherwise default options for during quiz
 
             $options->rightanswer = \question_display_options::HIDDEN;
             $options->numpartscorrect = \question_display_options::HIDDEN;
@@ -259,12 +260,13 @@ class activequiz_attempt
      *
      * @return int
      */
-    public function get_question_number(){
-        if(is_null($this->qnum)){
+    public function get_question_number() {
+        if (is_null($this->qnum)) {
             $this->qnum = 1;
-            return (string) 1;
-        }else{
-            return (string) $this->qnum;
+
+            return (string)1;
+        } else {
+            return (string)$this->qnum;
         }
     }
 
@@ -272,7 +274,7 @@ class activequiz_attempt
      * Adds 1 to the current qnum, effectively going to the next question
      *
      */
-    protected function add_question_number(){
+    protected function add_question_number() {
         $this->qnum = $this->qnum + 1;
     }
 
@@ -282,7 +284,7 @@ class activequiz_attempt
      *
      * @return array
      */
-    public function getSlots(){
+    public function getSlots() {
         return explode(',', $this->attempt->qubalayout);
     }
 
@@ -293,20 +295,20 @@ class activequiz_attempt
      *
      * @return int
      */
-    public function get_question_slot(\mod_activequiz\activequiz_question $q){
+    public function get_question_slot(\mod_activequiz\activequiz_question $q) {
 
         // build if not available
-        if(empty($this->slotsbyquestionid) || !is_array($this->slotsbyquestionid)){
+        if (empty($this->slotsbyquestionid) || !is_array($this->slotsbyquestionid)) {
             // build n array of slots keyed by the questionid they match to
             $slotsbyquestionid = array();
 
-            foreach($this->getSlots() as $slot){
-                $slotsbyquestionid[$this->quba->get_question($slot)->id] = $slot;
+            foreach ($this->getSlots() as $slot) {
+                $slotsbyquestionid[ $this->quba->get_question($slot)->id ] = $slot;
             }
             $this->slotsbyquestionid = $slotsbyquestionid;
         }
 
-        return (!empty($this->slotsbyquestionid[$q->getQuestion()->id]) ? $this->slotsbyquestionid[$q->getQuestion()->id] : false);
+        return (!empty($this->slotsbyquestionid[ $q->getQuestion()->id ]) ? $this->slotsbyquestionid[ $q->getQuestion()->id ] : false);
     }
 
     /**
@@ -316,29 +318,29 @@ class activequiz_attempt
      *
      * @return \mod_activequiz\activequiz_question
      */
-    public function get_question_by_slot($askedslot){
+    public function get_question_by_slot($askedslot) {
 
         // build if not available
-        if(empty($this->slotsbyquestionid) || !is_array($this->slotsbyquestionid)){
+        if (empty($this->slotsbyquestionid) || !is_array($this->slotsbyquestionid)) {
             // build n array of slots keyed by the questionid they match to
             $slotsbyquestionid = array();
 
-            foreach($this->getSlots() as $slot){
-                $slotsbyquestionid[$this->quba->get_question($slot)->id] = $slot;
+            foreach ($this->getSlots() as $slot) {
+                $slotsbyquestionid[ $this->quba->get_question($slot)->id ] = $slot;
             }
             $this->slotsbyquestionid = $slotsbyquestionid;
         }
 
         $qid = array_search($askedslot, $this->slotsbyquestionid);
 
-        if(empty($qid)){
+        if (empty($qid)) {
             return false;
         }
 
-        foreach($this->get_questions() as $question){
+        foreach ($this->get_questions() as $question) {
 
             /** @var \mod_activequiz\activequiz_question $question */
-            if($question->getQuestion()->id == $qid){
+            if ($question->getQuestion()->id == $qid) {
                 return $question;
             }
         }
@@ -351,7 +353,7 @@ class activequiz_attempt
      *
      * @return array
      */
-    public function get_questions(){
+    public function get_questions() {
 
         return $this->questionmanager->get_questions();
     }
@@ -363,7 +365,7 @@ class activequiz_attempt
      *
      * @return array (array of sequence check name, and then the value
      */
-    public function get_sequence_check($slot){
+    public function get_sequence_check($slot) {
 
         $qa = $this->quba->get_question_attempt($slot);
 
@@ -378,7 +380,7 @@ class activequiz_attempt
      *
      * @return string
      */
-    public function get_html_head_contributions(){
+    public function get_html_head_contributions() {
         $result = '';
 
         // get the slots ids from the quba layout
@@ -399,7 +401,7 @@ class activequiz_attempt
      *
      * @return bool
      */
-    public function save(){
+    public function save() {
         global $DB;
 
         // first save the question usage by activity object
@@ -409,22 +411,24 @@ class activequiz_attempt
         // this is here because for new usages there is no id until we save it
         $this->attempt->questionengid = $this->quba->get_id();
         $this->attempt->timemodified = time();
-        if(isset($this->attempt->id)){ // update the record
-            try{
+        if (isset($this->attempt->id)) { // update the record
+            try {
                 $DB->update_record('activequiz_attempts', $this->attempt);
-            }catch(\Exception $e){
+            } catch(\Exception $e) {
                 error_log($e->getMessage());
+
                 return false; // return false on failure
             }
-        }else{
+        } else {
             // insert new record
-            try{
+            try {
                 $newid = $DB->insert_record('activequiz_attempts', $this->attempt);
                 $this->attempt->id = $newid;
-            }catch(\Exception $e){
+            } catch(\Exception $e) {
                 return false; // return false on failure
             }
         }
+
         return true; // return true if we get here
     }
 
@@ -433,7 +437,7 @@ class activequiz_attempt
      *
      * @return bool
      */
-    public function save_question(){
+    public function save_question() {
         global $DB;
 
         $timenow = time();
@@ -452,23 +456,24 @@ class activequiz_attempt
     /**
      * Process a comment for a particular question on an attempt
      *
-     * @param int $slot
+     * @param int                        $slot
      * @param \mod_activequiz\activequiz $rtq
      *
      * @return bool
      */
-    public function process_comment($slot = null, $rtq){
+    public function process_comment($slot = null, $rtq) {
         global $DB;
 
         // if there is no slot return false
-        if(empty($slot)){
+        if (empty($slot)) {
             return false;
         }
 
         // Process any data that was submitted.
         if (data_submitted() && confirm_sesskey()) {
             if (optional_param('submit', false, PARAM_BOOL) &&
-                                    \question_engine::is_manual_grade_in_range($this->attempt->questionengid, $slot)) {
+                \question_engine::is_manual_grade_in_range($this->attempt->questionengid, $slot)
+            ) {
                 $transaction = $DB->start_delegated_transaction();
                 $this->quba->process_all_actions(time());
                 $this->save();
@@ -478,11 +483,11 @@ class activequiz_attempt
                 $params = array(
                     'objectid' => $this->quba->get_question($slot)->id,
                     'courseid' => $rtq->getCourse()->id,
-                    'context' => $rtq->getContext(),
-                    'other' => array(
-                        'rtqid' => $rtq->getRTQ()->id,
+                    'context'  => $rtq->getContext(),
+                    'other'    => array(
+                        'rtqid'     => $rtq->getRTQ()->id,
                         'attemptid' => $this->attempt->id,
-                        'slot' => $slot,
+                        'slot'      => $slot,
                         'sessionid' => $this->attempt->sessionid
                     )
                 );
@@ -505,10 +510,10 @@ class activequiz_attempt
      * @param int $slot The slot for which we want to get feedback
      * @return string HTML fragment of the feedback
      */
-    public function get_question_feedback($slot = -1){
+    public function get_question_feedback($slot = -1) {
         global $PAGE;
 
-        if($slot === -1){
+        if ($slot === -1) {
             // attempt to get it from the slots param sent back from a question processing
             $slots = required_param('slots', PARAM_ALPHANUMEXT);
 
@@ -531,7 +536,7 @@ class activequiz_attempt
      *
      * @param bool $is whether or not it is
      */
-    public function islastquestion($is = false){
+    public function islastquestion($is = false) {
         $this->lastquestion = $is;
     }
 
@@ -543,7 +548,7 @@ class activequiz_attempt
      * @param int $slot
      *
      */
-    public function summarize_response($slot){
+    public function summarize_response($slot) {
         global $PAGE;
 
         $questionattempt = $this->quba->get_question_attempt($slot);
@@ -561,7 +566,7 @@ class activequiz_attempt
 
         $this->responsesummary = $qrenderer->formulation_and_controls($questionattempt, $qoptions);
 
-        if($rtqQuestion->getShowHistory()){
+        if ($rtqQuestion->getShowHistory()) {
             $this->responsesummary .= $this->question_attempt_history($questionattempt);
         }
 
@@ -576,7 +581,7 @@ class activequiz_attempt
      * @param int $slot
      * @return number|null
      */
-    public function get_slot_mark($slot){
+    public function get_slot_mark($slot) {
         return $this->quba->get_question_mark($slot);
     }
 
@@ -586,7 +591,7 @@ class activequiz_attempt
      * @param int $slot
      * @return number
      */
-    public function get_slot_max_mark($slot){
+    public function get_slot_max_mark($slot) {
         return $this->quba->get_question_max_mark($slot);
     }
 
@@ -595,10 +600,9 @@ class activequiz_attempt
      *
      * @return number
      */
-    public function get_total_mark(){
+    public function get_total_mark() {
         return $this->quba->get_total_mark();
     }
-
 
 
     /**
@@ -608,15 +612,15 @@ class activequiz_attempt
      *
      * @return bool Weather or not it was successful
      */
-    public function close_attempt($rtq){
+    public function close_attempt($rtq) {
         $this->quba->finish_all_questions(time());
         $this->attempt->status = self::FINISHED;
         $this->attempt->timefinish = time();
         $this->save();
 
         $params = array(
-            'objectid' => $this->attempt->id,
-            'context'  => $rtq->getContext(),
+            'objectid'      => $this->attempt->id,
+            'context'       => $rtq->getContext(),
             'relateduserid' => $this->attempt->userid
         );
         $event = \mod_activequiz\event\attempt_ended::create($params);
@@ -635,10 +639,10 @@ class activequiz_attempt
      * @param \question_attempt $qa
      * @return string
      */
-    public function question_attempt_history($qa){
+    public function question_attempt_history($qa) {
 
         $table = new \html_table();
-        $table->head  = array (
+        $table->head = array(
             get_string('step', 'question'),
             get_string('time'),
             get_string('action', 'question'),
@@ -679,9 +683,9 @@ class activequiz_attempt
      * @return mixed
      * @throws \Exception Throws exception when no property is found
      */
-    public function __get($prop){
+    public function __get($prop) {
 
-        if(property_exists($this->attempt, $prop)){
+        if (property_exists($this->attempt, $prop)) {
             return $this->attempt->$prop;
         }
 
@@ -695,19 +699,18 @@ class activequiz_attempt
      * magic setter method for this class
      *
      * @param string $prop
-     * @param mixed $value
+     * @param mixed  $value
      *
      * @return activequiz_attempt
      */
-    public function __set($prop, $value){
-        if(is_null($this->attempt)){
+    public function __set($prop, $value) {
+        if (is_null($this->attempt)) {
             $this->attempt = new \stdClass();
         }
         $this->attempt->$prop = $value;
+
         return $this;
     }
-
-
 
 
 }
