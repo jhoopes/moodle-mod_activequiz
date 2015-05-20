@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -85,7 +84,7 @@ class activequiz_attempt {
      * @param \stdClass
      * @param \context_module $context
      */
-    public function __construct($questionmanager, $dbattempt = NULL, $context = NULL) {
+    public function __construct($questionmanager, $dbattempt = null, $context = null) {
         $this->questionmanager = $questionmanager;
         $this->context = $context;
 

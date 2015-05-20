@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -59,7 +58,7 @@ class quizdata {
         global $DB, $PAGE;
 
         // no page url as this is just a callback
-        $this->pageurl = NULL;
+        $this->pageurl = null;
         $this->jsonlib = new \mod_activequiz\utils\jsonlib();
 
 

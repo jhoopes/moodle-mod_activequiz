@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -78,7 +77,7 @@ class restore_activequiz_activity_structure_step extends restore_questions_activ
         $data->timemodified = $this->apply_date_offset($data->timemodified);
         $data->grouping = $this->get_mappingid('grouping', $data->grouping);
         $this->oldquestionorder = $data->questionorder;
-        $data->questionorder = NULL; // set to null,  This will be updated in after_execute
+        $data->questionorder = null; // set to null,  This will be updated in after_execute
 
         $newitemid = $DB->insert_record('activequiz', $data);
         $this->apply_activity_instance($newitemid);
@@ -142,7 +141,6 @@ class restore_activequiz_activity_structure_step extends restore_questions_activ
         $data->timefinish = $this->apply_date_offset($data->timefinish);
         $data->timemodified = $this->apply_date_offset($data->timemodified);
 
-
         $this->currentrtqattempt = clone($data);
     }
 
@@ -156,7 +154,6 @@ class restore_activequiz_activity_structure_step extends restore_questions_activ
         $data->questionengid = $newusageid;
 
         $newitemid = $DB->insert_record('activequiz_attempts', $data);
-
 
         $this->set_mapping('activequiz_attempt', $oldid, $newitemid, false);
     }

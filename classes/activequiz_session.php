@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -224,10 +223,10 @@ class activequiz_session {
         // clear and reset properties on the session
         $this->session->status = 'notrunning';
         $this->session->sessionopen = 0;
-        $this->session->currentquestion = NULL;
-        $this->session->currentqnum = NULL;
-        $this->session->currentquestiontime = NULL;
-        $this->session->nextstarttime = NULL;
+        $this->session->currentquestion = null;
+        $this->session->currentqnum = null;
+        $this->session->currentquestiontime = null;
+        $this->session->nextstarttime = null;
 
         // get all attempts and close them
         $attempts = $this->getall_open_attempts(true);
@@ -459,14 +458,14 @@ class activequiz_session {
             $attempt->preview = $preview;
             $attempt->timemodified = time();
             $attempt->timestart = time();
-            $attempt->responded = NULL;
-            $attempt->timefinish = NULL;
+            $attempt->responded = null;
+            $attempt->timefinish = null;
 
             // add forgroupid to attempt if we're in group mode
             if ($this->rtq->group_mode()) {
                 $attempt->forgroupid = $group;
             } else {
-                $attempt->forgroupid = NULL;
+                $attempt->forgroupid = null;
             }
 
             $attempt->save();
