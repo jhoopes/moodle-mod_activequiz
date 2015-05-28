@@ -37,6 +37,7 @@ student gave.  Students will also be able to view their attempts based on the di
 Changes:
 --------
 
+2015-05-27 - Some small minor changes from Moodle.org for plugin reviewing.  Also a large number of code style updates.
 2015-04-30 - Updates required to make the edit page work with the new question engine display classes.
              Drag and drop of questions was also added.
 2015-01-05 - Re-written module for integration with the question engine, with many other updates.
