@@ -36,9 +36,25 @@ $sessionid = required_param('sessionid', PARAM_INT);
 // get JSONlib to return json response
 $jsonlib = new \mod_activequiz\utils\jsonlib();
 
-
+// First determine if we get a session.
 if (!$session = $DB->get_record('activequiz_sessions', array('id' => $sessionid))) {
     $jsonlib->send_error('invalid session');
+}
+
+// Next we need to get the active quiz object and course module object to make sure a student can log in
+// for the session asked for
+if(!$activequiz = $DB->get_record('activequiz', array('id'=> $session->activequizid))){
+    $jsonlib->send_error('invalid request');
+}else{
+    // place within try/catch in order to catch errors/redirects and just display invalid request.
+    try{
+        $course = $DB->get_record('course', array('id' => $activequiz->course), '*', MUST_EXIST);
+        $cm = get_coursemodule_from_instance('activequiz', $activequiz->id, $course->id, false, MUST_EXIST);
+
+        require_login($course->id, false, $cm, false, true);
+    }catch(Exception $e){
+        $jsonlib->send_error('invalid request');
+    }
 }
 
 // if we have a session determine the response

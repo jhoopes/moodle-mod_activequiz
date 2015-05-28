@@ -86,6 +86,8 @@ class quizdata {
             $course = $DB->get_record('course', array('id' => $quiz->course), '*', MUST_EXIST);
             $cm = get_coursemodule_from_instance('activequiz', $quiz->id, $course->id, false, MUST_EXIST);
             $session = $DB->get_record('activequiz_sessions', array('id' => $sessionid), '*', MUST_EXIST);
+
+            require_login($course->id, false, $cm, false, true);
         } catch(\moodle_exception $e) {
             if (debugging()) { // if debugging throw error as normal
                 throw new $e;
