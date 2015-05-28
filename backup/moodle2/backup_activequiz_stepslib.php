@@ -80,7 +80,7 @@ class backup_activequiz_activity_structure_step extends backup_questions_activit
             'activequizid', 'sessionid', 'groupid', 'userid'
         ));
 
-        // Build the tree
+        // Build the tree.
         $activequiz->add_child($questions);
         $questions->add_child($question);
 
@@ -96,11 +96,11 @@ class backup_activequiz_activity_structure_step extends backup_questions_activit
         $attempt->add_child($groupattendances);
         $groupattendances->add_child($groupattendance);
 
-        // Define sources
+        // Define sources.
         $activequiz->set_source_table('activequiz', array('id' => backup::VAR_ACTIVITYID));
         $question->set_source_table('activequiz_questions', array('activequizid' => backup::VAR_PARENTID));
 
-        // if user info backup grades table
+        // If user info backup grades table.
         if ($userinfo) {
             $grade->set_source_table('activequiz_grades', array('activequizid' => backup::VAR_PARENTID));
             $session->set_source_table('activequiz_sessions', array('activequizid' => backup::VAR_PARENTID));
@@ -108,10 +108,10 @@ class backup_activequiz_activity_structure_step extends backup_questions_activit
             $groupattendance->set_source_table('activequiz_groupattendance', array('attemptid' => backup::VAR_PARENTID));
         }
 
-        // Define source alias
+        // Define source alias.
         $grade->set_source_alias('grade', 'gradeval');
 
-        // Define id annotations
+        // Define id annotations.
         $activequiz->annotate_ids('grouping', 'grouping');
         $grade->annotate_ids('user', 'userid');
         $attempt->annotate_ids('user', 'userid');
@@ -120,10 +120,10 @@ class backup_activequiz_activity_structure_step extends backup_questions_activit
         $groupattendance->annotate_ids('group', 'groupid');
         $groupattendance->annotate_ids('user', 'userid');
 
-        // Define file annotations
-        $activequiz->annotate_files('mod_activequiz', 'intro', null); // This file area hasn't itemid
+        // Define file annotations.
+        $activequiz->annotate_files('mod_activequiz', 'intro', null); // This file area hasn't itemid.
 
-        // Return the root element (activequiz), wrapped into standard activity structure
+        // Return the root element (activequiz), wrapped into standard activity structure.
         return $this->prepare_activity_structure($activequiz);
     }
 
