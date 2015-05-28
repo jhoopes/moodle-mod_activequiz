@@ -18,8 +18,6 @@ namespace mod_activequiz\controllers;
 
 defined('MOODLE_INTERNAL') || die();
 
-global $CFG;
-
 /**
  * view controller class for the view page
  *

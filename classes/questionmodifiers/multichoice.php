@@ -18,7 +18,6 @@ namespace mod_activequiz\questionmodifiers;
 
 defined('MOODLE_INTERNAL') || die();
 
-global $CFG;
 require_once($CFG->dirroot . '/question/engine/lib.php');
 
 /**

@@ -28,7 +28,6 @@
 define('AJAX_SCRIPT', true);
 require_once('../../config.php');
 require_sesskey();
-global $DB;
 
 // if they've passed the sesskey information grab the session info
 $sessionid = required_param('sessionid', PARAM_INT);
