@@ -41,6 +41,13 @@ $string['responses'] = 'View responses';
 $string['attempts'] = 'Attempts';
 $string['overallgrade'] = 'Overall grade: {$a->overallgrade} / {$a->scale}';
 
+$string['activequiz:addinstance'] = 'Add an instance of activequiz';
+$string['activequiz:attempt'] = 'Attempt an active quiz';
+$string['activequiz:control'] = 'Control an active quiz. (Usually for instructors only)';
+$string['activequiz:editquestions'] = 'Edit questions for an active quiz.';
+$string['activequiz:seeresponses'] = 'View other student responses to grade them';
+$string['activequiz:viewownattempts'] = 'Allows students to see their own attempts at a quiz';
+
 $string['invalidattemptaccess'] = 'You do not have permission to access this attempt';
 
 // event strings
@@ -70,8 +77,7 @@ $string['gradesettings'] = 'Grade settings';
 $string['scale'] = 'Maximum Grade';
 $string['scale_help'] = 'This value (integer) will scale whatever points that are received on the quiz to this value.';
 $string['grademethod'] = 'Session grading method';
-$string['grademethod_help'] = 'This is the method that is used when grading.' .
-    'This method is for figuring out the grading with multiple sessions in the same activequiz';
+$string['grademethod_help'] = 'This is the method that is used when grading.  This method is for figuring out the grading with multiple sessions in the same activequiz';
 $string['assessed'] = 'Assessed';
 $string['assessed_help'] = 'Check this box to make your quiz assessed';
 
