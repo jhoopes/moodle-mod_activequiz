@@ -303,7 +303,7 @@ class mod_activequiz_renderer extends plugin_renderer_base {
             $instructions = get_string('studentquizinst', 'activequiz');
         }
         $loadingpix = $this->output->pix_icon('i/loading', 'loading...');
-        $output .= html_writer::start_div('loading', array('id' => 'loadingbox'));
+        $output .= html_writer::start_div('activequizloading', array('id' => 'loadingbox'));
         $output .= html_writer::tag('p', get_string('loading', 'activequiz'), array('id' => 'loadingtext'));
         $output .= $loadingpix;
         $output .= html_writer::end_div();
@@ -497,7 +497,7 @@ class mod_activequiz_renderer extends plugin_renderer_base {
 
         $output .= html_writer::start_div();
 
-        $output .= html_writer::tag('a', 'X', array('class' => 'close', 'href' => '#'));
+        $output .= html_writer::tag('a', 'X', array('class' => 'jumptoquestionclose', 'href' => '#'));
         $output .= html_writer::tag('h2', get_string('jumptoquestion', 'activequiz'));
         $output .= html_writer::tag('p', get_string('jumptoquesetioninstructions', 'activequiz'));
 

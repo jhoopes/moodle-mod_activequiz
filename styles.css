@@ -105,7 +105,7 @@
     }
 }
 
-.loading {
+.activequizloading {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
@@ -236,7 +236,7 @@
     background: -o-linear-gradient(#fff, #999);
 }
 
-.close {
+.jumptoquestionclose {
     background: #606061;
     color: #FFFFFF;
     line-height: 25px;
@@ -255,7 +255,7 @@
     box-shadow: 1px 1px 3px #000;
 }
 
-.close:hover {
+.jumptoquestioncloseclose:hover {
     background: #00d9ff;
 }
 
