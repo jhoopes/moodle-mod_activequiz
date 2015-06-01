@@ -27,6 +27,6 @@ $module->version = 2015030900;  // The current module version (Date: YYYYMMDDXX)
 $module->requires = 2013111800;  // Moodle 2.6 (or above)
 $module->cron = 0;           // Period for cron to check this module (secs)
 $module->component = 'mod_activequiz';
-$module->maturity = MATURITY_BETA;
-$module->release = '3.4.1 (Build: 2015030900)';
+$module->maturity = MATURITY_STABLE;
+$module->release = '3.4.2 (Build: 2015030900)';
 
