@@ -16,7 +16,7 @@
 /**
  * @package   mod_activequiz
  * @author    John Hoopes <hoopes@wisc.edu>
- * @copyright 2014 University of Wisconsin - Madison
+ * @copyright 2014 Unviersity of Wisconsin - Madison
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -198,7 +198,6 @@ activequiz.handle_question = function (questionid) {
         });
 
         setTimeout(activequiz.gather_results, 3500);
-        setTimeout(activequiz.getnotresponded, 3500);
 
     });
 };

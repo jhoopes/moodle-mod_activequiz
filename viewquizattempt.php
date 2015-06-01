@@ -21,11 +21,12 @@
  *
  * @package   mod_activequiz
  * @author    John Hoopes <hoopes@wisc.edu>
- * @copyright 2014 University of Wisconsin - Madison
+ * @copyright 2014 Unviersity of Wisconsin - Madison
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require_once("../../config.php");
+global $CFG, $DB, $OUTPUT, $PAGE;
 
 require_once($CFG->libdir . '/questionlib.php');
 require_once($CFG->dirroot . '/mod/activequiz/locallib.php');

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
  */
 class viewquizattempt {
 
-    /** @var \mod_activequiz\activequiz Realtime quiz class */
+    /** @var \mod_activequiz\activequiz Active quiz class */
     protected $RTQ;
 
     /** @var \mod_activequiz\activequiz_session $session The session class for the activequiz view */
@@ -72,6 +73,7 @@ class viewquizattempt {
 
         require_login($course->id, false, $cm);
 
+        add_to_log($course->id, "activequiz", "view attempt", "responses.php?id=$cm->id", "$quiz->id");
 
         $this->pageurl->param('id', $cm->id);
         $this->pageurl->param('quizid', $quiz->id);
@@ -79,6 +81,7 @@ class viewquizattempt {
         $this->pagevars['pageurl'] = $this->pageurl;
 
         $this->RTQ = new \mod_activequiz\activequiz($cm, $course, $quiz, $this->pagevars);
+        //$this->RTQ->require_capability('mod/activequiz:seeresponses');
 
         $this->RTQ->require_capability('mod/activequiz:viewownattempts');
 
@@ -88,8 +91,7 @@ class viewquizattempt {
 
         $PAGE->set_pagelayout('popup');
         $PAGE->set_context($this->RTQ->getContext());
-        $PAGE->set_title(strip_tags($course->shortname . ': ' . get_string("modulename", "activequiz") . ': ' .
-            format_string($quiz->name, true)));
+        $PAGE->set_title(strip_tags($course->shortname . ': ' . get_string("modulename", "activequiz") . ': ' . format_string($quiz->name, true)));
         $PAGE->set_heading($course->fullname);
         $PAGE->set_url($this->pageurl);
     }
@@ -110,7 +112,7 @@ class viewquizattempt {
                 $session = $this->RTQ->get_session($this->pagevars['sessionid']);
                 $attempt = $session->get_user_attempt($this->pagevars['attemptid']);
 
-                $success = $attempt->process_comment($this->pagevars['slot'], $this->RTQ);
+                $success = $attempt->process_comment($this->pagevars['slot']);
 
 
                 if ($success) {
@@ -159,21 +161,6 @@ class viewquizattempt {
                 }
 
                 if ($hascapability) {
-
-                    $params = array(
-                        'relateduserid' => $attempt->userid,
-                        'objectid'      => $attempt->id,
-                        'context'       => $this->RTQ->getContext(),
-                        'other'         => array(
-                            'activequizid' => $this->RTQ->getRTQ()->id,
-                            'sessionid'    => $attempt->sessionid
-                        )
-                    );
-
-                    $event = \mod_activequiz\event\attempt_viewed::create($params);
-                    $event->add_record_snapshot('activequiz_attempts', $attempt->get_attempt());
-                    $event->trigger();
-
                     $this->RTQ->get_renderer()->render_attempt($attempt, $session);
                 }
 

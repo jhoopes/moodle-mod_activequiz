@@ -16,7 +16,7 @@
 /**
  * @package   mod_activequiz
  * @author    John Hoopes <hoopes@wisc.edu>
- * @copyright 2014 University of Wisconsin - Madison
+ * @copyright 2014 Unviersity of Wisconsin - Madison
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -110,12 +110,7 @@ activequiz.ajax = {
                         response = '';
                     }
                 } else {
-                    try {
-                        response = JSON.parse(this.responseText);
-                    } catch (Error) {
-                        response = this.responseText;
-                    }
-
+                    response = JSON.parse(this.responseText);
                 }
                 callback(status, response); // call the callback with the status and response
             }

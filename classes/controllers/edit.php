@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,7 +19,7 @@ namespace mod_activequiz\controllers;
 
 defined('MOODLE_INTERNAL') || die();
 
-
+global $CFG;
 require_once($CFG->libdir . '/questionlib.php');
 require_once($CFG->dirroot . '/question/editlib.php');
 
@@ -31,7 +32,7 @@ require_once($CFG->dirroot . '/question/editlib.php');
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class edit {
-    /** @var \mod_activequiz\activequiz Realtime quiz class */
+    /** @var \mod_activequiz\activequiz Active quiz class */
     protected $RTQ;
 
     /** @var string $action The specified action to take */
@@ -64,7 +65,7 @@ class edit {
         $pageurl = new \moodle_url($baseurl);
         $pageurl->remove_all_params();
 
-        $id = optional_param('cmid', false, PARAM_INT);
+        $id = optional_param('id', false, PARAM_INT);
         $quizid = optional_param('quizid', false, PARAM_INT);
 
         // get necessary records from the DB
@@ -85,19 +86,93 @@ class edit {
             $this->context = \context_module::instance($cm->id);
         }
 
+
+        //TODO: not sure this is really needed anymore as we are now using the question engine with its own capabilities
+        //$this->RTQ->require_capability('mod/activequiz:editquestions');
+
+
         // set up question lib
 
-        list($this->pageurl, $this->contexts, $cmid, $cm, $quiz, $this->pagevars) =
-            question_edit_setup('editq', '/mod/activequiz/edit.php', true);
+        if (!empty($this->context)) {
+            $this->contexts = new \question_edit_contexts($this->context);
+            //$contexts->require_one_edit_tab_cap($edittab);
+        } else {
+            $this->contexts = null;
+        }
+
+        $this->pagevars['qpage'] = optional_param('qpage', -1, PARAM_INT);
+        //pass 'cat' from page to page and when 'category' comes from a drop down menu
+        //then we also reset the qpage so we go to page 1 of
+        //a new cat.
+        $this->pagevars['cat'] = optional_param('cat', 0, PARAM_SEQUENCE); // if empty will be set up later
+        if ($category = optional_param('category', 0, PARAM_SEQUENCE)) {
+            if ($this->pagevars['cat'] != $category) { // is this a move to a new category?
+                $this->pagevars['cat'] = $category;
+                $this->pagevars['qpage'] = 0;
+            }
+        }
+        if ($this->pagevars['cat']) {
+            $pageurl->param('cat', $this->pagevars['cat']);
+        }
+        if (strpos($baseurl, '/question/') === 0) {
+            \navigation_node::override_active_url($pageurl);
+        }
+
+        if ($this->pagevars['qpage'] > -1) {
+            $pageurl->param('qpage', $this->pagevars['qpage']);
+        } else {
+            $this->pagevars['qpage'] = 0;
+        }
+
+        $this->pagevars['qperpage'] = question_get_display_preference(
+            'qperpage', DEFAULT_QUESTIONS_PER_PAGE, PARAM_INT, $pageurl);
+
+        for ($i = 1; $i <= \question_bank_view::MAX_SORTS; $i++) {
+            $param = 'qbs' . $i;
+            if (!$sort = optional_param($param, '', PARAM_ALPHAEXT)) {
+                break;
+            }
+            $pageurl->param($param, $sort);
+        }
+
+        $defaultcategory = question_make_default_categories($this->contexts->all());
+
+        $contextlistarr = array();
+        foreach ($this->contexts->having_one_edit_tab_cap('editq') as $context) {
+            $contextlistarr[] = "'$context->id'";
+        }
+        $contextlist = join($contextlistarr, ' ,');
+        if (!empty($this->pagevars['cat'])) {
+            $catparts = explode(',', $this->pagevars['cat']);
+            if (!$catparts[0] || (false !== array_search($catparts[1], $contextlistarr)) ||
+                !$DB->count_records_select("question_categories", "id = ? AND contextid = ?", array($catparts[0], $catparts[1]))
+            ) {
+                print_error('invalidcategory', 'question');
+            }
+        } else {
+            $category = $defaultcategory;
+            $this->pagevars['cat'] = "$category->id,$category->contextid";
+        }
+
+        // Display options. //TODO: determine if we want to use these or just keep it simple for now
+        /*$this->pagevars['recurse']    = question_get_display_preference('recurse',    1, PARAM_BOOL, $pageurl);
+        $this->pagevars['showhidden'] = question_get_display_preference('showhidden', 0, PARAM_BOOL, $pageurl);
+        $this->pagevars['qbshowtext'] = question_get_display_preference('qbshowtext', 0, PARAM_BOOL, $pageurl);*/
 
 
-        $PAGE->set_url($this->pageurl);
-        $this->pagevars['pageurl'] = $this->pageurl;
+        // set up page information
+        $pageurl->params(array('id' => $cm->id, 'quiz' => $quiz->id));
+        $this->pagevars['pageurl'] = $pageurl;
+        require_login($course->id, false, $cm);
+        $PAGE->set_url($pageurl);
+        $this->pageurl = $pageurl;
+        $PAGE->set_pagelayout('incourse');
 
         $PAGE->set_title(strip_tags($course->shortname . ': ' . get_string("modulename", "activequiz")
             . ': ' . format_string($quiz->name, true)));
         $PAGE->set_heading($course->fullname);
 
+        add_to_log($course->id, "activequiz", "edit: $this->action", "edit.php?quizid=$quizid");
 
         // setup classes needed for the edit page
         $this->RTQ = new \mod_activequiz\activequiz($cm, $course, $quiz, $this->pagevars);
@@ -114,25 +189,6 @@ class edit {
 
 
         switch ($this->action) {
-            case 'dragdrop': // this is a javascript callack case for the drag and drop of questions using ajax
-                $jsonlib = new \mod_activequiz\utils\jsonlib();
-
-                $questionorder = optional_param('questionorder', '', PARAM_RAW);
-
-                if ($questionorder === '') {
-                    $jsonlib->send_error('invalid request');
-                }
-
-                $questionorder = explode(',', $questionorder);
-
-                if ($this->RTQ->get_questionmanager()->set_full_order($questionorder) === true) {
-                    $jsonlib->set('success', 'true');
-                    $jsonlib->send_response();
-                } else {
-                    $jsonlib->send_error('unable to re-sort questions');
-                }
-
-                break;
             case 'moveup':
 
                 $questionid = required_param('questionid', PARAM_INT);

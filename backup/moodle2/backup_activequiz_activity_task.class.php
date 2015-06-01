@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -45,7 +46,7 @@ class backup_activequiz_activity_task extends backup_activity_task {
      */
     protected function define_my_steps() {
         // Generate the activequiz.xml file containing all information
-        // and annotating used questions.
+        // and annotating used questions
         $this->add_step(new backup_activequiz_activity_structure_step('activequiz_structure', 'activequiz.xml'));
 
         // Note: Following  steps must be present
@@ -74,11 +75,11 @@ class backup_activequiz_activity_task extends backup_activity_task {
 
         $base = preg_quote($CFG->wwwroot, "/");
 
-        // Link to the list of activequizs.
+        // Link to the list of activequizs
         $search = "/(" . $base . "\/mod\/activequiz\/index.php\?id\=)([0-9]+)/";
         $content = preg_replace($search, '$@ACTIVEQUIZINDEX*$2@$', $content);
 
-        // Link to activequiz view by moduleid.
+        // Link to activequiz view by moduleid
         $search = "/(" . $base . "\/mod\/activequiz\/view.php\?id\=)([0-9]+)/";
         $content = preg_replace($search, '$@ACTIVEQUIZVIEWBYID*$2@$', $content);
 

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,14 +20,14 @@ namespace mod_activequiz\qbanktypes;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Custom action column for adding a question to the realtime quiz from the question bank view
+ * Custom action column for adding a question to the Active quiz from the question bank view
  *
  * @package     mod_activequiz
  * @author      John Hoopes <hoopes@wisc.edu>
  * @copyright   2014 University of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class question_bank_add_to_rtq_action_column extends \core_question\bank\action_column_base {
+class question_bank_add_to_rtq_action_column extends \question_bank_action_column_base {
 
     protected $stradd;
 

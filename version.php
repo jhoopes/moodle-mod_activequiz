@@ -17,16 +17,16 @@
 /**
  * @package   mod_activequiz
  * @author    John Hoopes <hoopes@wisc.edu>
- * @copyright 2014 University of Wisconsin - Madison
+ * @copyright 2014 Unviersity of Wisconsin - Madison
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2015052700;  // The current module version (Date: YYYYMMDDXX)
-$plugin->requires = 2014111003;  // Moodle 2.8 (or above)
-$plugin->cron = 0;           // Period for cron to check this module (secs)
-$plugin->component = 'mod_activequiz';
-$plugin->maturity = MATURITY_STABLE;
-$plugin->release = '3.5.1 (Build: 2015052700)';
+$module->version = 2015030900;  // The current module version (Date: YYYYMMDDXX)
+$module->requires = 2013111800;  // Moodle 2.6 (or above)
+$module->cron = 0;           // Period for cron to check this module (secs)
+$module->component = 'mod_activequiz';
+$module->maturity = MATURITY_BETA;
+$module->release = '3.4.1 (Build: 2015030900)';
 

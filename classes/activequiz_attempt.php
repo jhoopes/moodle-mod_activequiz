@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -32,7 +33,7 @@ class activequiz_attempt {
     /** Constants for the status of the attempt */
     const NOTSTARTED = 0;
     const INPROGRESS = 10;
-    const ABANDONED = 20;
+    CONST ABANDONED = 20;
     const FINISHED = 30;
 
     /** @var \stdClass The attempt record */
@@ -93,8 +94,7 @@ class activequiz_attempt {
             $this->attempt = new \stdClass();
 
             // create a new quba since we're creating a new attempt
-            $this->quba = \question_engine::make_questions_usage_by_activity('mod_activequiz',
-                $this->questionmanager->getRTQ()->getContext());
+            $this->quba = \question_engine::make_questions_usage_by_activity('mod_activequiz', $this->questionmanager->getRTQ()->getContext());
             $this->quba->set_preferred_behaviour('immediatefeedback');
 
             $attemptlayout = $this->questionmanager->add_questions_to_quba($this->quba);
@@ -108,15 +108,6 @@ class activequiz_attempt {
 
         }
 
-    }
-
-    /**
-     * Get the attempt stdClass object
-     *
-     * @return null|\stdClass
-     */
-    public function get_attempt() {
-        return $this->attempt;
     }
 
     /**
@@ -421,8 +412,8 @@ class activequiz_attempt {
         } else {
             // insert new record
             try {
-                $newid = $DB->insert_record('activequiz_attempts', $this->attempt);
-                $this->attempt->id = $newid;
+                $newId = $DB->insert_record('activequiz_attempts', $this->attempt);
+                $this->attempt->id = $newId;
             } catch(\Exception $e) {
                 return false; // return false on failure
             }
@@ -455,12 +446,11 @@ class activequiz_attempt {
     /**
      * Process a comment for a particular question on an attempt
      *
-     * @param int                        $slot
-     * @param \mod_activequiz\activequiz $rtq
+     * @param int $slot
      *
      * @return bool
      */
-    public function process_comment($slot = null, $rtq) {
+    public function process_comment($slot = null) {
         global $DB;
 
         // if there is no slot return false
@@ -470,28 +460,14 @@ class activequiz_attempt {
 
         // Process any data that was submitted.
         if (data_submitted() && confirm_sesskey()) {
-            if (optional_param('submit', false, PARAM_BOOL) &&
-                \question_engine::is_manual_grade_in_range($this->attempt->questionengid, $slot)
-            ) {
+            if (optional_param('submit', false, PARAM_BOOL) && \question_engine::is_manual_grade_in_range($this->attempt->questionengid, $slot)) {
                 $transaction = $DB->start_delegated_transaction();
                 $this->quba->process_all_actions(time());
-                $this->save();
-                $transaction->allow_commit();
 
-                // Trigger event for question manually graded
-                $params = array(
-                    'objectid' => $this->quba->get_question($slot)->id,
-                    'courseid' => $rtq->getCourse()->id,
-                    'context'  => $rtq->getContext(),
-                    'other'    => array(
-                        'rtqid'     => $rtq->getRTQ()->id,
-                        'attemptid' => $this->attempt->id,
-                        'slot'      => $slot,
-                        'sessionid' => $this->attempt->sessionid
-                    )
-                );
-                $event = \mod_activequiz\event\question_manually_graded::create($params);
-                $event->trigger();
+
+                $this->save();
+
+                $transaction->allow_commit();
 
                 return true;
             }
@@ -569,9 +545,9 @@ class activequiz_attempt {
             $this->responsesummary .= $this->question_attempt_history($questionattempt);
         }
 
-        // Bad way of doing things
-        // $response = $questionattempt->get_last_step()->get_qt_data();
-        // $this->responsesummary = $question->summarise_response($response);
+        /** bad way of doing things */
+        //$response = $questionattempt->get_last_step()->get_qt_data();
+        //$this->responsesummary = $question->summarise_response($response);
     }
 
     /**
@@ -607,24 +583,13 @@ class activequiz_attempt {
     /**
      * Closes the attempt
      *
-     * @param \mod_activequiz\activequiz $rtq
-     *
      * @return bool Weather or not it was successful
      */
-    public function close_attempt($rtq) {
+    public function close_attempt() {
         $this->quba->finish_all_questions(time());
         $this->attempt->status = self::FINISHED;
         $this->attempt->timefinish = time();
         $this->save();
-
-        $params = array(
-            'objectid'      => $this->attempt->id,
-            'context'       => $rtq->getContext(),
-            'relateduserid' => $this->attempt->userid
-        );
-        $event = \mod_activequiz\event\attempt_ended::create($params);
-        $event->add_record_snapshot('activequiz_attempts', $this->attempt);
-        $event->trigger();
 
         return true;
     }

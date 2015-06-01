@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
  */
 class quizdata {
 
-    /** @var \mod_activequiz\activequiz Realtime quiz class */
+    /** @var \mod_activequiz\activequiz Active quiz class */
     protected $RTQ;
 
     /** @var \mod_activequiz\activequiz_session $session The session class for the activequiz view */
@@ -73,7 +74,7 @@ class quizdata {
             $this->jsonlib->send_response();
         }
 
-        // use try/catch in order to catch errors and not display them on a javascript callback
+
         try {
             $rtqid = required_param('rtqid', PARAM_INT);
             $sessionid = required_param('sessionid', PARAM_INT);
@@ -334,7 +335,7 @@ class quizdata {
                     if (empty($qnum)) {
                         $this->jsonlib->send_error('invalid question number');
                     }
-                    if (!$question = $this->session->goto_question($qnum)) {
+                    IF (!$question = $this->session->goto_question($qnum)) {
                         $this->jsonlib->send_error('invalid question number');
                     }
                     $this->session->set_status('running');
@@ -367,8 +368,7 @@ class quizdata {
                 }
 
                 break;
-            case 'endquestion':
-                // update the session status to say that we're ending the question (this will in turn update students
+            case 'endquestion': // update the session status to say that we're ending the question (this will in turn update students
 
                 if ($this->RTQ->is_instructor()) {
 

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -166,7 +167,7 @@ class activequiz_session {
     public static function delete($sessionid) {
         global $DB;
 
-        // delete all attempt qubaids, then all realtime quiz attempts, and then finally itself
+        // delete all attempt qubaids, then all Active quiz attempts, and then finally itself
         \question_engine::delete_questions_usage_by_activities(new \mod_activequiz\utils\qubaids_for_rtq($sessionid));
         $DB->delete_records('activequiz_attempts', array('sessionid' => $sessionid));
         $DB->delete_records('activequiz_groupattendance', array('sessionid' => $sessionid));
@@ -232,7 +233,7 @@ class activequiz_session {
         $attempts = $this->getall_open_attempts(true);
         foreach ($attempts as $attempt) {
             /** @var \mod_activequiz\activequiz_attempt $attempt */
-            $attempt->close_attempt($this->rtq);
+            $attempt->close_attempt();
         }
         // save the session as closed
         $this->save_session();
@@ -347,22 +348,22 @@ class activequiz_session {
         }
 
         // next allow question modifiers to modify the output
-        $currQuestion = $this->rtq->get_questionmanager()->get_question_with_slot($this->session->currentqnum,
-            $this->openAttempt);
-        $return = $this->rtq->call_question_modifiers('modify_questionresults_duringquiz', $currQuestion, $currQuestion,
-            $attempts, $totalresponsesummary);
+        $currQuestion = $this->rtq->get_questionmanager()->get_question_with_slot($this->session->currentqnum, $this->openAttempt);
+        $return = $this->rtq->call_question_modifiers('modify_questionresults_duringquiz', $currQuestion, $currQuestion, $attempts, $totalresponsesummary);
 
         if (!empty($return)) {
             // we have an updated output
             $totalresponsesummary = $return;
         }
 
+        //$respondedbox = $this->rtq->get_renderer()->respondedbox($responded, count($attempts));
+        //$totalresponsesummary = $respondedbox . $totalresponsesummary;
         return $totalresponsesummary;
 
     }
 
     /**
-     * Builds the content for a realtime quiz box for who hasn't responded.
+     * Builds the content for a Active quiz box for who hasn't responded.
      *
      * @return string
      */
@@ -458,29 +459,13 @@ class activequiz_session {
             $attempt->preview = $preview;
             $attempt->timemodified = time();
             $attempt->timestart = time();
-            $attempt->responded = null;
-            $attempt->timefinish = null;
 
             // add forgroupid to attempt if we're in group mode
             if ($this->rtq->group_mode()) {
                 $attempt->forgroupid = $group;
-            } else {
-                $attempt->forgroupid = null;
             }
 
             $attempt->save();
-
-            // create attempt_created event
-            $params = array(
-                'objectid'      => $attempt->id,
-                'relateduserid' => $attempt->userid,
-                'courseid'      => $this->rtq->getCourse()->id,
-                'context'       => $this->rtq->getContext()
-            );
-            $event = \mod_activequiz\event\attempt_started::create($params);
-            $event->add_record_snapshot('activequiz', $this->rtq->getRTQ());
-            $event->add_record_snapshot('activequiz_attempts', $attempt->get_attempt());
-            $event->trigger();
 
             if ($this->rtq->group_mode() && $this->rtq->getRTQ()->groupattendance == 1) {
                 // if we're doing group attendance add group members to group attendance table
@@ -543,8 +528,7 @@ class activequiz_session {
     /**
      * Check attempts for the user's groups
      *
-     * @return array|bool Returns an array of valid groups to make an attempt for, if empty,
-     *                    there are no valid groups to attempt for.
+     * @return array|bool Returns an array of valid groups to make an attempt for, if empty, there are no valid groups to attempt for.
      *                    Returns bool false when there is no session
      */
     public function check_attempt_for_group() {
@@ -559,13 +543,12 @@ class activequiz_session {
 
         $validgroups = array();
 
-        // we need to loop through the groups in case a user is in multiple,
-        // and then check if there is a possibility for them to create an attempt for that user
+        // we need to loop through the groups in case a user is in multiple, and then check if there is a possibility for them
+        // to create an attempt for that user
         foreach ($groups as $group) {
 
             list($sql, $params) = $DB->get_in_or_equal(array($group));
-            $query = 'SELECT * FROM {activequiz_attempts} WHERE forgroupid ' . $sql .
-                ' AND status = ? AND sessionid = ? AND userid != ?';
+            $query = 'SELECT * FROM {activequiz_attempts} WHERE forgroupid ' . $sql . ' AND status = ? AND sessionid = ? AND userid != ?';
             $params[] = \mod_activequiz\activequiz_attempt::INPROGRESS;
             $params[] = $this->session->id;
             $params[] = $USER->id;
@@ -708,8 +691,7 @@ class activequiz_session {
      *
      *
      * @param bool   $includepreviews Whether or not to include the preview attempts
-     * @param string $open Whether or not to get open attempts.  'all' means both, otherwise 'open' means open attempts,
-     *                      'closed' means closed attempts
+     * @param string $open Whether or not to get open attempts.  'all' means both, otherwise 'open' means open attempts, 'closed' means closed attempts
      * @param int    $userid If specified will get the user's attempts
      * @param bool   $skipgroups If set to true, we will not also look for attempts for the user's groups if the rtq is in group mode
      *
@@ -791,8 +773,7 @@ class activequiz_session {
 
         $attempts = array();
         foreach ($dbattempts as $dbattempt) {
-            $attempts[ $dbattempt->id ] = new activequiz_attempt($this->rtq->get_questionmanager(), $dbattempt,
-                $this->rtq->getContext());
+            $attempts[ $dbattempt->id ] = new activequiz_attempt($this->rtq->get_questionmanager(), $dbattempt, $this->rtq->getContext());
         }
 
         return $attempts;

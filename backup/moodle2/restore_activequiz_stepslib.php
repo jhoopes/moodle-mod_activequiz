@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,7 +19,7 @@
  * @package   mod_activequiz
  * @author    John Hoopes <hoopes@wisc.edu>
  * @author    Davo Smith
- * @copyright 2014 University of Wisconsin - Madison
+ * @copyright 2014 Unviersity of Wisconsin - Madison
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -58,11 +59,10 @@ class restore_activequiz_activity_structure_step extends restore_questions_activ
             // Add states and question usages for the attempts.
             $this->add_question_usages($quizattempt, $paths);
 
-            $paths[] = new restore_path_element('activequiz_groupattendance',
-                '/activity/activequiz/sessions/session/attempts/attempt/groupattendances/groupattendance');
+            $paths[] = new restore_path_element('activequiz_groupattendance', '/activity/activequiz/sessions/session/attempts/attempt/groupattendances/groupattendance');
         }
 
-        // Return the paths wrapped into standard activity structure.
+        // Return the paths wrapped into standard activity structure
         return $this->prepare_activity_structure($paths);
     }
 
@@ -141,6 +141,7 @@ class restore_activequiz_activity_structure_step extends restore_questions_activ
         $data->timefinish = $this->apply_date_offset($data->timefinish);
         $data->timemodified = $this->apply_date_offset($data->timemodified);
 
+
         $this->currentrtqattempt = clone($data);
     }
 
@@ -154,6 +155,7 @@ class restore_activequiz_activity_structure_step extends restore_questions_activ
         $data->questionengid = $newusageid;
 
         $newitemid = $DB->insert_record('activequiz_attempts', $data);
+
 
         $this->set_mapping('activequiz_attempt', $oldid, $newitemid, false);
     }

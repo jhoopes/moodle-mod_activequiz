@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,6 +19,7 @@ namespace mod_activequiz\questionmodifiers;
 
 defined('MOODLE_INTERNAL') || die();
 
+global $CFG;
 require_once($CFG->dirroot . '/question/engine/lib.php');
 
 /**
@@ -55,7 +57,7 @@ class poodllrecording implements \mod_activequiz\questionmodifiers\ibasequestion
      * Updating output to include javascript to initiate a lightbox effect on drawing type questions
      * so that the images are smaller unless clicked on for review
      *
-     * @param \mod_activequiz\activequiz_question $question The realtime quiz question
+     * @param \mod_activequiz\activequiz_question $question The Active quiz question
      * @param array                               $attempts An array of \mod_activequiz\activequiz_attempt classes
      * @param string                              $output The current output from getting the results
      * @return string Return the updated output to be passed to the client

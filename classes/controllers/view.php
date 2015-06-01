@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,6 +19,8 @@ namespace mod_activequiz\controllers;
 
 defined('MOODLE_INTERNAL') || die();
 
+global $CFG;
+
 /**
  * view controller class for the view page
  *
@@ -28,7 +31,7 @@ defined('MOODLE_INTERNAL') || die();
  */
 class view {
 
-    /** @var \mod_activequiz\activequiz Realtime quiz class */
+    /** @var \mod_activequiz\activequiz Active quiz class */
     protected $RTQ;
 
     /** @var \mod_activequiz\activequiz_session $session The session class for the activequiz view */
@@ -79,6 +82,9 @@ class view {
 
         require_login($course->id, false, $cm);
 
+
+        add_to_log($course->id, "activequiz", "view", "view.php?id=$cm->id", "$quiz->id");
+
         $this->pageurl->param('id', $cm->id);
         $this->pageurl->param('quizid', $quiz->id);
         $this->pageurl->param('action', $this->pagevars['action']);
@@ -96,9 +102,7 @@ class view {
 
         $PAGE->set_pagelayout('incourse');
         $PAGE->set_context($this->RTQ->getContext());
-        $PAGE->set_cm($this->RTQ->getCM());
-        $PAGE->set_title(strip_tags($course->shortname . ': ' . get_string("modulename", "activequiz") . ': ' .
-            format_string($quiz->name, true)));
+        $PAGE->set_title(strip_tags($course->shortname . ': ' . get_string("modulename", "activequiz") . ': ' . format_string($quiz->name, true)));
         $PAGE->set_heading($course->fullname);
         $PAGE->set_url($this->pageurl);
 
@@ -110,10 +114,9 @@ class view {
      *
      */
     public function handle_request() {
-        global $DB, $USER, $PAGE;
+        global $DB, $USER;
 
-        // first check if there are questions or not.  If there are no questions display that message instead,
-        // regardless of action.
+        // first check if there are questions or not.  If there are no questions display that message instead, regardless of action
         if (count($this->RTQ->get_questionmanager()->get_questions()) === 0) {
             $this->pagevars['action'] = 'noquestions';
             $this->pageurl->param('action', ''); // remove the action
@@ -131,9 +134,6 @@ class view {
                 break;
             case 'quizstart':
                 // case for the quiz start landing page
-
-                // set the quiz view page to the base layout for 1 column layout
-                $PAGE->set_pagelayout('base');
 
                 if ($this->session->get_session() === false) {
                     // redirect them to the default page with a quick message first
@@ -158,9 +158,7 @@ class view {
                     }
 
                     if ($cantakequiz) {
-                        if (!$this->session->init_attempts($this->RTQ->is_instructor(), $this->pagevars['group'],
-                            $this->pagevars['groupmembers'])
-                        ) {
+                        if (!$this->session->init_attempts($this->RTQ->is_instructor(), $this->pagevars['group'], $this->pagevars['groupmembers'])) {
                             print_error('cantinitattempts', 'activequiz');
                         }
 
@@ -230,16 +228,6 @@ class view {
             default:
                 // default is to show view to start quiz (for instructors/quiz controllers) or join quiz (for everyone else)
 
-                // trigger event for course module viewed
-                $event = \mod_activequiz\event\course_module_viewed::create(array(
-                    'objectid' => $PAGE->cm->instance,
-                    'context'  => $PAGE->context,
-                ));
-
-                $event->add_record_snapshot('course', $this->RTQ->getCourse());
-                $event->add_record_snapshot($PAGE->cm->modname, $this->RTQ->getRTQ());
-                $event->trigger();
-
                 // determine home display based on role
                 if ($this->RTQ->is_instructor()) {
                     $startsessionform = new \mod_activequiz\forms\view\start_session($this->pageurl);
@@ -249,11 +237,7 @@ class view {
 
                         // first check to see if there are any open sessions
                         // this shouldn't occur, but never hurts to check
-                        $sessions = $DB->get_records('activequiz_sessions', array(
-                                'activequizid' => $this->RTQ->getRTQ()->id,
-                                'sessionopen'  => 1
-                            )
-                        );
+                        $sessions = $DB->get_records('activequiz_sessions', array('activequizid' => $this->RTQ->getRTQ()->id, 'sessionopen' => 1));
 
                         if (!empty($sessions)) {
                             // error out with that there are existing sessions
@@ -298,8 +282,8 @@ class view {
                             $validgroups = array();
                         }
                     }
-                    $studentstartformparams = array('rtq' => $this->RTQ, 'validgroups' => $validgroups);
-                    $studentstartform = new \mod_activequiz\forms\view\student_start_form($this->pageurl, $studentstartformparams);
+
+                    $studentstartform = new \mod_activequiz\forms\view\student_start_form($this->pageurl, array('rtq' => $this->RTQ, 'validgroups' => $validgroups));
                     if ($data = $studentstartform->get_data()) {
 
                         $quizstarturl = clone($this->pageurl);

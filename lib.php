@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,7 +20,7 @@
  *
  * @package   mod_activequiz
  * @author    John Hoopes <hoopes@wisc.edu>
- * @copyright 2014 University of Wisconsin - Madison
+ * @copyright 2014 Unviersity of Wisconsin - Madison
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -88,12 +89,6 @@ function activequiz_update_instance($activequiz) {
     return true;
 }
 
-/**
- * Proces the review options on the quiz settings page
- *
- * @param \mod_activequiz\activequiz $activequiz
- * @return string
- */
 function activequiz_process_review_options($activequiz) {
 
     $afterreviewoptions = \mod_activequiz\activequiz::get_review_options_from_form($activequiz, 'after');
@@ -142,18 +137,15 @@ function activequiz_delete_instance($id) {
     return true;
 }
 
-/**
- * Function to call other functions for after add or update of a quiz settings page
- *
- * @param int $activequiz
- */
+
 function activequiz_after_add_or_update($activequiz) {
 
     activequiz_grade_item_update($activequiz);
+
 }
 
 /**
- * Update the grade item depending on settings passed in
+ *
  *
  *
  * @param stdClass   $activequiz
@@ -193,7 +185,7 @@ function activequiz_grade_item_update($activequiz, $grades = null) {
 
 
 /**
- * Update grades depending on the userid and other settings
+ *
  *
  * @param      $activequiz
  * @param int  $userid
@@ -225,12 +217,6 @@ function activequiz_update_grades($activequiz, $userid = 0, $nullifnone = true) 
 }
 
 
-/**
- * Reset the grade book
- *
- * @param        $courseid
- * @param string $type
- */
 function activequiz_reset_gradebook($courseid, $type = '') {
 
 

@@ -21,13 +21,14 @@
  *
  * @package   mod_activequiz
  * @author    John Hoopes <hoopes@wisc.edu>
- * @copyright 2014 University of Wisconsin - Madison
+ * @copyright 2014 Unviersity of Wisconsin - Madison
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 define('AJAX_SCRIPT', true);
 
 require_once('../../config.php');
+global $CFG;
 require_once($CFG->dirroot . '/mod/activequiz/lib.php');
 require_once($CFG->libdir . '/filelib.php');
 

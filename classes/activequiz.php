@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,7 +20,7 @@ namespace mod_activequiz;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Realtime quiz object.  This object contains a lot of dependencies
+ * Active quiz object.  This object contains a lot of dependencies
  * that work together that help to keep all of the dependencies in one
  * class instead of spreading them around to multiple classes
  *
@@ -74,7 +75,7 @@ class activequiz {
     protected $pagevars;
 
     /**
-     * takes the realtime quiz object passed to add/update instance
+     * takes the Active quiz object passed to add/update instance
      * and returns a stdClass of review options for the specified whenname
      *
      * @param \stdClass $formactivequiz
@@ -336,7 +337,7 @@ class activequiz {
 
 
     /**
-     * Gets all sessions for the realtime quiz that are closed
+     * Gets all sessions for the Active quiz that are closed
      *
      * @return array
      */
@@ -348,10 +349,8 @@ class activequiz {
      * This is a method to invoke the question modifier classes
      *
      * * * while params not explicitly defined, the first two arguments are required
-     * @param string                                   $action The function that will be called on the question modifier classes,
-     *                          function must be defined in basequestionmodifier
-     * @param \mod_activequiz\activequiz_question|null The question that we're going to modifiy.
-     *                                                     If null, we'll use all questions defined for this instance
+     * @param string                                   $action The function that will be called on the question modifier classes, function must be defined in basequestionmodifier
+     * @param \mod_activequiz\activequiz_question|null The question that we're going to modifiy.  If null, we'll use all questions defined for this instance
      *
      * Any parameters passed after the first 2 are passed to the action function
      *

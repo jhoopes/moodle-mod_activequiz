@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,17 +19,19 @@ namespace mod_activequiz\controllers;
 
 defined('MOODLE_INTERNAL') || die();
 
+global $CFG;
+
 /**
  * The responses controller
  *
  * @package     mod_activequiz
  * @author      John Hoopes <hoopes@wisc.edu>
- * @copyright   2014 University of Wisconsin - Madison
+ * @copyright   2014 Unviersity of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class responses {
 
-    /** @var \mod_activequiz\activequiz Realtime quiz class */
+    /** @var \mod_activequiz\activequiz Active quiz class */
     protected $RTQ;
 
     /** @var \mod_activequiz\activequiz_session $session The session class for the activequiz view */
@@ -70,6 +73,7 @@ class responses {
 
         require_login($course->id, false, $cm);
 
+        add_to_log($course->id, "activequiz", "viewresponses", "responses.php?id=$cm->id", "$quiz->id");
 
         $this->pageurl->param('id', $cm->id);
         $this->pageurl->param('quizid', $quiz->id);
@@ -85,8 +89,7 @@ class responses {
 
         $PAGE->set_pagelayout('incourse');
         $PAGE->set_context($this->RTQ->getContext());
-        $PAGE->set_title(strip_tags($course->shortname . ': ' . get_string("modulename", "activequiz") . ': ' .
-            format_string($quiz->name, true)));
+        $PAGE->set_title(strip_tags($course->shortname . ': ' . get_string("modulename", "activequiz") . ': ' . format_string($quiz->name, true)));
         $PAGE->set_heading($course->fullname);
         $PAGE->set_url($this->pageurl);
     }
@@ -121,8 +124,7 @@ class responses {
 
                 $session = $this->RTQ->get_session($sessionid);
                 $this->pageurl->param('sessionid');
-                $sessionattempts = new \mod_activequiz\tableviews\sessionattempts('sessionattempts', $this->RTQ,
-                    $session, $this->pageurl);
+                $sessionattempts = new \mod_activequiz\tableviews\sessionattempts('sessionattempts', $this->RTQ, $session, $this->pageurl);
 
                 $sessions = $this->RTQ->get_sessions();
                 $this->RTQ->get_renderer()->responses_header();

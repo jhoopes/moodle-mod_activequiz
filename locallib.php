@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,7 +20,7 @@
  *
  * @package   mod_activequiz
  * @author    John Hoopes <hoopes@wisc.edu>
- * @copyright 2014 University of Wisconsin - Madison
+ * @copyright 2014 Unviersity of Wisconsin - Madison
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -42,7 +43,7 @@ function activequiz_view_tabs($RTQ, $currenttab) {
         $row[] = new tabobject('view', new moodle_url('/mod/activequiz/view.php', array('id' => $RTQ->getCM()->id)), get_string('view', 'activequiz'));
     }
     if ($RTQ->has_capability('mod/activequiz:editquestions')) {
-        $row[] = new tabobject('edit', new moodle_url('/mod/activequiz/edit.php', array('cmid' => $RTQ->getCM()->id)), get_string('edit', 'activequiz'));
+        $row[] = new tabobject('edit', new moodle_url('/mod/activequiz/edit.php', array('id' => $RTQ->getCM()->id)), get_string('edit', 'activequiz'));
     }
     if ($RTQ->has_capability('mod/activequiz:seeresponses')) {
         $row[] = new tabobject('responses', new moodle_url('/mod/activequiz/responses.php', array('id' => $RTQ->getCM()->id)), get_string('responses', 'activequiz'));

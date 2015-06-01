@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -50,7 +51,7 @@ interface ibasequestionmodifier {
      * Allows a question modifier to change the output of a particular question when displaying
      * results to the instructor
      *
-     * @param \mod_activequiz\activequiz_question $question The realtime quiz question that we're currently on
+     * @param \mod_activequiz\activequiz_question $question The Active quiz question that we're currently on
      * @param array                               $attempts An array of \mod_activequiz\activequiz_attempt classes
      * @param string                              $output The current output from getting the results
      * @return string Return the updated output to be passed to the client

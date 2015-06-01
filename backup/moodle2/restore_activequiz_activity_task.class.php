@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -25,7 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/activequiz/backup/moodle2/restore_activequiz_stepslib.php');
+require_once($CFG->dirroot . '/mod/activequiz/backup/moodle2/restore_activequiz_stepslib.php'); // Because it exists (must)
 
 /**
  * activequiz restore task that provides all the settings and steps to perform one

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,7 +19,7 @@
  * @package   mod_activequiz
  * @author    John Hoopes <hoopes@wisc.edu>
  * @author    Davo Smith
- * @copyright 2014 University of Wisconsin - Madison
+ * @copyright 2014 Unviersity of Wisconsin - Madison
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -26,13 +27,13 @@
 $string['modulename'] = 'Active quiz';
 $string['modulename_help'] = '
 <p>The Active quiz activity enables an instructor to create and administer quizzes in real-time.  All regular quiz question types can be used in the Active Quiz.</p>
-<p>Active Quiz allows individual or group participation. Group attendance is possible so points given during the active quiz will only be applied to the participants that attended the session.  Questions can be set to allow multiple attempts. A time limit may be set to automatically end the question, or the instructor can manually end the question and move on to the next one.  The instructor also has the ability to jump to different questions while  running the session. Instructors can monitor group or individual participation, real-time responses of the participants and the question being polled. </p>
+<p>Active Quiz allows individual or group participation. Group attendance is possible so points given during the Active quiz will only be applied to the participants that attended the session.  Questions can be set to allow multiple attempts. A time limit may be set to automatically end the question, or the instructor can manually end the question and move on to the next one.  The instructor also has the ability to jump to different questions while  running the session. Instructors can monitor group or individual participation, real-time responses of the participants and the question being polled. </p>
 <p>Each quiz attempt is marked automatically like a regular quiz (with the exception of essay and PoodLL questions) and the grade is recorded in the gradebook. Grading for group participation can be done automatically by transferring the grade from the single responder to the other group members. </p>
 <p>The instructor has options to show hints, give feedback and show correct answers to students upon quiz completion.</p>
 <p>Active Quizzes may be used as a vehicle for delivering Team Based Learning inside Moodle.</p>
 ';
 $string['modulenameplural'] = 'Active quizzes';
-$string['activequizsettings'] = 'General active quiz settings';
+$string['activequizsettings'] = 'General Active quiz settings';
 $string['pluginadministration'] = 'Active quiz administration';
 $string['pluginname'] = 'Active quiz';
 $string['view'] = 'View quiz';
@@ -41,20 +42,14 @@ $string['responses'] = 'View responses';
 $string['attempts'] = 'Attempts';
 $string['overallgrade'] = 'Overall grade: {$a->overallgrade} / {$a->scale}';
 
+$string['invalidattemptaccess'] = 'You do not have permission to access this attempt';
+
 $string['activequiz:addinstance'] = 'Add an instance of activequiz';
 $string['activequiz:attempt'] = 'Attempt an active quiz';
 $string['activequiz:control'] = 'Control an active quiz. (Usually for instructors only)';
 $string['activequiz:editquestions'] = 'Edit questions for an active quiz.';
 $string['activequiz:seeresponses'] = 'View other student responses to grade them';
 $string['activequiz:viewownattempts'] = 'Allows students to see their own attempts at a quiz';
-
-$string['invalidattemptaccess'] = 'You do not have permission to access this attempt';
-
-// event strings
-$string['eventattemptstarted'] = 'Attempt started';
-$string['eventattemptviewed'] = 'Attempt viewed';
-$string['eventquestionmanuallygraded'] = 'Question manually graded';
-$string['eventquestionanswered'] = 'Question answered for attempt';
 
 // Scale types
 $string['firstsession'] = 'First session';
@@ -188,8 +183,8 @@ $string['hidenotresponded'] = 'Hide not responded';
 $string['shownotresponded'] = 'Show not responded';
 
 // Instructions
-$string['instructorquizinst'] = '<p>Please wait on this page until students have connected.  Once <b>start quiz</b> is clicked, the quiz will start the first question</p>' .
-    '<p>
+$string['instructorquizinst'] = '<p>Please wait on this page until students have connected.  Once <b>start quiz</b> is clicked, the quiz will start the first question</p>
+    <p>
 <p>Controls:</p>
     <ul>
         <li>

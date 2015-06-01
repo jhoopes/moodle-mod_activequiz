@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -23,9 +24,9 @@ use \mod_activequiz\forms\edit\add_question_form;
 /**
  * Question manager class
  *
- * Provides utility functions to manage questions for a realtime quiz
+ * Provides utility functions to manage questions for a Active quiz
  *
- * Basically this class provides an interface to internally map the questions added to a realtime quiz to
+ * Basically this class provides an interface to internally map the questions added to a Active quiz to
  * questions in the question bank.  calling get_questions() will return an ordered array of question objects
  * from the questions table and not the activequiz_questions table.  That table is only used internally by this
  * class.
@@ -60,7 +61,7 @@ class questionmanager {
      * Construct an instance of question manager
      *
      * @param activequiz               $rtq
-     * @param \mod_activequiz_renderer $renderer The realtime quiz renderer to render visual elements
+     * @param \mod_activequiz_renderer $renderer The Active quiz renderer to render visual elements
      * @param array                    $pagevars page variables array
      */
     public function __construct($rtq, $renderer, $pagevars = array()) {
@@ -255,26 +256,9 @@ class questionmanager {
             return false; // return false if the direction is not up or down
         }
 
-        return $this->update_questionorder('movequestion' . $direction, $questionid);
-    }
+        $this->update_questionorder('movequestion' . $direction, $questionid);
 
-    /**
-     * Public API function for setting the full order of the questions on the activequiz
-     *
-     * Please note that full order must be an array with no specialized keys as only array values are taken
-     *
-     * @param array $fullorder
-     * @return bool
-     */
-    public function set_full_order($fullorder = array()) {
-
-        if (!is_array($fullorder)) {
-            return false;
-        }
-
-        $fullorder = array_values($fullorder);
-
-        return $this->update_questionorder('replaceorder', null, $fullorder);
+        return true;
     }
 
     /**
@@ -428,14 +412,11 @@ class questionmanager {
      * Updates the question order for the question manager
      *
      * @param string $action
-     * @param int    $questionid the realtime quiz question id, NOT the question engine question id
-     * @param array  $fullorder An array of question objects to sort as is.
-     *                         This is mainly used for the dragdrop callback on the edit page.  If the full order is not specified
-     *                         with all questions currently on the quiz, the case will return false
+     * @param int    $questionid the Active quiz question id, NOT the question engine question id
      *
      * @return bool true/false if it was successful
      */
-    protected function update_questionorder($action, $questionid, $fullorder = array()) {
+    protected function update_questionorder($action, $questionid) {
 
         switch ($action) {
             case 'addquestion':
@@ -539,39 +520,8 @@ class questionmanager {
                 return true;
 
                 break;
-            case 'replaceorder':
 
-                $questionorder = $this->get_question_order();
-                $questionorder = explode(',', $questionorder);
-
-                // if we don't have the same number of questions return error
-                if (count($fullorder) !== count($questionorder)) {
-                    return false;
-                }
-
-                // next validate that the questions sent all match to a question in the current order
-                $allmatch = true;
-                foreach ($questionorder as $qorder) {
-                    if (!in_array($qorder, $fullorder)) {
-                        $allmatch = false;
-                    }
-                }
-
-                if ($allmatch) {
-
-                    $newquestionorder = implode(',', $fullorder);
-                    $this->set_question_order($newquestionorder);
-                    $this->refresh_questions();
-
-                    return true;
-                } else {
-                    return false;
-                }
-
-                break;
         }
-
-        return false; // if we get here, there's an error so return false
     }
 
     /**
@@ -654,7 +604,7 @@ class questionmanager {
         foreach ($orderedquestionids as $rtqqid => $questionid) { // use the ordered question ids we got earlier
             if (!empty($questions[ $questionid ])) {
 
-                // create realtime quiz question and add it to the array
+                // create Active quiz question and add it to the array
                 $quizquestion = new \mod_activequiz\activequiz_question($rtqqid,
                     $this->rtqQuestions[ $rtqqid ]->notime,
                     $this->rtqQuestions[ $rtqqid ]->questiontime,

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,7 +20,7 @@ namespace mod_activequiz;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * A realtime quiz question object
+ * A Active quiz question object
  *
  * @package     mod_activequiz
  * @author      John Hoopes <hoopes@wisc.edu>
@@ -86,7 +87,7 @@ class activequiz_question {
     public function JsonSerialize() {
         // to make sue of the is function on json_encode, this class also needs to implement JsonSerializable
 
-        // TODO: This will be supported if Moodle moves to only supporting php 5.4 and higher
+        //TODO:  This will be supported if Moodle moves to only supporting php 5.4 and higher
 
     }
 
@@ -109,7 +110,7 @@ class activequiz_question {
     }
 
     /**
-     * Returns the question time for this realtime quiz question
+     * Returns the question time for this Active quiz question
      *
      * @return int
      */

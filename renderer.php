@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/questionlib.php');
@@ -742,7 +743,7 @@ EOD;
         if ($isinstructor) {
             // show a button to edit the quiz
             $params = array(
-                'cmid' => $this->rtq->getCM()->id
+                'id' => $this->rtq->getCM()->id
             );
             $editurl = new moodle_url('/mod/activequiz/edit.php', $params);
             $editbutton = $this->output->single_button($editurl, get_string('edit', 'activequiz'), 'get');
@@ -782,13 +783,11 @@ EOD;
      * @param string $questionbankview HTML for the question bank view
      */
     public function editrender_listquestions($questions, $questionbankview) {
-        global $CFG;
 
         echo html_writer::start_div('row', array('id' => 'questionrow'));
 
         echo html_writer::start_div('span6');
         echo html_writer::tag('h2', 'Question List');
-        echo html_writer::div('', 'rtqstatusbox rtqhiddenstatus', array('id' => 'editstatus'));
 
         echo $this->show_questionlist($questions);
 
@@ -799,26 +798,6 @@ EOD;
         echo html_writer::end_div();
 
         echo html_writer::end_div();
-
-        $this->page->requires->js('/mod/activequiz/js/core.js');
-        $this->page->requires->js('/mod/activequiz/js/sortable/sortable.js');
-        $this->page->requires->js('/mod/activequiz/js/edit_quiz.js');
-
-        // next set up a class to pass to js for js info
-        $jsinfo = new stdClass();
-        $jsinfo->sesskey = sesskey();
-        $jsinfo->siteroot = $CFG->wwwroot;
-        $jsinfo->cmid = $this->rtq->getCM()->id;
-
-        // print jsinfo to javascript
-        echo html_writer::start_tag('script', array('type' => 'text/javascript'));
-        echo "rtqinitinfo = " . json_encode($jsinfo);
-        echo html_writer::end_tag('script');
-
-        $this->page->requires->strings_for_js(array(
-            'success',
-            'error'
-        ), 'core');
 
     }
 
@@ -835,8 +814,8 @@ EOD;
         $questioncount = count($questions);
         $questionnum = 1;
         foreach ($questions as $question) {
-            /** @var \mod_activequiz\activequiz_question $question */
-            $return .= '<li data-questionid="' . $question->getId() . '">';
+
+            $return .= '<li>';
             $return .= $this->display_question_block($question, $questionnum, $questioncount);
             $return .= '</li>';
             $questionnum++;
@@ -859,9 +838,6 @@ EOD;
 
         $return = '';
 
-        $dragicon = new pix_icon('i/dragdrop', 'dragdrop');
-        $return .= html_writer::div($this->output->render($dragicon), 'dragquestion');
-
         $return .= html_writer::div(print_question_icon($question->getQuestion()), 'icon');
 
         $namehtml = html_writer::start_tag('p');
@@ -875,7 +851,7 @@ EOD;
         $controlHTML = '';
 
         $spacericon = new pix_icon('spacer', 'space', null, array('class' => 'smallicon space'));
-        $controlHTML .= html_writer::start_tag('noscript');
+
         if ($qnum > 1) { // if we're on a later question than the first one add the move up control
 
             $moveupurl = clone($this->pageurl);
@@ -903,8 +879,6 @@ EOD;
         } else {
             $controlHTML .= $this->output->render($spacericon);
         }
-
-        $controlHTML .= html_writer::end_tag('noscript');
 
         // always add edit and delete icons
         $editurl = clone($this->pageurl);
