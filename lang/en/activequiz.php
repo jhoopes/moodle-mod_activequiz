@@ -188,8 +188,8 @@ $string['hidenotresponded'] = 'Hide not responded';
 $string['shownotresponded'] = 'Show not responded';
 
 // Instructions
-$string['instructorquizinst'] = '<p>Please wait on this page until students have connected.  Once <b>start quiz</b> is clicked, the quiz will start the first question</p>' .
-    '<p>
+$string['instructorquizinst'] = '<p>Please wait on this page until students have connected.  Once <b>start quiz</b> is clicked, the quiz will start the first question</p>
+    <p>
 <p>Controls:</p>
     <ul>
         <li>
