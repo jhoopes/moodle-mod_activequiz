@@ -275,3 +275,8 @@
     float:left;
     width: 10em;
 }
+
+.path-mod-activequiz .hidden{
+    display: none;
+    visibility: hidden;
+}
