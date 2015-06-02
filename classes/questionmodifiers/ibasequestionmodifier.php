@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -27,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright   2014 University of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-interface ibasequestionmodifier{
+interface ibasequestionmodifier {
 
 
     /**
@@ -52,8 +51,8 @@ interface ibasequestionmodifier{
      * results to the instructor
      *
      * @param \mod_activequiz\activequiz_question $question The realtime quiz question that we're currently on
-     * @param array $attempts An array of \mod_activequiz\activequiz_attempt classes
-     * @param string $output The current output from getting the results
+     * @param array                               $attempts An array of \mod_activequiz\activequiz_attempt classes
+     * @param string                              $output The current output from getting the results
      * @return string Return the updated output to be passed to the client
      */
     public function modify_questionresults_duringquiz($question, $attempts, $output);

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -27,14 +26,13 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright   2014 University of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class jsonlib
-{
+class jsonlib {
 
     /** @var stdClass $response class to hold resonse information */
     protected $response;
 
     /** @var array $status codes Array to hold different status codes to return with response */
-    protected $status_codes  = array (
+    protected $status_codes = array(
         100 => 'Continue',
         101 => 'Switching Protocols',
         102 => 'Processing',
@@ -92,7 +90,7 @@ class jsonlib
      * Construct the lib and set up response
      *
      */
-    public function __construct(){
+    public function __construct() {
 
         $this->response = new \stdClass();
         $this->response->status = "OK";
@@ -103,9 +101,9 @@ class jsonlib
      * Set a key/value pair on the response object
      *
      * @param string $key The key to set on the response object
-     * @param mixed $value The value to set for the key provided on the response object
+     * @param mixed  $value The value to set for the key provided on the response object
      */
-    public function set($key, $value){
+    public function set($key, $value) {
         $this->response->$key = $value;
     }
 
@@ -116,14 +114,13 @@ class jsonlib
      *
      * @param string $message The error message to send
      */
-    public function send_error($message)
-    {
+    public function send_error($message) {
 
         $this->response->status = "error";
         $this->response->message = $message;
 
         $response = json_encode($this->response);
-        if($response === false){ // check for error
+        if ($response === false) { // check for error
 
             $message = $this->get_json_error();
             $this->send_headers(500);
@@ -140,10 +137,10 @@ class jsonlib
      *
      * This function automatically terminates script running as we are sending the response
      */
-    public function send_response(){
+    public function send_response() {
 
         $response = json_encode($this->response);
-        if($response === false){ // check for error
+        if ($response === false) { // check for error
 
             $response = $this->get_json_error(); // return error as bare text since json_encode isn't working
             $this->send_headers(500);
@@ -162,8 +159,7 @@ class jsonlib
      *
      * @return string
      */
-    protected function get_json_error()
-    {
+    protected function get_json_error() {
         switch (json_last_error()) {
             case JSON_ERROR_NONE:
                 $message = 'no error';
@@ -198,10 +194,10 @@ class jsonlib
      * @param int $status The status code to send with the response
      *
      */
-    private function send_headers($status){
+    private function send_headers($status) {
 
-        if (!empty($this->status_codes[$status])) {
-            $status_string = $status . ' ' . $this->status_codes[$status];
+        if (!empty($this->status_codes[ $status ])) {
+            $status_string = $status . ' ' . $this->status_codes[ $status ];
             header($_SERVER['SERVER_PROTOCOL'] . ' ' . $status_string, true, $status);
             header('cache-control: private, max-age=0, no-cache');
             header('pragma: no-cache');

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,7 +18,6 @@ namespace mod_activequiz\forms\view;
 
 defined('MOODLE_INTERNAL') || die();
 
-global $CFG;
 require_once($CFG->libdir . '/formslib.php');
 
 
@@ -31,14 +29,14 @@ require_once($CFG->libdir . '/formslib.php');
  * @copyright 2014 University of Wisconsin - Madison
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class groupselectmembers extends \moodleform{
+class groupselectmembers extends \moodleform {
 
 
     /**
      * Defines form definition
      *
      */
-    public function definition(){
+    public function definition() {
         global $USER;
         $custdata = $this->_customdata;
         $mform = $this->_form;
@@ -49,14 +47,14 @@ class groupselectmembers extends \moodleform{
         $groupmembers = $rtq->get_groupmanager()->get_group_members($selectedgroup);
 
         $groupmemnum = 1;
-        foreach($groupmembers as $groupmember){
+        foreach ($groupmembers as $groupmember) {
 
-            $attributes = array('group'=>1);
+            $attributes = array('group' => 1);
 
 
             $mform->addElement('advcheckbox', 'gm' . $groupmemnum, null,
-                                fullname($groupmember), $attributes,
-                                array(0, $groupmember->id));
+                fullname($groupmember), $attributes,
+                array(0, $groupmember->id));
 
 
             $groupmemnum++;

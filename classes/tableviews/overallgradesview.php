@@ -1,6 +1,4 @@
 <?php
-
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -20,8 +18,8 @@ namespace mod_activequiz\tableviews;
 
 defined('MOODLE_INTERNAL') || die();
 
-global $CFG;
 require_once($CFG->libdir . '/tablelib.php');
+
 /**
  * Table lib subclass for showing the overall grades for a realtime quiz activity
  *
@@ -30,7 +28,7 @@ require_once($CFG->libdir . '/tablelib.php');
  * @copyright   2014 University of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class overallgradesview extends \flexible_table implements \renderable{
+class overallgradesview extends \flexible_table implements \renderable {
 
 
     /** @var \mod_activequiz\activequiz $rtq */
@@ -39,11 +37,11 @@ class overallgradesview extends \flexible_table implements \renderable{
     /**
      * Contstruct this table class
      *
-     * @param string $uniqueid The unique id for the table
+     * @param string                     $uniqueid The unique id for the table
      * @param \mod_activequiz\activequiz $rtq
-     * @param \moodle_url $pageurl
+     * @param \moodle_url                $pageurl
      */
-    public function __construct($uniqueid, $rtq, $pageurl){
+    public function __construct($uniqueid, $rtq, $pageurl) {
 
         $this->rtq = $rtq;
         $this->baseurl = $pageurl;
@@ -56,24 +54,24 @@ class overallgradesview extends \flexible_table implements \renderable{
      * Setup the table, i.e. table headers
      *
      */
-    public function setup(){
+    public function setup() {
         // Set var for is downloading
         $isdownloading = $this->is_downloading();
 
         $this->set_attribute('cellspacing', '0');
 
-        if($this->rtq->group_mode()){
+        if ($this->rtq->group_mode()) {
             $columns = array(
-                'fullname'    => get_string('name'),
-                'group'     => get_string('groupmembership', 'activequiz'),
-                'grade'     => get_string('grade'),
-                'timemodified'=> get_string('timemodified', 'activequiz'),
+                'fullname'     => get_string('name'),
+                'group'        => get_string('groupmembership', 'activequiz'),
+                'grade'        => get_string('grade'),
+                'timemodified' => get_string('timemodified', 'activequiz'),
             );
-        }else{
+        } else {
             $columns = array(
-                'fullname'    => get_string('name'),
-                'grade'     => get_string('grade'),
-                'timemodified'=> get_string('timemodified', 'activequiz'),
+                'fullname'     => get_string('name'),
+                'grade'        => get_string('grade'),
+                'timemodified' => get_string('timemodified', 'activequiz'),
             );
         }
 
@@ -100,18 +98,18 @@ class overallgradesview extends \flexible_table implements \renderable{
      * Sets the data to the table
      *
      */
-    public function set_data(){
+    public function set_data() {
         global $CFG, $OUTPUT;
 
         $download = $this->is_downloading();
         $tabledata = $this->get_data();
 
-        foreach($tabledata as $item){
+        foreach ($tabledata as $item) {
 
             $row = array();
 
             $row[] = $item->fullname;
-            if($this->rtq->group_mode()){
+            if ($this->rtq->group_mode()) {
                 $row[] = $item->group;
             }
             $row[] = $item->grade;
@@ -128,7 +126,7 @@ class overallgradesview extends \flexible_table implements \renderable{
      *
      * @return array $data The array of data to show
      */
-    protected function get_data(){
+    protected function get_data() {
         global $DB, $CFG;
 
 
@@ -139,58 +137,58 @@ class overallgradesview extends \flexible_table implements \renderable{
 
 
         $userids = array();
-        foreach($grades as $grade){
+        foreach ($grades as $grade) {
             $userids[] = $grade->userid;
         }
 
         // get user records to get the full name
-        if(!empty($userids)){
+        if (!empty($userids)) {
             list($useridsql, $params) = $DB->get_in_or_equal($userids);
             $sql = 'SELECT * FROM {user} WHERE id ' . $useridsql;
             $userrecs = $DB->get_records_sql($sql, $params);
-        }else{
+        } else {
             $userrecs = array();
         }
 
-        foreach($grades as $grade){
+        foreach ($grades as $grade) {
 
             // check to see if the grade is for a gradebook role.  if not then their grade
             // shouldn't show up here
             $add = false;
-            if($roles = get_user_roles($this->rtq->getContext(), $grade->userid)){
+            if ($roles = get_user_roles($this->rtq->getContext(), $grade->userid)) {
                 $gradebookroles = explode(',', $CFG->gradebookroles);
-                foreach($roles as $role){
+                foreach ($roles as $role) {
 
-                    if(in_array($role->roleid, $gradebookroles)){
+                    if (in_array($role->roleid, $gradebookroles)) {
                         // if they have at least one gradebook role show their grade
                         $add = true;
                     }
                 }
-                if($add === false){
+                if ($add === false) {
                     // don't show grade for non gradebook role
                     continue;
                 }
-            }else{
+            } else {
                 // if there are no given roles for the context, then they aren't students
                 continue;
             }
 
             $gradedata = new \stdClass();
-            $gradedata->fullname = fullname($userrecs[$grade->userid]);
-            if($this->rtq->group_mode()){
+            $gradedata->fullname = fullname($userrecs[ $grade->userid ]);
+            if ($this->rtq->group_mode()) {
 
                 $groups = $this->rtq->get_groupmanager()->get_user_groups($grade->userid);
-                if(!empty($groups)){
+                if (!empty($groups)) {
                     $groupstring = '';
-                    foreach($groups as $group){
-                        if(strlen($groupstring) > 0){
+                    foreach ($groups as $group) {
+                        if (strlen($groupstring) > 0) {
                             // add a comma space if we're back in the foreach for a second or more time
                             $groupstring .= ', ';
                         }
                         $groupstring .= $this->rtq->get_groupmanager()->get_group_name($group->id);
                     }
                     $gradedata->group = $groupstring;
-                }else{
+                } else {
                     $gradedata->group = ' - ';
                 }
             }

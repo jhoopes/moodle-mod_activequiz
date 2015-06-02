@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,7 +18,6 @@ namespace mod_activequiz\forms\edit;
 
 defined('MOODLE_INTERNAL') || die();
 
-global $CFG;
 require_once($CFG->libdir . '/formslib.php');
 
 /**
@@ -31,8 +29,7 @@ require_once($CFG->libdir . '/formslib.php');
  * @copyright   2014 University of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class add_question_form extends \moodleform
-{
+class add_question_form extends \moodleform {
 
     /**
      * Overriding parent function to account for namespace in the class name
@@ -43,6 +40,7 @@ class add_question_form extends \moodleform
     protected function get_form_identifier() {
 
         $class = get_class($this);
+
         return preg_replace('/[^a-z0-9_]/i', '_', $class);
     }
 
@@ -51,7 +49,7 @@ class add_question_form extends \moodleform
      * Adds form fields to the form
      *
      */
-    public function definition(){
+    public function definition() {
 
         $mform = $this->_form;
         $rtq = $this->_customdata['rtq'];;
@@ -89,9 +87,9 @@ class add_question_form extends \moodleform
         $mform->addHelpButton('showhistoryduringquiz', 'showhistoryduringquiz', 'activequiz');
         $mform->setDefault('showhistoryduringquiz', $this->_customdata['showhistoryduringquiz']);
 
-        if(!empty($this->_customdata['edit'])){
+        if (!empty($this->_customdata['edit'])) {
             $savestring = get_string('savequestion', 'activequiz');
-        }else{
+        } else {
             $savestring = get_string('addquestion', 'activequiz');
         }
 
@@ -107,25 +105,25 @@ class add_question_form extends \moodleform
      *
      * @return array $errors
      */
-    public function validation($data, $files){
+    public function validation($data, $files) {
 
         $errors = array();
 
-        if(!filter_var($data['indvquestiontime'], FILTER_VALIDATE_INT) && $data['indvquestiontime'] !== 0){
+        if (!filter_var($data['indvquestiontime'], FILTER_VALIDATE_INT) && $data['indvquestiontime'] !== 0) {
             $errors['indvquestiontime'] = get_string('invalid_indvquestiontime', 'activequiz');
-        }else if($data['indvquestiontime'] < 0){
+        } else if ($data['indvquestiontime'] < 0) {
             $errors['indvquestiontime'] = get_string('invalid_indvquestiontime', 'activequiz');
         }
 
-        if(!filter_var($data['numberoftries'], FILTER_VALIDATE_INT) && $data['numberoftries'] !== 0){
+        if (!filter_var($data['numberoftries'], FILTER_VALIDATE_INT) && $data['numberoftries'] !== 0) {
             $errors['numberoftries'] = get_string('invalid_numberoftries', 'activequiz');
-        }else if($data['numberoftries'] < 1){
+        } else if ($data['numberoftries'] < 1) {
             $errors['numberoftries'] = get_string('invalid_numberoftries', 'activequiz');
         }
 
-        if(!filter_var($data['points'], FILTER_VALIDATE_FLOAT) && $data['points'] !== 0){
+        if (!filter_var($data['points'], FILTER_VALIDATE_FLOAT) && $data['points'] !== 0) {
             $errors['points'] = get_string('invalid_points', 'activequiz');
-        }else if($data['points'] <= 0){
+        } else if ($data['points'] <= 0) {
             $errors['points'] = get_string('invalid_points', 'activequiz');
         }
 

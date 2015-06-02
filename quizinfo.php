@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -29,7 +28,6 @@
 define('AJAX_SCRIPT', true);
 require_once('../../config.php');
 require_sesskey();
-global $DB;
 
 // if they've passed the sesskey information grab the session info
 $sessionid = required_param('sessionid', PARAM_INT);
@@ -37,32 +35,48 @@ $sessionid = required_param('sessionid', PARAM_INT);
 // get JSONlib to return json response
 $jsonlib = new \mod_activequiz\utils\jsonlib();
 
-
-if(!$session = $DB->get_record('activequiz_sessions', array('id'=>$sessionid))){
+// First determine if we get a session.
+if (!$session = $DB->get_record('activequiz_sessions', array('id' => $sessionid))) {
     $jsonlib->send_error('invalid session');
 }
 
+// Next we need to get the active quiz object and course module object to make sure a student can log in
+// for the session asked for
+if(!$activequiz = $DB->get_record('activequiz', array('id'=> $session->activequizid))){
+    $jsonlib->send_error('invalid request');
+}else{
+    // place within try/catch in order to catch errors/redirects and just display invalid request.
+    try{
+        $course = $DB->get_record('course', array('id' => $activequiz->course), '*', MUST_EXIST);
+        $cm = get_coursemodule_from_instance('activequiz', $activequiz->id, $course->id, false, MUST_EXIST);
+
+        require_login($course->id, false, $cm, false, true);
+    }catch(Exception $e){
+        $jsonlib->send_error('invalid request');
+    }
+}
+
 // if we have a session determine the response
-if($session->sessionopen == 0){
+if ($session->sessionopen == 0) {
 
     $jsonlib->set('status', 'sessionclosed');
     $jsonlib->send_response();
 
-}else if(empty($session->currentquestion)){
+} else if (empty($session->currentquestion)) {
     // send a status of quiz not running
     $jsonlib->set('status', 'notrunning');
     $jsonlib->send_response();
-}else if($session->status == 'reviewing') {
+} else if ($session->status == 'reviewing') {
 
     $jsonlib->set('status', 'reviewing');
     $jsonlib->send_response();
 
-}else if($session->status == 'endquestion'){
+} else if ($session->status == 'endquestion') {
 
     $jsonlib->set('status', 'endquestion');
     $jsonlib->send_response();
 
-}else {
+} else {
     // otherwise send a response of the current question with the next start time
     $jsonlib->set('status', 'running');
     $jsonlib->set('currentquestion', $session->currentquestion);

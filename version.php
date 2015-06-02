@@ -29,4 +29,3 @@ $plugin->cron      = 0;           // Period for cron to check this module (secs)
 $plugin->component = 'mod_activequiz';
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->release   = '3.5.2 (Build: 2015060100)';
-

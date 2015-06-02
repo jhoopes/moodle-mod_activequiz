@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -27,19 +26,19 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright   2014 University of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class groupmanager{
+class groupmanager {
 
 
     /** @var \mod_activequiz\activequiz $rtq */
     protected $rtq;
 
 
-        /**
+    /**
      * Construct new instance
      *
      * @param \mod_activequiz\activequiz
      */
-    public function __construct($rtq){
+    public function __construct($rtq) {
         $this->rtq = $rtq;
 
     }
@@ -52,17 +51,17 @@ class groupmanager{
      *
      * @return array An array of group objects keyed by groupid
      */
-    public function get_user_groups($userid = null){
+    public function get_user_groups($userid = null) {
         global $USER;
 
         // assume current user when none specified
-        if(empty($userid)){
+        if (empty($userid)) {
             $userid = $USER->id;
         }
 
-        if(!empty($this->rtq->getRTQ()->grouping)){
+        if (!empty($this->rtq->getRTQ()->grouping)) {
             return groups_get_all_groups($this->rtq->getCourse()->id, $userid, $this->rtq->getRTQ()->grouping);
-        }else{
+        } else {
             return array(); // return empty array when there is no grouping
         }
     }
@@ -71,21 +70,22 @@ class groupmanager{
      * Gets an array of group names keyed by their group id.  is useful for selects and simple foreaches
      *
      * @param int|null $userid If left empty, current user is assumed
-     * @param bool $withdots Whether or not to have the choosedots string be the first element in the array
+     * @param bool     $withdots Whether or not to have the choosedots string be the first element in the array
      * @return array An array of group names keyed by their id
      */
-    public function get_user_groups_name_array($userid = null, $withdots = false){
+    public function get_user_groups_name_array($userid = null, $withdots = false) {
 
         $groups = $this->get_user_groups($userid);
         $retgroups = array();
 
-        if($withdots){
+        if ($withdots) {
             $retgroups[''] = get_string('choosedots');
         }
 
-        foreach($groups as $group){
-            $retgroups[$group->id] = $group->name;
+        foreach ($groups as $group) {
+            $retgroups[ $group->id ] = $group->name;
         }
+
         return $retgroups;
     }
 
@@ -96,7 +96,7 @@ class groupmanager{
      *
      * @return string
      */
-    public function get_group_name($groupid){
+    public function get_group_name($groupid) {
         return groups_get_group_name($groupid);
     }
 
@@ -107,7 +107,7 @@ class groupmanager{
      *
      * @return array An array of user table user objects
      */
-    public function get_group_members($groupid){
+    public function get_group_members($groupid) {
         return groups_get_members($groupid);
     }
 
@@ -115,11 +115,11 @@ class groupmanager{
      * Wrapper function for groups is member
      *
      * @param int $groupid
-     * @param int $userid  Can be left blank and will assume current user if so
+     * @param int $userid Can be left blank and will assume current user if so
      *
      * @return bool
      */
-    public function is_member_of_group($groupid, $userid = null){
+    public function is_member_of_group($groupid, $userid = null) {
         return groups_is_member($groupid, $userid);
     }
 
@@ -130,8 +130,7 @@ class groupmanager{
      *
      * @return array An array of group objects
      */
-    public function get_groups($groups){
-
+    public function get_groups($groups) {
 
 
     }
@@ -148,25 +147,25 @@ class groupmanager{
      *
      * @return array
      */
-    public function get_attendance($activequizid = null, $sessionid = null, $attemptid = null, $groupid = null){
+    public function get_attendance($activequizid = null, $sessionid = null, $attemptid = null, $groupid = null) {
         global $DB;
 
         $conditions = array();
 
-        if(!empty($activequizid)){
+        if (!empty($activequizid)) {
             $conditions['activequizid'] = $activequizid;
         }
-        if(!empty($sessionid)){
+        if (!empty($sessionid)) {
             $conditions['sessionid'] = $sessionid;
         }
-        if(!empty($attemptid)){
+        if (!empty($attemptid)) {
             $conditions['attemptid'] = $attemptid;
         }
-        if(!empty($groupid)){
+        if (!empty($groupid)) {
             $conditions['groupid'] = $groupid;
         }
 
-        if(empty($conditions)){
+        if (empty($conditions)) {
             // if no conditions return empty array
             return array();
         }

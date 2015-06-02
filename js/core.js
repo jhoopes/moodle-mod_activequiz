@@ -31,7 +31,7 @@ activequiz.vars = activequiz.vars || {};
  * @param value the value of the property to set
  * @returns {activequiz}
  */
-activequiz.set = function(name, value){
+activequiz.set = function (name, value) {
     this.vars[name] = value;
     return this;
 };
@@ -42,8 +42,8 @@ activequiz.set = function(name, value){
  * @param name
  * @returns {*}
  */
-activequiz.get = function(name){
-    if(typeof this.vars[name] === 'undefined'){
+activequiz.get = function (name) {
+    if (typeof this.vars[name] === 'undefined') {
         return 'undefined';
     }
 
@@ -60,7 +60,7 @@ activequiz.ajax = {
 
     httpRequest: {},
 
-    init: function(){
+    init: function () {
 
     },
     /**
@@ -76,7 +76,7 @@ activequiz.ajax = {
      *
      * @param callback callable function to be the callback onreadystatechange, must accept httpstatus and the response
      */
-    create_request: function(url, params, callback){
+    create_request: function (url, params, callback) {
 
         // re-init a new request ( so we don't have things running into each other)
         if (window.XMLHttpRequest) { // Mozilla, Safari, ...
@@ -98,21 +98,21 @@ activequiz.ajax = {
             }
         }
 
-        httpRequest.onreadystatechange = function(){
+        httpRequest.onreadystatechange = function () {
             if (this.readyState == 4) {
 
                 var status = this.status;
                 var response = '';
-                if(status == 500){
-                    try{
+                if (status == 500) {
+                    try {
                         response = JSON.parse(this.responseText);
-                    }catch(Error){
+                    } catch (Error) {
                         response = '';
                     }
-                }else{
-                    try{
+                } else {
+                    try {
                         response = JSON.parse(this.responseText);
-                    }catch(Error){
+                    } catch (Error) {
                         response = this.responseText;
                     }
 
@@ -123,14 +123,14 @@ activequiz.ajax = {
         httpRequest.open('POST', activequiz.get('siteroot') + url, true);
 
         var parameters = '';
-        if(params instanceof FormData){
+        if (params instanceof FormData) {
             parameters = params;  // already valid to send with xmlHttpRequest
-        }else{ // separate it out
+        } else { // separate it out
             httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-            for(var param in params){
-                if(params.hasOwnProperty(param)){
-                    if(parameters.length > 0){
+            for (var param in params) {
+                if (params.hasOwnProperty(param)) {
+                    if (parameters.length > 0) {
                         parameters += '&';
                     }
                     parameters += param + '=' + encodeURI(params[param]);
@@ -152,9 +152,9 @@ activequiz.ajax = {
  *
  * @param stop whether to actually stop "loading"
  */
-activequiz.quiz_page_loaded = function(stop){
+activequiz.quiz_page_loaded = function (stop) {
 
-    if(stop){
+    if (stop) {
 
         var controls = document.getElementById('controlbox');
         var instructions = document.getElementById('instructionsbox');
@@ -165,8 +165,8 @@ activequiz.quiz_page_loaded = function(stop){
 
 
         // next insert rtqinitinfo into the activequizvars
-        for(var prop in window.rtqinitinfo){
-            if(rtqinitinfo.hasOwnProperty(prop)){
+        for (var prop in window.rtqinitinfo) {
+            if (rtqinitinfo.hasOwnProperty(prop)) {
                 this.set(prop, rtqinitinfo[prop]);
             }
         }
@@ -178,13 +178,13 @@ activequiz.quiz_page_loaded = function(stop){
         activequiz.set('quizinfobox', document.getElementById('quizinfobox'));
 
         // see if we're resuming a quiz or not
-        if(activequiz.get('resumequiz') == "true"){
-            if(controls){
+        if (activequiz.get('resumequiz') == "true") {
+            if (controls) {
                 controls.classList.remove('hidden');
             }
             this.resume_quiz();
-        }else{
-            if(controls){
+        } else {
+            if (controls) {
                 controls.classList.remove('hidden');
             }
             instructions.classList.remove('hidden');
@@ -196,77 +196,77 @@ activequiz.quiz_page_loaded = function(stop){
             activequiz.getQuizInfo();
         }
 
-    }else{
+    } else {
         setTimeout(activequiz.quiz_page_loaded(true), 1000);
     }
 };
 
-activequiz.resume_quiz = function(){
+activequiz.resume_quiz = function () {
 
     var startquizbtn = document.getElementById('startquiz');
     var inquizcontrols = document.getElementById('inquizcontrols');
 
-  switch(this.get('resumequizaction')){
-      case 'waitforquestion':
-          // we're waiting for a question so let the quiz info handle that
-          // note that there is up to a 3 second offset due to set interval, but, this within an acceptable time offset
-          // for the next question to start
+    switch (this.get('resumequizaction')) {
+        case 'waitforquestion':
+            // we're waiting for a question so let the quiz info handle that
+            // note that there is up to a 3 second offset due to set interval, but, this within an acceptable time offset
+            // for the next question to start
 
-          activequiz.getQuizInfo();
+            activequiz.getQuizInfo();
 
-          if(inquizcontrols){
-              inquizcontrols.classList.remove('btn-hide');
-              startquizbtn.classList.add('btn-hide');
-          }
+            if (inquizcontrols) {
+                inquizcontrols.classList.remove('btn-hide');
+                startquizbtn.classList.add('btn-hide');
+            }
 
-          if(activequiz.get('isinstructor') == 'true'){
-              // instructor resume waitfor question needs to be instantiated as their quizinfo doesn't handle the wait for question case
-              this.waitfor_question(this.get('resumequizcurrentquestion'), this.get('resumequizquestiontime'), this.get('resumequizdelay'));
-          }
+            if (activequiz.get('isinstructor') == 'true') {
+                // instructor resume waitfor question needs to be instantiated as their quizinfo doesn't handle the wait for question case
+                this.waitfor_question(this.get('resumequizcurrentquestion'), this.get('resumequizquestiontime'), this.get('resumequizdelay'));
+            }
 
-          break;
-      case 'startquestion':
-          if(inquizcontrols){
-              inquizcontrols.classList.remove('btn-hide');
-              startquizbtn.classList.add('btn-hide');
-              if(this.get('resumequizquestiontime') == 0){
-                  // enable the "end question button"
-                  this.control_buttons(['endquestion', 'toggleresponses', 'togglenotresponded']);
-              }
+            break;
+        case 'startquestion':
+            if (inquizcontrols) {
+                inquizcontrols.classList.remove('btn-hide');
+                startquizbtn.classList.add('btn-hide');
+                if (this.get('resumequizquestiontime') == 0) {
+                    // enable the "end question button"
+                    this.control_buttons(['endquestion', 'toggleresponses', 'togglenotresponded']);
+                }
 
-          }
+            }
 
-          this.goto_question(this.get('resumequizcurrentquestion'), this.get('resumequizquestiontime'));
-          activequiz.set('inquestion', 'true');
-          activequiz.getQuizInfo();
-          this.loading(null, 'hide');
-
-
-          break;
-      case 'reviewing':
-
-          // setup review for instructors, otherwise display reviewing for students
-          if(activequiz.get('isinstructor') == 'true'){
-              activequiz.getQuizInfo(); // still start quiz info
-              this.loading(null, 'hide');
-              // load right controls if available
-              if(inquizcontrols){
-                  inquizcontrols.classList.remove('btn-hide');
-                  startquizbtn.classList.add('btn-hide');
-              }
-              activequiz.set('inquestion', 'false');
-              activequiz.set('currentquestion', this.get('resumequizcurrentquestion'));
-              activequiz.set('endquestion', 'true');
-              this.reload_results();
-          }else{
-              activequiz.getQuizInfo(); // still start quiz info
-              this.loading(null, 'hide');
-              this.quiz_info(M.util.get_string('waitforrevewingend', 'activequiz'), true);
-          }
+            this.goto_question(this.get('resumequizcurrentquestion'), this.get('resumequizquestiontime'));
+            activequiz.set('inquestion', 'true');
+            activequiz.getQuizInfo();
+            this.loading(null, 'hide');
 
 
-          break;
-  }
+            break;
+        case 'reviewing':
+
+            // setup review for instructors, otherwise display reviewing for students
+            if (activequiz.get('isinstructor') == 'true') {
+                activequiz.getQuizInfo(); // still start quiz info
+                this.loading(null, 'hide');
+                // load right controls if available
+                if (inquizcontrols) {
+                    inquizcontrols.classList.remove('btn-hide');
+                    startquizbtn.classList.add('btn-hide');
+                }
+                activequiz.set('inquestion', 'false');
+                activequiz.set('currentquestion', this.get('resumequizcurrentquestion'));
+                activequiz.set('endquestion', 'true');
+                this.reload_results();
+            } else {
+                activequiz.getQuizInfo(); // still start quiz info
+                this.loading(null, 'hide');
+                this.quiz_info(M.util.get_string('waitforrevewingend', 'activequiz'), true);
+            }
+
+
+            break;
+    }
 
 };
 
@@ -278,7 +278,7 @@ activequiz.resume_quiz = function(){
  * @param questiontime
  * @param delay
  */
-activequiz.waitfor_question = function(questionid, questiontime, delay){
+activequiz.waitfor_question = function (questionid, questiontime, delay) {
 
 
     var quizinfobox = activequiz.get('quizinfobox');
@@ -294,11 +294,11 @@ activequiz.waitfor_question = function(questionid, questiontime, delay){
     quizinfotime.innerHTML = "&nbsp;" + delay.toString() + " seconds";
     activequiz.set('timeLeft', delay);
 
-    activequiz.counter = setInterval(function() {
+    activequiz.counter = setInterval(function () {
         var timeLeft = activequiz.get('timeLeft');
         timeLeft--;
         activequiz.set('timeLeft', timeLeft);
-        if(timeLeft <= 0) {
+        if (timeLeft <= 0) {
             clearInterval(activequiz.counter);
             activequiz.goto_question(questionid, questiontime);
         } else {
@@ -319,7 +319,7 @@ activequiz.waitfor_question = function(questionid, questiontime, delay){
 };
 
 
-activequiz.goto_question = function(questionid, questiontime){
+activequiz.goto_question = function (questionid, questiontime) {
 
     this.clear_and_hide_qinfobox();
 
@@ -327,7 +327,7 @@ activequiz.goto_question = function(questionid, questiontime){
     questionbox.classList.remove('hidden');
 
     // make sure the trycount is always correct (this is for repolling of questions for students
-    if(activequiz.get('isinstructor') == 'false') {
+    if (activequiz.get('isinstructor') == 'false') {
         var questions = activequiz.get('questions');
         var question = questions[questionid];
         var tottries = question.tries;
@@ -342,7 +342,7 @@ activequiz.goto_question = function(questionid, questiontime){
     // Also make sure the questiontimetext is there if we have a timer for this question
     var questiontimer = document.getElementById('q' + questionid + '_questiontime');
     var questiontimertext = document.getElementById('q' + questionid + '_questiontimetext');
-    if(questiontime == 0){
+    if (questiontime == 0) {
 
         questiontimer.innerHTML = "&nbsp;";
         questiontimertext.innerHTML = "&nbsp;";
@@ -350,7 +350,7 @@ activequiz.goto_question = function(questionid, questiontime){
         // QuizInfo will handle the end of a question for students
         // for instructors they are the initiators of a question end so they won't need an update
 
-    }else{ // otherwise set up the timer
+    } else { // otherwise set up the timer
         questiontimertext.innerHTML = M.util.get_string('timertext', 'activequiz');
         questiontimer.innerHTML = "&nbsp;" + questiontime + ' seconds';
 
@@ -362,15 +362,15 @@ activequiz.goto_question = function(questionid, questiontime){
         activequiz.set('questionendtime', questionendtime);
         //activequiz.set('timeLeft', questiontime);
 
-        activequiz.qcounter = setInterval(function() {
+        activequiz.qcounter = setInterval(function () {
             /*var timeLeft = activequiz.get('timeLeft');
-            timeLeft--;
-            activequiz.set('timeLeft', timeLeft);*/
+             timeLeft--;
+             activequiz.set('timeLeft', timeLeft);*/
 
             var currenttime = new Date();
             var currenttimetime = currenttime.getTime();
 
-            if(currenttimetime > activequiz.get('questionendtime')){
+            if (currenttimetime > activequiz.get('questionendtime')) {
                 activequiz.set('inquestion', 'false'); // no longer in question
                 clearInterval(activequiz.qcounter);
                 activequiz.qcounter = false;
@@ -395,7 +395,7 @@ activequiz.goto_question = function(questionid, questiontime){
  *
  *
  */
-activequiz.save_question = function(){
+activequiz.save_question = function () {
 
     var currentquestion = activequiz.get('currentquestion');
 
@@ -404,24 +404,24 @@ activequiz.save_question = function(){
     var questions = activequiz.get('questions');
     var question = questions[currentquestion];
     var tottries = question.tries;
-    if(tottries > 1){
+    if (tottries > 1) {
         // if there are already tries get the current try number
         var tryno;
-        if(activequiz.get('tryno') !== 'undefined'){
+        if (activequiz.get('tryno') !== 'undefined') {
             tryno = activequiz.get('tryno');
             // set the new tryno as the next one
             tryno++;
             console.log('newtryno: ' + tryno);
             activequiz.set('tryno', tryno);
             this.update_tries((tottries - tryno) + 1, currentquestion);
-        }else{
+        } else {
             // set the try number as 2
             activequiz.set('tryno', 2);
             tryno = 2;
         }
 
         // if the try number is less than the total tries then just handle qestion, don't hide or clear anything
-        if(tryno <= tottries){
+        if (tryno <= tottries) {
             this.handle_question(currentquestion, false);
             return;
         }
@@ -430,7 +430,7 @@ activequiz.save_question = function(){
     // this code is run if there are nor more tries, or if the total number of tries is 1
 
     // clear the activequiz counter interval
-    if(activequiz.qcounter){
+    if (activequiz.qcounter) {
         clearInterval(activequiz.qcounter);
     }
 
@@ -448,19 +448,19 @@ activequiz.save_question = function(){
  * Util function to hide all question boxes
  *
  */
-activequiz.hide_all_questionboxes = function(){
+activequiz.hide_all_questionboxes = function () {
 
-    if(activequiz.get('questions') != 'undefined'){
+    if (activequiz.get('questions') != 'undefined') {
         var allquestions = activequiz.get('questions');
-        for(var prop in allquestions){
-            if(allquestions.hasOwnProperty(prop)){
+        for (var prop in allquestions) {
+            if (allquestions.hasOwnProperty(prop)) {
                 var qnum = allquestions[prop].slot;
                 var qcont = document.getElementById('q' + qnum + '_container');
                 // only do this for elements actually found
-                if(typeof qcont != 'undefined'){
-                    if(qcont.classList.contains('hidden')){
+                if (typeof qcont != 'undefined') {
+                    if (qcont.classList.contains('hidden')) {
                         // already hidden
-                    }else{
+                    } else {
                         qcont.classList.add('hidden');
                     }
                 }
@@ -473,18 +473,18 @@ activequiz.hide_all_questionboxes = function(){
  * Util function to clear and hide the quizinfobox
  *
  */
-activequiz.clear_and_hide_qinfobox = function(){
+activequiz.clear_and_hide_qinfobox = function () {
 
     var quizinfobox = document.getElementById('quizinfobox');
 
-    if(!quizinfobox.classList.contains('hidden')){
+    if (!quizinfobox.classList.contains('hidden')) {
         quizinfobox.classList.add('hidden');
     }
 
     var notrespondedbox = document.getElementById('notrespondedbox');
 
-    if(notrespondedbox){
-        if(!notrespondedbox.classList.contains('hidden')){
+    if (notrespondedbox) {
+        if (!notrespondedbox.classList.contains('hidden')) {
             notrespondedbox.classList.add('hidden');
         }
     }
@@ -499,21 +499,21 @@ activequiz.clear_and_hide_qinfobox = function(){
  * @param string
  * @param action
  */
-activequiz.loading = function(string, action){
+activequiz.loading = function (string, action) {
 
     var loadingbox = document.getElementById('loadingbox');
     var loadingtext = document.getElementById('loadingtext');
 
-    if(action === 'hide'){
+    if (action === 'hide') {
 
         // hides the loading box
-        if(!loadingbox.classList.contains('hidden')){
+        if (!loadingbox.classList.contains('hidden')) {
             loadingbox.classList.add('hidden');
         }
-    }else if(action === 'show'){
+    } else if (action === 'show') {
         // show the loading box with the string provided
 
-        if(loadingbox.classList.contains('hidden')){
+        if (loadingbox.classList.contains('hidden')) {
             loadingbox.classList.remove('hidden');
         }
         loadingtext.innerHTML = string;
@@ -526,32 +526,32 @@ activequiz.loading = function(string, action){
  * @param quizinfo
  * @param clear  bool for whether or not to clear the quizinfobox
  */
-activequiz.quiz_info = function(quizinfo, clear){
+activequiz.quiz_info = function (quizinfo, clear) {
 
     var quizinfobox = document.getElementById('quizinfobox');
 
     // if clear, make the quizinfobox be empty
-    if(clear){
+    if (clear) {
         quizinfobox.innerHTML = '';
     }
 
 
-    if(quizinfo == null){
+    if (quizinfo == null) {
         quizinfo = '';
     }
 
-    if(quizinfo == ''){
+    if (quizinfo == '') {
         return; // display nothing if there is nothing
     }
 
-    if(typeof quizinfo == 'object'){
+    if (typeof quizinfo == 'object') {
         quizinfobox.appendChild(quizinfo);
-    }else{
+    } else {
         quizinfobox.innerHTML = quizinfo;
     }
 
     // if it's hidden remove the hidden class
-    if(quizinfobox.classList.contains('hidden')){
+    if (quizinfobox.classList.contains('hidden')) {
         quizinfobox.classList.remove('hidden');
     }
 };
@@ -562,9 +562,9 @@ activequiz.quiz_info = function(quizinfo, clear){
  * @param count The number of tries left
  * @param qnum the question number to update
  */
-activequiz.update_tries = function(count, qnum){
+activequiz.update_tries = function (count, qnum) {
 
-    var trybox = document.getElementById('q'+qnum+'_trycount');
+    var trybox = document.getElementById('q' + qnum + '_trycount');
     var a = {
         'tries': count
     };
@@ -572,7 +572,6 @@ activequiz.update_tries = function(count, qnum){
     trybox.innerHTML = M.util.get_string('trycount', 'activequiz', a);
 
 };
-
 
 
 // Utility functions
@@ -599,7 +598,7 @@ function number_format(number, decimals, dec_point, thousands_sep) {
         toFixedFix = function (n, prec) {
             var k = Math.pow(10, prec);
             return '' + (Math.round(n * k) / k)
-                .toFixed(prec);
+                    .toFixed(prec);
         };
     // Fix for IE parseFloat(0.55).toFixed(0) = 0;
     s = (prec ? toFixedFix(n, prec) : '' + Math.round(n))
@@ -608,7 +607,7 @@ function number_format(number, decimals, dec_point, thousands_sep) {
         s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
     }
     if ((s[1] || '')
-        .length < prec) {
+            .length < prec) {
         s[1] = s[1] || '';
         s[1] += new Array(prec - s[1].length + 1)
             .join('0');

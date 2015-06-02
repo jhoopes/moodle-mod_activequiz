@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,8 +18,6 @@ namespace mod_activequiz\controllers;
 
 defined('MOODLE_INTERNAL') || die();
 
-global $CFG;
-
 /**
  * The responses controller
  *
@@ -29,8 +26,7 @@ global $CFG;
  * @copyright   2014 University of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class responses
-{
+class responses {
 
     /** @var \mod_activequiz\activequiz Realtime quiz class */
     protected $RTQ;
@@ -41,7 +37,7 @@ class responses
     /** @var \moodle_url $pageurl The page url to base other calls on */
     protected $pageurl;
 
-    /** @var array $this->pagevars An array of page options for the page load */
+    /** @var array $this ->pagevars An array of page options for the page load */
     protected $pagevars;
 
     /**
@@ -49,7 +45,7 @@ class responses
      *
      * @param string $baseurl the base url of the page
      */
-    public function setup_page($baseurl){
+    public function setup_page($baseurl) {
         global $PAGE, $CFG, $DB;
 
         $this->pagevars = array();
@@ -61,7 +57,7 @@ class responses
         $quizid = optional_param('quizid', false, PARAM_INT);
 
         // get necessary records from the DB
-        if($id) {
+        if ($id) {
             $cm = get_coursemodule_from_id('activequiz', $id, 0, false, MUST_EXIST);
             $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
             $quiz = $DB->get_record('activequiz', array('id' => $cm->instance), '*', MUST_EXIST);
@@ -90,7 +86,7 @@ class responses
         $PAGE->set_pagelayout('incourse');
         $PAGE->set_context($this->RTQ->getContext());
         $PAGE->set_title(strip_tags($course->shortname . ': ' . get_string("modulename", "activequiz") . ': ' .
-                                                                                    format_string($quiz->name, true)));
+            format_string($quiz->name, true)));
         $PAGE->set_heading($course->fullname);
         $PAGE->set_url($this->pageurl);
     }
@@ -100,10 +96,10 @@ class responses
      * Handles the page request
      *
      */
-    public function handle_request(){
+    public function handle_request() {
         global $DB;
 
-        switch($this->pagevars['action']){
+        switch ($this->pagevars['action']) {
             case 'regradeall':
 
                 $this->RTQ->get_grader()->save_all_grades();
@@ -118,7 +114,7 @@ class responses
             case 'viewsession':
                 $sessionid = required_param('sessionid', PARAM_INT);
 
-                if(empty($sessionid)){ // if no session id just go to the home page
+                if (empty($sessionid)) { // if no session id just go to the home page
                     $this->pageurl->param('action', '');
                     redirect($this->pageurl, null, 0);
                 }
@@ -126,7 +122,7 @@ class responses
                 $session = $this->RTQ->get_session($sessionid);
                 $this->pageurl->param('sessionid');
                 $sessionattempts = new \mod_activequiz\tableviews\sessionattempts('sessionattempts', $this->RTQ,
-                                                                                            $session, $this->pageurl);
+                    $session, $this->pageurl);
 
                 $sessions = $this->RTQ->get_sessions();
                 $this->RTQ->get_renderer()->responses_header();
@@ -151,7 +147,7 @@ class responses
      * Gets the extra parameters for the class
      *
      */
-    protected function get_parameters(){
+    protected function get_parameters() {
 
         $this->pagevars['action'] = optional_param('action', '', PARAM_ALPHANUM);
 

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,7 +18,6 @@ namespace mod_activequiz\questionmodifiers;
 
 defined('MOODLE_INTERNAL') || die();
 
-global $CFG;
 require_once($CFG->dirroot . '/question/engine/lib.php');
 
 /**
@@ -30,13 +28,13 @@ require_once($CFG->dirroot . '/question/engine/lib.php');
  * @copyright 2015 University of Wisconsin - madison
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class poodllrecording implements \mod_activequiz\questionmodifiers\ibasequestionmodifier{
+class poodllrecording implements \mod_activequiz\questionmodifiers\ibasequestionmodifier {
 
 
+    public function requires_jquery() {
+    }
 
-    public function requires_jquery(){}
-
-    public function add_css(){
+    public function add_css() {
         global $PAGE;
         $PAGE->requires->css('/mod/activequiz/js/questionmodifiers/poodllrecording/lightbox/css/lightbox.css');
         $PAGE->requires->css('/mod/activequiz/js/questionmodifiers/poodllrecording/styles.css');
@@ -46,7 +44,7 @@ class poodllrecording implements \mod_activequiz\questionmodifiers\ibasequestion
      * Add js and css
      *
      */
-    public function add_js(){
+    public function add_js() {
         global $PAGE;
         $PAGE->requires->js('/mod/activequiz/js/questionmodifiers/poodllrecording/lightbox_images.js');
         $PAGE->requires->js('/mod/activequiz/js/questionmodifiers/poodllrecording/lightbox/lightbox.min.js');
@@ -58,15 +56,15 @@ class poodllrecording implements \mod_activequiz\questionmodifiers\ibasequestion
      * so that the images are smaller unless clicked on for review
      *
      * @param \mod_activequiz\activequiz_question $question The realtime quiz question
-     * @param array $attempts An array of \mod_activequiz\activequiz_attempt classes
-     * @param string $output The current output from getting the results
+     * @param array                               $attempts An array of \mod_activequiz\activequiz_attempt classes
+     * @param string                              $output The current output from getting the results
      * @return string Return the updated output to be passed to the client
      */
-    public function modify_questionresults_duringquiz($question, $attempts, $output){
+    public function modify_questionresults_duringquiz($question, $attempts, $output) {
         global $DB;
 
         // if no attempts just return the output
-        if(empty($attempts)){
+        if (empty($attempts)) {
             return $output;
         }
 
@@ -80,11 +78,11 @@ class poodllrecording implements \mod_activequiz\questionmodifiers\ibasequestion
         // now get question definition
         $questiondef = $qa->get_question();
 
-        if($questiondef->responseformat == 'picture'){
+        if ($questiondef->responseformat == 'picture') {
 
             // if the response format is a picture, meaning drawing type add the js for lightbox stuff
 
-            $picturejs = \html_writer::start_tag('script', array('type'=>'text/javascript', 'id'=>'poodllrecording_js'));
+            $picturejs = \html_writer::start_tag('script', array('type' => 'text/javascript', 'id' => 'poodllrecording_js'));
             $picturejs .= '
                 activequiz.questionmodifiers.poodllrecording.lightbox_images();
             ';
@@ -94,7 +92,7 @@ class poodllrecording implements \mod_activequiz\questionmodifiers\ibasequestion
 
             $newoutput = \html_writer::div($newoutput, '', array('id' => 'poodllrecording-picture'));
 
-        }else{
+        } else {
             $newoutput = $output;
         }
 

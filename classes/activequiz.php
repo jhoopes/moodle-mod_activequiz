@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -29,8 +28,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright   2014 University of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class activequiz
-{
+class activequiz {
 
     /**
      * @var array $review fields Static review fields to add as options
@@ -80,18 +78,18 @@ class activequiz
      * and returns a stdClass of review options for the specified whenname
      *
      * @param \stdClass $formactivequiz
-     * @param string $whenname
+     * @param string    $whenname
      *
      * @return \stdClass
      */
-    public static function get_review_options_from_form($formactivequiz, $whenname){
+    public static function get_review_options_from_form($formactivequiz, $whenname) {
 
         $formoptionsgrp = $whenname . 'optionsgrp';
         $formreviewoptions = $formactivequiz->$formoptionsgrp;
 
         $reviewoptions = new \stdClass();
-        foreach(\mod_activequiz\activequiz::$reviewfields as $field => $notused){
-            $reviewoptions->$field = $formreviewoptions[$field];
+        foreach (\mod_activequiz\activequiz::$reviewfields as $field => $notused) {
+            $reviewoptions->$field = $formreviewoptions[ $field ];
         }
 
         return $reviewoptions;
@@ -107,7 +105,7 @@ class activequiz
      * @param array  $pagevars The variables and options for the page
      *
      */
-    public function __construct($cm, $course, $quiz, $pagevars = array()){
+    public function __construct($cm, $course, $quiz, $pagevars = array()) {
         global $CFG, $PAGE;
 
         $this->cm = $cm;
@@ -131,7 +129,7 @@ class activequiz
      *
      * @return object
      */
-    public function getCM(){
+    public function getCM() {
         return $this->cm;
     }
 
@@ -140,7 +138,7 @@ class activequiz
      *
      * @return object
      */
-    public function getCourse(){
+    public function getCourse() {
         return $this->course;
     }
 
@@ -149,7 +147,7 @@ class activequiz
      *
      * @return object
      */
-    public function getRTQ(){
+    public function getRTQ() {
         return $this->activequiz;
     }
 
@@ -158,7 +156,7 @@ class activequiz
      *
      * @return bool
      */
-    public function saveRTQ(){
+    public function saveRTQ() {
         global $DB;
 
         return $DB->update_record('activequiz', $this->activequiz);
@@ -169,7 +167,7 @@ class activequiz
      *
      * @return \context_module
      */
-    public function getContext(){
+    public function getContext() {
         return $this->context;
     }
 
@@ -178,7 +176,7 @@ class activequiz
      *
      * @param \mod_activequiz\questionmanager $questionmanager
      */
-    public function set_questionmanager(\mod_activequiz\questionmanager $questionmanager){
+    public function set_questionmanager(\mod_activequiz\questionmanager $questionmanager) {
         $this->questionmanager = $questionmanager;
     }
 
@@ -187,7 +185,7 @@ class activequiz
      *
      * @return \mod_activequiz\questionmanager
      */
-    public function get_questionmanager(){
+    public function get_questionmanager() {
         return $this->questionmanager;
     }
 
@@ -196,7 +194,7 @@ class activequiz
      *
      * @param \mod_activequiz_renderer $renderer
      */
-    public function set_renderer(\mod_activequiz_renderer $renderer){
+    public function set_renderer(\mod_activequiz_renderer $renderer) {
         $this->renderer = $renderer;
     }
 
@@ -205,7 +203,7 @@ class activequiz
      *
      * @return \mod_activequiz_renderer
      */
-    public function get_renderer(){
+    public function get_renderer() {
         return $this->renderer;
     }
 
@@ -214,7 +212,7 @@ class activequiz
      *
      * @return \mod_activequiz\utils\grade
      */
-    public function get_grader(){
+    public function get_grader() {
         return $this->grader;
     }
 
@@ -223,7 +221,7 @@ class activequiz
      *
      * @return \mod_activequiz\utils\groupmanager
      */
-    public function get_groupmanager(){
+    public function get_groupmanager() {
         return $this->groupmanager;
     }
 
@@ -232,7 +230,7 @@ class activequiz
      *
      * @param string $capability
      */
-    public function require_capability($capability){
+    public function require_capability($capability) {
         require_capability($capability, $this->context);
 
         // no return as require_capability will throw exception on error, or just continue
@@ -242,15 +240,15 @@ class activequiz
      * Wrapper for the has_capability function to provide the rtq context
      *
      * @param string $capability
-     * @param int $userid
+     * @param int    $userid
      *
      * @return bool Whether or not the current user has the capability
      */
-    public function has_capability($capability, $userid = 0){
-        if($userid !==0){
+    public function has_capability($capability, $userid = 0) {
+        if ($userid !== 0) {
             // pass in userid if there is one
             return has_capability($capability, $this->context, $userid);
-        }else{
+        } else {
             // just do standard check with current user
             return has_capability($capability, $this->context);
         }
@@ -261,12 +259,13 @@ class activequiz
      *
      * @return bool
      */
-    public function is_instructor(){
+    public function is_instructor() {
 
-        if(is_null($this->isinstructor)){
+        if (is_null($this->isinstructor)) {
             $this->isinstructor = $this->has_capability('mod/activequiz:control');
+
             return $this->isinstructor;
-        }else{
+        } else {
             return $this->isinstructor;
         }
     }
@@ -276,10 +275,10 @@ class activequiz
      *
      * @return bool
      */
-    public function group_mode(){
-        if($this->activequiz->workedingroups){
+    public function group_mode() {
+        if ($this->activequiz->workedingroups) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -291,9 +290,10 @@ class activequiz
      *
      * @return \stdClass A class of the options
      */
-    public function get_review_options($whenname){
+    public function get_review_options($whenname) {
 
         $reviewoptions = json_decode($this->activequiz->reviewoptions);
+
         return $reviewoptions->$whenname;
     }
 
@@ -304,10 +304,10 @@ class activequiz
      *
      * @return \mod_activequiz\activequiz_session
      */
-    public function get_session($sessionid){
+    public function get_session($sessionid) {
         global $DB;
 
-        $session = $DB->get_record('activequiz_sessions', array('id' => $sessionid), '*',  MUST_EXIST);
+        $session = $DB->get_record('activequiz_sessions', array('id' => $sessionid), '*', MUST_EXIST);
 
         return new \mod_activequiz\activequiz_session($this, $this->pagevars['pageurl'], $this->pagevars, $session);
 
@@ -319,7 +319,7 @@ class activequiz
      * @param array $conditions
      * @return array
      */
-    public function get_sessions($conditions = array()){
+    public function get_sessions($conditions = array()) {
         global $DB;
 
         $qconditions = array_merge(array('activequizid' => $this->getRTQ()->id), $conditions);
@@ -327,7 +327,7 @@ class activequiz
         $sessions = $DB->get_records('activequiz_sessions', $qconditions);
 
         $rtqsessions = array();
-        foreach($sessions as $session){
+        foreach ($sessions as $session) {
             $rtqsessions[] = new \mod_activequiz\activequiz_session($this, $this->pagevars['pageurl'], $this->pagevars, $session);
         }
 
@@ -340,7 +340,7 @@ class activequiz
      *
      * @return array
      */
-    public function get_closed_sessions(){
+    public function get_closed_sessions() {
         return $this->get_sessions(array('sessionopen' => 0));
     }
 
@@ -348,7 +348,7 @@ class activequiz
      * This is a method to invoke the question modifier classes
      *
      * * * while params not explicitly defined, the first two arguments are required
-     * @param string $action The function that will be called on the question modifier classes,
+     * @param string                                   $action The function that will be called on the question modifier classes,
      *                          function must be defined in basequestionmodifier
      * @param \mod_activequiz\activequiz_question|null The question that we're going to modifiy.
      *                                                     If null, we'll use all questions defined for this instance
@@ -357,61 +357,61 @@ class activequiz
      *
      * @throws \moodle_exception Throws moodle exception on errors in invoking methods
      */
-    public function call_question_modifiers(){
+    public function call_question_modifiers() {
 
         $params = func_get_args();
 
-        if(empty($params[0])) {
+        if (empty($params[0])) {
             throw new \moodle_exception('noaction', 'activequiz', null, null, 'Invalid call to call_question_modifiers.  No Action');
-        }else{
+        } else {
             $action = $params[0];
         }
 
         // next get the question types we're going to be invoking question modifiers for
-        if(!empty($params[1])){
+        if (!empty($params[1])) {
 
-            if($params[1] instanceof \mod_activequiz\activequiz_question){
+            if ($params[1] instanceof \mod_activequiz\activequiz_question) {
                 /** @var \mod_activequiz\activequiz_question $question */
                 $question = $params[1];
                 // we have a question defined, so we'll use it's question type
                 $questiontypes = array($question->getQuestion()->qtype);
-            }else{
+            } else {
                 $questiontypes = array();
             }
 
-        }else{
+        } else {
             // we're going through all question types defined by the instance
             $questiontypes = array();
             $questions = $this->get_questionmanager()->get_questions();
-            foreach($questions as $question){
+            foreach ($questions as $question) {
                 /** @var \mod_activequiz\activequiz_question $question */
                 $questiontypes[] = $question->getQuestion()->qtype;
             }
         }
 
-        if(empty($questiontypes)){
+        if (empty($questiontypes)) {
             throw new \moodle_exception('noquestiontypes', 'activequiz', null, null, 'No question types defined for this call');
         }
 
         // next we'll try to invoke the methods
         $return = null;
-        foreach($questiontypes as $type){
+        foreach ($questiontypes as $type) {
 
             // first check to make sure the class exists
-            if(class_exists("\\mod_activequiz\\questionmodifiers\\" . $type)){
+            if (class_exists("\\mod_activequiz\\questionmodifiers\\" . $type)) {
 
                 // create reflection for it to validate action and params as well as implementing
                 $reflection = new \ReflectionClass('\mod_activequiz\questionmodifiers\\' . $type);
-                if(!$reflection->implementsInterface('\mod_activequiz\questionmodifiers\ibasequestionmodifier')){
+                if (!$reflection->implementsInterface('\mod_activequiz\questionmodifiers\ibasequestionmodifier')) {
                     throw new \moodle_exception('invlidimplementation', 'activequiz', null, null, 'You question modifier does not implement the base modifier interface... ' . $type);
-                }else{
+                } else {
                     $rMethod = $reflection->getMethod($action);
                     $fparams = array_slice($params, 2);
 
                     // next validate that we've gotten the right number of parameters for calling the action
-                    if($rMethod->getNumberOfRequiredParameters() != count($fparams)){
+                    if ($rMethod->getNumberOfRequiredParameters() != count($fparams)) {
                         throw new \moodle_exception('invalidnumberofparams', 'activequiz', null, null, 'Invalid number of parameters passed to question modifiers call');
-                    }else{
+                    } else {
 
                         // now just call and return the method's return
                         $class = '\mod_activequiz\questionmodifiers\\' . $type;

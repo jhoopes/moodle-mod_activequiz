@@ -25,33 +25,33 @@ var activequiz = activequiz || {};
 activequiz.vars = activequiz.vars || {};
 
 
-activequiz.getQuizInfo = function(){
+activequiz.getQuizInfo = function () {
 
     var params = {
         'sesskey': activequiz.get('sesskey'),
         'sessionid': activequiz.get('sessionid')
     };
 
-    activequiz.ajax.create_request('/mod/activequiz/quizinfo.php', params, function(status, response){
+    activequiz.ajax.create_request('/mod/activequiz/quizinfo.php', params, function (status, response) {
 
-        if(status == 500){
+        if (status == 500) {
             window.alert('There was an error....' + response);
-        }else if(status == 200){
-            if(response.status == 'notrunning'){
+        } else if (status == 200) {
+            if (response.status == 'notrunning') {
                 // do nothing as we're not running
-            }else if(response.status == 'running' && activequiz.get('inquestion') != 'true'){
+            } else if (response.status == 'running' && activequiz.get('inquestion') != 'true') {
 
                 activequiz.loading(null, 'hide'); // make sure the loading box hides (this is a catch for when the quiz is resuming)
                 activequiz.set('inquestion', 'true'); // set this to true so that we don't keep calling this over and over
                 activequiz.set('endedquestion', 'false'); // set this to false if we're going to a new question
                 activequiz.waitfor_question(response.currentquestion, response.questiontime, response.delay);
 
-            }else if(response.status == 'endquestion' && activequiz.get('endedquestion') != 'true'){
+            } else if (response.status == 'endquestion' && activequiz.get('endedquestion') != 'true') {
 
                 var currentquestion = activequiz.get('currentquestion');
 
                 activequiz.handle_question(currentquestion);
-                if(activequiz.qcounter){
+                if (activequiz.qcounter) {
                     clearInterval(activequiz.qcounter);
                     var questiontimertext = document.getElementById('q' + currentquestion + '_questiontimetext');
                     var questiontimer = document.getElementById('q' + currentquestion + '_questiontime');
@@ -65,11 +65,11 @@ activequiz.getQuizInfo = function(){
 
                 activequiz.set('endedquestion', 'true');
 
-            }else if(response.status == 'reviewing'){
+            } else if (response.status == 'reviewing') {
 
                 activequiz.set('inquestion', 'false');
 
-            }else if(response.status == 'sessionclosed'){
+            } else if (response.status == 'sessionclosed') {
 
                 activequiz.hide_all_questionboxes();
                 activequiz.quiz_info(M.util.get_string('sessionclosed', 'activequiz'));
@@ -90,14 +90,14 @@ activequiz.getQuizInfo = function(){
  * @param questionid the questionid to handle
  * @param hide is used to determine if we should hide the question container.  is true by default
  */
-activequiz.handle_question = function(questionid, hide){
+activequiz.handle_question = function (questionid, hide) {
 
     var alreadysaving = activequiz.get('savingquestion');
-    if(alreadysaving == 'undefined'){
+    if (alreadysaving == 'undefined') {
         activequiz.set('savingquestion', 'saving');
-    }else if(alreadysaving == "saving"){
+    } else if (alreadysaving == "saving") {
         return; // don't try and save again
-    }else{
+    } else {
         activequiz.set('savingquestion', 'saving');
     }
 
@@ -110,11 +110,10 @@ activequiz.handle_question = function(questionid, hide){
     loadingbox.classList.remove('hidden');
 
     // if there are multiple tries for this question then don't hide the question container
-    if(hide){
-        var qbox = document.getElementById('q'+ questionid + '_container');
+    if (hide) {
+        var qbox = document.getElementById('q' + questionid + '_container');
         qbox.classList.add('hidden');
     }
-
 
 
     // will only work on Modern browsers
@@ -132,7 +131,7 @@ activequiz.handle_question = function(questionid, hide){
     // submit the form
     activequiz.ajax.create_request('/mod/activequiz/quizdata.php', formdata, function (status, response) {
 
-        if(status == 500){
+        if (status == 500) {
             activequiz.set('savingquestion', 'done');
             var loadingbox = document.getElementById('loadingbox');
             loadingbox.classList.add('hidden');
@@ -155,12 +154,12 @@ activequiz.handle_question = function(questionid, hide){
         activequiz.quiz_info(feedbackintro, true);
 
         var feedback = response.feedback;
-        if(feedback.length > 0){
+        if (feedback.length > 0) {
 
             var feedbackbox = document.createElement('div');
             feedbackbox.innerHTML = feedback;
             activequiz.quiz_info(feedbackbox);
-        }else {
+        } else {
             // no feedback
 
             var feedbackbox = document.createElement('div');

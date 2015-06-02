@@ -79,7 +79,7 @@ class attempt_viewed extends \core\event\base {
      */
     public function get_url() {
         return new \moodle_url('/mod/activequiz/viewquizattempt.php', array('attemptid' => $this->objectid,
-                                'sessionid' => $this->data['sessionid']));
+                                                                            'sessionid' => $this->data['sessionid']));
     }
 
 

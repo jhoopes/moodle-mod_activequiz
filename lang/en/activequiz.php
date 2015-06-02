@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -42,6 +41,13 @@ $string['responses'] = 'View responses';
 $string['attempts'] = 'Attempts';
 $string['overallgrade'] = 'Overall grade: {$a->overallgrade} / {$a->scale}';
 
+$string['activequiz:addinstance'] = 'Add an instance of activequiz';
+$string['activequiz:attempt'] = 'Attempt an active quiz';
+$string['activequiz:control'] = 'Control an active quiz. (Usually for instructors only)';
+$string['activequiz:editquestions'] = 'Edit questions for an active quiz.';
+$string['activequiz:seeresponses'] = 'View other student responses to grade them';
+$string['activequiz:viewownattempts'] = 'Allows students to see their own attempts at a quiz';
+
 $string['invalidattemptaccess'] = 'You do not have permission to access this attempt';
 
 // event strings
@@ -71,8 +77,7 @@ $string['gradesettings'] = 'Grade settings';
 $string['scale'] = 'Maximum Grade';
 $string['scale_help'] = 'This value (integer) will scale whatever points that are received on the quiz to this value.';
 $string['grademethod'] = 'Session grading method';
-$string['grademethod_help'] = 'This is the method that is used when grading.' .
-                                'This method is for figuring out the grading with multiple sessions in the same activequiz';
+$string['grademethod_help'] = 'This is the method that is used when grading.  This method is for figuring out the grading with multiple sessions in the same activequiz';
 $string['assessed'] = 'Assessed';
 $string['assessed_help'] = 'Check this box to make your quiz assessed';
 
@@ -94,7 +99,6 @@ $string['theattempt_help'] = 'Whether the student can review the attempt at all.
 $string['reviewafter'] = 'After the sessions are closed';
 $string['manualcomment'] = 'Manual Comment';
 $string['manualcomment_help'] = 'The comment that instructors can add when grading an attempt';
-
 
 
 // edit page
@@ -185,7 +189,7 @@ $string['shownotresponded'] = 'Show not responded';
 
 // Instructions
 $string['instructorquizinst'] = '<p>Please wait on this page until students have connected.  Once <b>start quiz</b> is clicked, the quiz will start the first question</p>' .
-'<p>
+    '<p>
 <p>Controls:</p>
     <ul>
         <li>

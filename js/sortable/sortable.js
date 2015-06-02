@@ -1,6 +1,6 @@
 /**!
  * Sortable
- * @author	RubaXa   <trash@rubaxa.org>
+ * @author    RubaXa   <trash@rubaxa.org>
  * @license MIT
  */
 
@@ -161,7 +161,6 @@
         ;
 
 
-
     /**
      * @class  Sortable
      * @param  {HTMLElement}  el
@@ -210,7 +209,7 @@
         var group = options.group;
 
         if (!group || typeof group != 'object') {
-            group = options.group = { name: group };
+            group = options.group = {name: group};
         }
 
 
@@ -884,7 +883,7 @@
 
     function _bind(ctx, fn) {
         var args = slice.call(arguments, 2);
-        return	fn.bind ? fn.bind.apply(fn, [ctx].concat(args)) : function () {
+        return fn.bind ? fn.bind.apply(fn, [ctx].concat(args)) : function () {
             return fn.apply(ctx, args.concat(slice.call(arguments)));
         };
     }

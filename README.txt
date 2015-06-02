@@ -38,6 +38,7 @@ Changes:
 --------
 
 2015-06-01 - Fixing of missing CSS style "hidden" as some themes do not contain this style
+2015-05-27 - Some small minor changes from Moodle.org for plugin reviewing.  Also a large number of code style updates.
 2015-04-30 - Updates required to make the edit page work with the new question engine display classes.
              Drag and drop of questions was also added.
 2015-01-05 - Re-written module for integration with the question engine, with many other updates.
@@ -85,4 +86,3 @@ You can contact me (John Hoopes) at hoopes AT wisc DOT edu
 You can contact Davo Smith on 'moodle AT davosmith DOT co DOT uk, or at http://www.davosmith.co.uk/contact.php
 
 This module is provided as is by the University of Wisconsin released under the same license of Moodle (GPL v3)
-

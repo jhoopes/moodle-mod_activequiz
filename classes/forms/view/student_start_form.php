@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,7 +18,6 @@ namespace mod_activequiz\forms\view;
 
 defined('MOODLE_INTERNAL') || die();
 
-global $CFG;
 require_once($CFG->libdir . '/formslib.php');
 
 
@@ -32,7 +30,7 @@ require_once($CFG->libdir . '/formslib.php');
  * @copyright   2014 University of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class student_start_form extends \moodleform{
+class student_start_form extends \moodleform {
 
     /**
      * Overriding parent function to account for namespace in the class name
@@ -43,6 +41,7 @@ class student_start_form extends \moodleform{
     protected function get_form_identifier() {
 
         $class = get_class($this);
+
         return preg_replace('/[^a-z0-9_]/i', '_', $class);
     }
 
@@ -51,7 +50,7 @@ class student_start_form extends \moodleform{
      * Form definition
      *
      */
-    function definition(){
+    function definition() {
         global $USER;
 
         $custdata = $this->_customdata;
@@ -61,19 +60,19 @@ class student_start_form extends \moodleform{
         $validgroups = $custdata['validgroups'];
 
         // check if we're in group mode
-        if($rtq->group_mode()){
+        if ($rtq->group_mode()) {
 
             // get user's groups
             $groups = $rtq->get_groupmanager()->get_user_groups_name_array(null, false);
 
             // take out the invalid groups
-            foreach($groups as $key => $group){
-                if(!in_array($key, $validgroups)){
-                    unset($groups[$key]);
+            foreach ($groups as $key => $group) {
+                if (!in_array($key, $validgroups)) {
+                    unset($groups[ $key ]);
                 }
             }
 
-            if(count($groups) <= 1){ // first one will always be the '' index for the choose dots string
+            if (count($groups) <= 1) { // first one will always be the '' index for the choose dots string
                 // if only 1 group unset the choosedots index and disable the form element
                 unset($groups['']);
 
@@ -86,9 +85,9 @@ class student_start_form extends \moodleform{
                 $mform->setType('group', PARAM_INT);
 
                 $mform->addElement('static', 'group_text', get_string('group'), $groupname);
-            }else{
+            } else {
                 // add the choose dots string to the begining of the array for selecting
-                $groups = array(''=>get_string('choosedots')) + $groups;
+                $groups = array('' => get_string('choosedots')) + $groups;
                 $mform->addElement('select', 'group', get_string('select_group', 'mod_activequiz'), $groups);
                 $mform->setType('group', PARAM_INT);
             }
@@ -97,9 +96,9 @@ class student_start_form extends \moodleform{
         $mform->addElement('hidden', 'groupmode', $rtq->getRTQ()->workedingroups);
         $mform->setType('groupmode', PARAM_INT);
 
-        if($rtq->group_mode() && $rtq->getRTQ()->groupattendance == 1){
+        if ($rtq->group_mode() && $rtq->getRTQ()->groupattendance == 1) {
             $mform->addElement('submit', 'submitbutton', get_string('continue'));
-        }else{
+        } else {
             $mform->addElement('submit', 'submitbutton', get_string('joinquiz', 'mod_activequiz'));
         }
 
@@ -114,29 +113,30 @@ class student_start_form extends \moodleform{
      *
      * @return array $errors
      */
-    public function validation($data, $files){
+    public function validation($data, $files) {
         global $USER;
 
         $errors = array();
 
         // only check when we're in group mode
-        if($data['groupmode'] == 1){
+        if ($data['groupmode'] == 1) {
 
-            if(!isset($data['group'])){
-                if(isset($data['hidden_group'])){
+            if (!isset($data['group'])) {
+                if (isset($data['hidden_group'])) {
                     $data['group'] = $data['hidden_group'];
-                }else{
+                } else {
                     $errors['group'] = get_string('notingroup', 'mod_activequiz');
                 }
             }
 
 
             // make sure the user is in the group selected (shouldn't happen)
-            if(!groups_is_member($data['group'], $USER->id)){
+            if (!groups_is_member($data['group'], $USER->id)) {
                 $errors['group'] = get_string('notingroup', 'mod_activequiz');
             }
 
         }
+
         return $errors;
     }
 }

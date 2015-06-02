@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -27,8 +26,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright   2014 University of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class activequiz_question
-{
+class activequiz_question {
 
     /** @var int $id The RTQ question id */
     protected $id;
@@ -39,7 +37,7 @@ class activequiz_question
     /** @var int $questiontime question time for the question */
     protected $questiontime;
 
-    /** @var int $tries The number of tries  */
+    /** @var int $tries The number of tries */
     protected $tries;
 
     /** @var float $points The number of points for the question */
@@ -62,15 +60,15 @@ class activequiz_question
     /**
      * Construct the question
      *
-     * @param int $rtqqid
-     * @param  int $notime
-     * @param int $questiontime
-     * @param int $tries
-     * @param float $points
-     * @param int $showhistoryduringquiz
+     * @param int    $rtqqid
+     * @param  int   $notime
+     * @param int    $questiontime
+     * @param int    $tries
+     * @param float  $points
+     * @param int    $showhistoryduringquiz
      * @param object $question
      */
-    public function __construct($rtqqid, $notime, $questiontime, $tries, $points, $showhistoryduringquiz, $question){
+    public function __construct($rtqqid, $notime, $questiontime, $tries, $points, $showhistoryduringquiz, $question) {
         $this->id = $rtqqid;
         $this->notime = $notime;
         $this->questiontime = $questiontime;
@@ -85,8 +83,7 @@ class activequiz_question
     /**
      * not used function until we only support 5.4 and higher
      */
-    public function JsonSerialize()
-    {
+    public function JsonSerialize() {
         // to make sue of the is function on json_encode, this class also needs to implement JsonSerializable
 
         // TODO: This will be supported if Moodle moves to only supporting php 5.4 and higher
@@ -98,7 +95,7 @@ class activequiz_question
      *
      * @return int
      */
-    public function getId(){
+    public function getId() {
         return $this->id;
     }
 
@@ -107,7 +104,7 @@ class activequiz_question
      *
      * @return int
      */
-    public function getNoTime(){
+    public function getNoTime() {
         return $this->notime;
     }
 
@@ -116,7 +113,7 @@ class activequiz_question
      *
      * @return int
      */
-    public function getQuestionTime(){
+    public function getQuestionTime() {
         return $this->questiontime;
     }
 
@@ -125,7 +122,7 @@ class activequiz_question
      *
      * @return int
      */
-    public function getTries(){
+    public function getTries() {
         return $this->tries;
     }
 
@@ -134,7 +131,7 @@ class activequiz_question
      *
      * @return float
      */
-    public function getPoints(){
+    public function getPoints() {
         return $this->points;
     }
 
@@ -143,7 +140,7 @@ class activequiz_question
      *
      * @return int
      */
-    public function getShowHistory(){
+    public function getShowHistory() {
         return $this->showhistoryduringquiz;
     }
 
@@ -152,7 +149,7 @@ class activequiz_question
      *
      * @return \stdClass
      */
-    public function getQuestion(){
+    public function getQuestion() {
         return $this->question;
     }
 
@@ -161,7 +158,7 @@ class activequiz_question
      *
      * @param int $slot
      */
-    public function set_slot($slot){
+    public function set_slot($slot) {
         $this->slot = $slot;
     }
 
@@ -170,7 +167,7 @@ class activequiz_question
      *
      * @return int
      */
-    public function get_slot(){
+    public function get_slot() {
         return $this->slot;
     }
 

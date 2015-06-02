@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -69,9 +68,9 @@ class restore_activequiz_activity_task extends restore_activity_task {
         $rules = array();
 
         // List of activequizs in course
-        $rules[] = new restore_decode_rule('activequizINDEX', '/mod/activequiz/index.php?id=$1', 'course');
+        $rules[] = new restore_decode_rule('ACTIVEQUIZINDEX', '/mod/activequiz/index.php?id=$1', 'course');
         // activequiz by cm->id and activequiz->id
-        $rules[] = new restore_decode_rule('activequizVIEWBYID', '/mod/activequiz/view.php?id=$1', 'course_module');
+        $rules[] = new restore_decode_rule('ACTIVEQUIZVIEWBYID', '/mod/activequiz/view.php?id=$1', 'course_module');
 
         return $rules;
     }

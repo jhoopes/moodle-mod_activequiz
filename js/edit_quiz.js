@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-window.addEventListener('load', function(){
+window.addEventListener('load', function () {
 
     activequiz.set('sesskey', window.rtqinitinfo.sesskey);
     activequiz.set('siteroot', window.rtqinitinfo.siteroot);
@@ -32,11 +32,11 @@ window.addEventListener('load', function(){
 
     var sorted = Sortable.create(questionList, {
         handle: '.dragquestion',
-        onSort: function(evt){
+        onSort: function (evt) {
 
             var questionList = document.getElementsByClassName('questionlist')[0];
             var questionOrder = [];
-            for(var x = 0; x < questionList.childNodes.length; x++){
+            for (var x = 0; x < questionList.childNodes.length; x++) {
 
                 var questionID = questionList.childNodes[x].getAttribute('data-questionid');
                 questionOrder.push(questionID);
@@ -49,25 +49,25 @@ window.addEventListener('load', function(){
                 'action': 'dragdrop'
             };
 
-            activequiz.ajax.create_request('/mod/activequiz/edit.php', params, function(status, response){
+            activequiz.ajax.create_request('/mod/activequiz/edit.php', params, function (status, response) {
 
                 var editStatus = document.getElementById('editstatus');
                 editStatus.innerHTMl = '';
 
-                if(status == 500){
+                if (status == 500) {
 
                     editStatus.classList.remove('rtqhiddenstatus');
                     editStatus.classList.add('rtqerrorstatus');
                     editStatus.innerHTML = M.util.get_string('error', 'core');
 
-                }else if(typeof response !== 'object'){
+                } else if (typeof response !== 'object') {
 
                     console.log(response);
                     editStatus.classList.remove('rtqhiddenstatus');
                     editStatus.classList.add('rtqerrorstatus');
                     editStatus.innerHTML = response;
 
-                }else{
+                } else {
 
                     editStatus.classList.remove('rtqhiddenstatus');
                     editStatus.classList.add('rtqsuccessstatus');
@@ -75,7 +75,7 @@ window.addEventListener('load', function(){
 
                 }
 
-                setTimeout(function(){
+                setTimeout(function () {
                     var editStatus = document.getElementById('editstatus');
                     editStatus.classList.remove('rtqsuccessstatus');
                     editStatus.classList.remove('rtqerrorstatus');

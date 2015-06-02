@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -60,7 +59,7 @@ class restore_activequiz_activity_structure_step extends restore_questions_activ
             $this->add_question_usages($quizattempt, $paths);
 
             $paths[] = new restore_path_element('activequiz_groupattendance',
-                            '/activity/activequiz/sessions/session/attempts/attempt/groupattendances/groupattendance');
+                '/activity/activequiz/sessions/session/attempts/attempt/groupattendances/groupattendance');
         }
 
         // Return the paths wrapped into standard activity structure.
@@ -78,7 +77,7 @@ class restore_activequiz_activity_structure_step extends restore_questions_activ
         $data->timemodified = $this->apply_date_offset($data->timemodified);
         $data->grouping = $this->get_mappingid('grouping', $data->grouping);
         $this->oldquestionorder = $data->questionorder;
-        $data->questionorder = NULL; // set to null,  This will be updated in after_execute
+        $data->questionorder = null; // set to null,  This will be updated in after_execute
 
         $newitemid = $DB->insert_record('activequiz', $data);
         $this->apply_activity_instance($newitemid);
@@ -90,7 +89,7 @@ class restore_activequiz_activity_structure_step extends restore_questions_activ
         $data = (object)$data;
         $oldid = $data->id;
         $data->activequizid = $this->get_new_parentid('activequiz');
-        if($questionid = $this->get_mappingid('question', $data->questionid)){
+        if ($questionid = $this->get_mappingid('question', $data->questionid)) {
             $data->questionid = $questionid;
         } else {
             return;
@@ -142,7 +141,6 @@ class restore_activequiz_activity_structure_step extends restore_questions_activ
         $data->timefinish = $this->apply_date_offset($data->timefinish);
         $data->timemodified = $this->apply_date_offset($data->timemodified);
 
-
         $this->currentrtqattempt = clone($data);
     }
 
@@ -157,11 +155,10 @@ class restore_activequiz_activity_structure_step extends restore_questions_activ
 
         $newitemid = $DB->insert_record('activequiz_attempts', $data);
 
-
         $this->set_mapping('activequiz_attempt', $oldid, $newitemid, false);
     }
 
-    protected function process_activequiz_groupattendance($data){
+    protected function process_activequiz_groupattendance($data) {
         global $DB;
 
         $data = (object)$data;
@@ -194,16 +191,16 @@ class restore_activequiz_activity_structure_step extends restore_questions_activ
      * Also deletes unused question records in case a random question record didn't match up with the question order
      *
      */
-    protected function recode_activequiz_questionorder(){
+    protected function recode_activequiz_questionorder() {
         global $DB;
 
         $oldqorder = explode(',', $this->oldquestionorder);
         $newqorder = array();
 
-        foreach($oldqorder as $oldq){
+        foreach ($oldqorder as $oldq) {
 
             $newqid = $this->get_mappingid('activequiz_question', $oldq);
-            if($newqid){
+            if ($newqid) {
                 $newqorder[] = $newqid;
             }
         }

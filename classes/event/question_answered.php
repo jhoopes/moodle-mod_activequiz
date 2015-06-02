@@ -80,8 +80,8 @@ class question_answered extends \core\event\base {
      * @return \moodle_url
      */
     public function get_url() {
-        return new \moodle_url('/mod/activequiz/quizdata.php', array('attempt' => $this->other['attemptid'],
-            'sessionid'=>$this->other['sessionid'], 'action' => 'saveanswer', 'questionid' => $this->objectid ) );
+        return new \moodle_url('/mod/activequiz/quizdata.php', array('attempt'   => $this->other['attemptid'],
+                                                                     'sessionid' => $this->other['sessionid'], 'action' => 'saveanswer', 'questionid' => $this->objectid));
     }
 
 

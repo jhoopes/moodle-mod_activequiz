@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,8 +18,6 @@ namespace mod_activequiz\controllers;
 
 defined('MOODLE_INTERNAL') || die();
 
-global $CFG;
-
 /**
  * view controller class for the view page
  *
@@ -29,8 +26,7 @@ global $CFG;
  * @copyright   2014 University of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class view
-{
+class view {
 
     /** @var \mod_activequiz\activequiz Realtime quiz class */
     protected $RTQ;
@@ -50,7 +46,7 @@ class view
     /** @var \moodle_url $pageurl The page url to base other calls on */
     protected $pageurl;
 
-    /** @var array $this->pagevars An array of page options for the page load */
+    /** @var array $this ->pagevars An array of page options for the page load */
     protected $pagevars;
 
     /**
@@ -58,7 +54,7 @@ class view
      *
      * @param string $baseurl the base url of the page
      */
-    public function setup_page($baseurl){
+    public function setup_page($baseurl) {
         global $PAGE, $CFG, $DB;
 
         $this->pagevars = array();
@@ -70,7 +66,7 @@ class view
         $quizid = optional_param('quizid', false, PARAM_INT);
 
         // get necessary records from the DB
-        if($id) {
+        if ($id) {
             $cm = get_coursemodule_from_id('activequiz', $id, 0, false, MUST_EXIST);
             $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
             $quiz = $DB->get_record('activequiz', array('id' => $cm->instance), '*', MUST_EXIST);
@@ -102,7 +98,7 @@ class view
         $PAGE->set_context($this->RTQ->getContext());
         $PAGE->set_cm($this->RTQ->getCM());
         $PAGE->set_title(strip_tags($course->shortname . ': ' . get_string("modulename", "activequiz") . ': ' .
-                                                                                    format_string($quiz->name, true)));
+            format_string($quiz->name, true)));
         $PAGE->set_heading($course->fullname);
         $PAGE->set_url($this->pageurl);
 
@@ -113,18 +109,18 @@ class view
      * Handle's the page request
      *
      */
-    public function handle_request(){
+    public function handle_request() {
         global $DB, $USER, $PAGE;
 
         // first check if there are questions or not.  If there are no questions display that message instead,
         // regardless of action.
-        if(count($this->RTQ->get_questionmanager()->get_questions()) === 0){
+        if (count($this->RTQ->get_questionmanager()->get_questions()) === 0) {
             $this->pagevars['action'] = 'noquestions';
             $this->pageurl->param('action', ''); // remove the action
         }
 
 
-        switch($this->pagevars['action']){
+        switch ($this->pagevars['action']) {
 
 
             case 'noquestions':
@@ -139,36 +135,37 @@ class view
                 // set the quiz view page to the base layout for 1 column layout
                 $PAGE->set_pagelayout('base');
 
-                if($this->session->get_session() === false){
+                if ($this->session->get_session() === false) {
                     // redirect them to the default page with a quick message first
 
                     $redirurl = clone($this->pageurl);
                     $redirurl->remove_params('action');
 
                     redirect($redirurl, get_string('nosession', 'activequiz'), 5);
-                }else{
+                } else {
 
                     // this is here to help prevent race conditions for multiple group members trying to take the
                     // quiz at the same time
                     $cantakequiz = false;
-                    if($this->RTQ->group_mode()){
+                    if ($this->RTQ->group_mode()) {
 
                         // check if the user can take the quiz for the group
-                        if($this->session->can_take_quiz_for_group($this->pagevars['group'])){
+                        if ($this->session->can_take_quiz_for_group($this->pagevars['group'])) {
                             $cantakequiz = true;
                         }
-                    }else{ // if no group mode, user will always be able to take quiz
+                    } else { // if no group mode, user will always be able to take quiz
                         $cantakequiz = true;
                     }
 
-                    if($cantakequiz){
-                        if(!$this->session->init_attempts($this->RTQ->is_instructor(), $this->pagevars['group'],
-                                                                                    $this->pagevars['groupmembers'])){
+                    if ($cantakequiz) {
+                        if (!$this->session->init_attempts($this->RTQ->is_instructor(), $this->pagevars['group'],
+                            $this->pagevars['groupmembers'])
+                        ) {
                             print_error('cantinitattempts', 'activequiz');
                         }
 
                         // set the session as running
-                        if($this->RTQ->is_instructor() && $this->session->get_session()->status == 'notrunning'){
+                        if ($this->RTQ->is_instructor() && $this->session->get_session()->status == 'notrunning') {
                             $this->session->set_status('running');
                         }
 
@@ -181,7 +178,7 @@ class view
                         $this->RTQ->get_renderer()->view_header(true);
                         $this->RTQ->get_renderer()->render_quiz($attempt, $this->session);
                         $this->RTQ->get_renderer()->view_footer();
-                    }else{
+                    } else {
                         $this->RTQ->get_renderer()->view_header();
                         $this->RTQ->get_renderer()->group_session_started();
                         $this->RTQ->get_renderer()->view_footer();
@@ -191,28 +188,28 @@ class view
                 break;
             case 'selectgroupmembers':
 
-                if(empty($this->pagevars['group'])){
+                if (empty($this->pagevars['group'])) {
                     $viewhome = clone($this->pageurl);
                     $viewhome->remove_params('action');
                     redirect($viewhome, get_string('invalid_group_selected', 'activequiz'), 5);
-                }else{
+                } else {
                     $this->pageurl->param('group', $this->pagevars['group']);
                     $groupselectform = new \mod_activequiz\forms\view\groupselectmembers(
                         $this->pageurl,
                         array(
-                            'rtq'=>$this->RTQ,
+                            'rtq'           => $this->RTQ,
                             'selectedgroup' => $this->pagevars['group']
                         ));
 
-                    if($data = $groupselectform->get_data()){
+                    if ($data = $groupselectform->get_data()) {
 
                         // basically we want to get all gm* fields
                         $gmemnum = 1;
                         $groupmembers = array();
                         $data = get_object_vars($data);
-                        while(isset($data['gm' . $gmemnum])){
-                            if($data['gm' . $gmemnum] != 0){
-                                $groupmembers[] = $data['gm' . $gmemnum];
+                        while (isset($data[ 'gm' . $gmemnum ])) {
+                            if ($data[ 'gm' . $gmemnum ] != 0) {
+                                $groupmembers[] = $data[ 'gm' . $gmemnum ];
                             }
                             $gmemnum++;
                         }
@@ -222,7 +219,7 @@ class view
                         // redirect to the quiz start page
                         redirect($this->pageurl, null, 0);
 
-                    }else{
+                    } else {
                         $this->RTQ->get_renderer()->view_header();
                         $this->RTQ->get_renderer()->group_member_select($groupselectform);
                         $this->RTQ->get_renderer()->view_footer();
@@ -244,30 +241,30 @@ class view
                 $event->trigger();
 
                 // determine home display based on role
-                if($this->RTQ->is_instructor()){
+                if ($this->RTQ->is_instructor()) {
                     $startsessionform = new \mod_activequiz\forms\view\start_session($this->pageurl);
 
-                    if ($data = $startsessionform->get_data()){
+                    if ($data = $startsessionform->get_data()) {
                         // create a new quiz session
 
                         // first check to see if there are any open sessions
                         // this shouldn't occur, but never hurts to check
                         $sessions = $DB->get_records('activequiz_sessions', array(
-                                                                                'activequizid' => $this->RTQ->getRTQ()->id,
-                                                                                'sessionopen'  => 1
-                                                                            )
-                                                    );
+                                'activequizid' => $this->RTQ->getRTQ()->id,
+                                'sessionopen'  => 1
+                            )
+                        );
 
-                        if(!empty($sessions)){
+                        if (!empty($sessions)) {
                             // error out with that there are existing sessions
                             $this->RTQ->get_renderer()->setMessage(get_string('alreadyexisting_sessions', 'activequiz'), 'error');
                             $this->RTQ->get_renderer()->view_header();
                             $this->RTQ->get_renderer()->view_inst_home($startsessionform, $this->session->get_session());
                             $this->RTQ->get_renderer()->view_footer();
                             break;
-                        }else{
-                            if(!$this->session->create_session($data->sessionname)){
-                            // error handling
+                        } else {
+                            if (!$this->session->create_session($data->sessionname)) {
+                                // error handling
                                 $this->RTQ->get_renderer()->setMessage(get_string('unabletocreate_session', 'activequiz'), 'error');
                                 $this->RTQ->get_renderer()->view_header();
                                 $this->RTQ->get_renderer()->view_inst_home($startsessionform, $this->session->get_session());
@@ -280,52 +277,52 @@ class view
                         $quizstarturl->param('action', 'quizstart');
                         redirect($quizstarturl, null, 0);
 
-                    }else{
+                    } else {
                         $this->RTQ->get_renderer()->view_header();
                         $this->RTQ->get_renderer()->view_inst_home($startsessionform, $this->session->get_session());
                         $this->RTQ->get_renderer()->view_footer();
                     }
-                }else{
+                } else {
 
                     // check to see if the group already started a quiz
                     $validgroups = array();
-                    if($this->RTQ->group_mode()){
+                    if ($this->RTQ->group_mode()) {
                         // if there is already an attempt for this session for this group for this user don't allow them to start another
                         $validgroups = $this->session->check_attempt_for_group();
-                        if(empty($validgroups) && $validgroups !== false){
+                        if (empty($validgroups) && $validgroups !== false) {
                             $this->RTQ->get_renderer()->view_header();
                             $this->RTQ->get_renderer()->group_session_started();
                             $this->RTQ->get_renderer()->view_footer();
                             break;
-                        }else if($validgroups === false){
+                        } else if ($validgroups === false) {
                             $validgroups = array();
                         }
                     }
-                    $studentstartformparams = array('rtq'=>$this->RTQ, 'validgroups' => $validgroups);
+                    $studentstartformparams = array('rtq' => $this->RTQ, 'validgroups' => $validgroups);
                     $studentstartform = new \mod_activequiz\forms\view\student_start_form($this->pageurl, $studentstartformparams);
-                    if($data = $studentstartform->get_data()){
+                    if ($data = $studentstartform->get_data()) {
 
                         $quizstarturl = clone($this->pageurl);
                         $quizstarturl->param('action', 'quizstart');
 
                         // if data redirect to the quiz start url with the group selected if we're in group mode
-                        if($this->RTQ->group_mode()){
+                        if ($this->RTQ->group_mode()) {
                             $groupid = $data->group;
                             $quizstarturl->param('group', $groupid);
 
                             // check if the group attendance feature is enabled
                             // if so redirect to the group member select form
                             // don't send to group attendance form if an attempt is already started
-                            if($this->RTQ->getRTQ()->groupattendance == 1 && !$this->session->get_open_attempt_for_current_user()){
+                            if ($this->RTQ->getRTQ()->groupattendance == 1 && !$this->session->get_open_attempt_for_current_user()) {
                                 $quizstarturl->param('action', 'selectgroupmembers');
                             }
 
                             redirect($quizstarturl, null, 0);
-                        }else{
+                        } else {
                             redirect($quizstarturl, null, 0);
                         }
 
-                    }else{ // display student home.  (form will display only if there is an active session
+                    } else { // display student home.  (form will display only if there is an active session
 
                         $this->RTQ->get_renderer()->view_header();
                         $this->RTQ->get_renderer()->view_student_home($studentstartform, $this->session);
@@ -344,7 +341,7 @@ class view
      * Gets the extra parameters for the class
      *
      */
-    protected function get_parameters(){
+    protected function get_parameters() {
 
         $this->pagevars['action'] = optional_param('action', '', PARAM_ALPHANUM);
         $this->pagevars['group'] = optional_param('group', '', PARAM_INT);

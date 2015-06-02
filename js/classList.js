@@ -28,20 +28,20 @@ if ("document" in self) {
                 , elemCtrProto = view.Element[protoProp]
                 , objCtr = Object
                 , strTrim = String[protoProp].trim || function () {
-                    return this.replace(/^\s+|\s+$/g, "");
-                }
-                , arrIndexOf = Array[protoProp].indexOf || function (item) {
-                    var
-                        i = 0
-                        , len = this.length
-                        ;
-                    for (; i < len; i++) {
-                        if (i in this && this[i] === item) {
-                            return i;
-                        }
+                        return this.replace(/^\s+|\s+$/g, "");
                     }
-                    return -1;
-                }
+                , arrIndexOf = Array[protoProp].indexOf || function (item) {
+                        var
+                            i = 0
+                            , len = this.length
+                            ;
+                        for (; i < len; i++) {
+                            if (i in this && this[i] === item) {
+                                return i;
+                            }
+                        }
+                        return -1;
+                    }
             // Vendors: please allow content code to instantiate DOMExceptions
                 , DOMEx = function (type, message) {
                     this.name = type;
@@ -143,9 +143,9 @@ if ("document" in self) {
                 var
                     result = this.contains(token)
                     , method = result ?
-                        force !== true && "remove"
+                    force !== true && "remove"
                         :
-                        force !== false && "add"
+                    force !== false && "add"
                     ;
 
                 if (method) {
@@ -196,10 +196,10 @@ if ("document" in self) {
             // Polyfill for IE 10/11 and Firefox <26, where classList.add and
             // classList.remove exist but support only one argument at a time.
             if (!testElement.classList.contains("c2")) {
-                var createMethod = function(method) {
+                var createMethod = function (method) {
                     var original = DOMTokenList.prototype[method];
 
-                    DOMTokenList.prototype[method] = function(token) {
+                    DOMTokenList.prototype[method] = function (token) {
                         var i, len = arguments.length;
 
                         for (i = 0; i < len; i++) {
@@ -219,7 +219,7 @@ if ("document" in self) {
             if (testElement.classList.contains("c3")) {
                 var _toggle = DOMTokenList.prototype.toggle;
 
-                DOMTokenList.prototype.toggle = function(token, force) {
+                DOMTokenList.prototype.toggle = function (token, force) {
                     if (1 in arguments && !this.contains(token) === !force) {
                         return force;
                     } else {

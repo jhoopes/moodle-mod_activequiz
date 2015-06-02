@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,7 +18,6 @@ namespace mod_activequiz\forms\view;
 
 defined('MOODLE_INTERNAL') || die();
 
-global $CFG;
 require_once($CFG->libdir . '/formslib.php');
 
 /**
@@ -30,8 +28,7 @@ require_once($CFG->libdir . '/formslib.php');
  * @copyright   2014 University of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class start_session extends \moodleform
-{
+class start_session extends \moodleform {
 
     /**
      * Overriding parent function to account for namespace in the class name
@@ -42,6 +39,7 @@ class start_session extends \moodleform
     protected function get_form_identifier() {
 
         $class = get_class($this);
+
         return preg_replace('/[^a-z0-9_]/i', '_', $class);
     }
 
@@ -50,7 +48,7 @@ class start_session extends \moodleform
      * Definition of the session start form
      *
      */
-    public function definition(){
+    public function definition() {
 
         $mform = $this->_form;
 
@@ -70,11 +68,11 @@ class start_session extends \moodleform
      *
      * @return array $errors array of errors
      */
-    public function validations($data, $files){
+    public function validations($data, $files) {
 
         $errors = array();
 
-        if(empty($data['sessionname'])){
+        if (empty($data['sessionname'])) {
             $errors['sessionname'] = get_string('sessionname_required', 'activequiz');
         }
 

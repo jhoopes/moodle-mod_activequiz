@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -29,8 +28,7 @@ use mod_activequiz\qbanktypes\question_bank_add_to_rtq_action_column;
  * @copyright   2014 University of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class activequiz_question_bank_view extends \core_question\bank\view
-{
+class activequiz_question_bank_view extends \core_question\bank\view {
 
 
     /**
@@ -63,11 +61,11 @@ class activequiz_question_bank_view extends \core_question\bank\view
                     throw new coding_exception("No such class exists: $fullname");
                 }
             }
-            $this->requiredcolumns[$fullname] = new $fullname($this);
+            $this->requiredcolumns[ $fullname ] = new $fullname($this);
         }
+
         return $this->requiredcolumns;
     }
-
 
 
     /**
@@ -112,19 +110,17 @@ class activequiz_question_bank_view extends \core_question\bank\view
      *
      * @return \moodle_url Moodle url to add the question
      */
-    public function add_to_rtq_url($questionid){
+    public function add_to_rtq_url($questionid) {
 
         global $CFG;
         $params = $this->baseurl->params();
         $params['questionid'] = $questionid;
         $params['action'] = 'addquestion';
         $params['sesskey'] = sesskey();
+
         return new \moodle_url('/mod/activequiz/edit.php', $params);
 
     }
-
-
-
 
 
 }
