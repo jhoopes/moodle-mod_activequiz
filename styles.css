@@ -33,7 +33,6 @@
 
 .activequizbox .questionlist .icon {
     width: 10%;
-    height: 100%;
     vertical-align: middle;
 }
 
@@ -48,7 +47,6 @@
 
 .activequizbox .questionlist .controls {
     width: 30%;
-    height: 100%;
     vertical-align: middle;
 }
 
