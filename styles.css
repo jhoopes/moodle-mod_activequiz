@@ -274,7 +274,8 @@
     width: 10em;
 }
 
-.path-mod-activequiz .hidden{
+
+#quizview .hidden{
     display: none;
     visibility: hidden;
 }

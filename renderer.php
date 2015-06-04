@@ -295,6 +295,8 @@ class mod_activequiz_renderer extends plugin_renderer_base {
 
         $output = '';
 
+        $output .= html_writer::start_div('', array('id'=>'quizview'));
+
         if ($this->rtq->is_instructor()) {
             $output .= html_writer::div($this->render_controls(), 'activequizbox hidden', array('id' => 'controlbox'));
             $output .= $this->render_jumpto_modal($attempt);
@@ -324,7 +326,7 @@ class mod_activequiz_renderer extends plugin_renderer_base {
             $output .= $this->render_question_form($slot, $attempt);
         }
 
-
+        $output .= html_writer::end_div();
         echo $output;
     }
 
@@ -801,7 +803,7 @@ EOD;
         echo html_writer::end_div();
 
         $this->page->requires->js('/mod/activequiz/js/core.js');
-        $this->page->requires->js('/mod/activequiz/js/sortable/sortable.js');
+        $this->page->requires->js('/mod/activequiz/js/sortable/sortable.min.js');
         $this->page->requires->js('/mod/activequiz/js/edit_quiz.js');
 
         // next set up a class to pass to js for js info
