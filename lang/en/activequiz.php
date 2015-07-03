@@ -131,6 +131,7 @@ $string['qdeletesucess'] = 'Successfully deleted question';
 $string['qdeleteerror'] = 'Couldn\'t delete question';
 $string['questionedit'] = 'Edit question';
 $string['savequestion'] = 'Save question';
+$string['questionlist'] = 'Question List';
 
 $string['cantaddquestiontwice'] = 'You can not add the same question more than once to a quiz';
 
@@ -266,6 +267,8 @@ $string['studentquizinst'] = '<p>Please wait for the instructor to start the qui
 $string['selectsession'] = 'Select session to view:&nbsp;&nbsp;&nbsp;&nbsp;';
 $string['activitygrades'] = 'Activity grades: ';
 $string['groupmembership'] = 'Group membership';
+$string['regradeallgrades'] = 'Regrade all grades';
+$string['regradeallgradessuccess'] = 'Successfully re-graded quiz';
 
 // session attempts table
 $string['attemptno'] = 'Attempt Number';

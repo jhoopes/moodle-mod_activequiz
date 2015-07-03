@@ -291,7 +291,7 @@ activequiz.waitfor_question = function (questionid, questiontime, delay) {
     var quizinfotime = document.createElement('div');
 
     // set the timeLeft and then set interval to count down
-    quizinfotime.innerHTML = "&nbsp;" + delay.toString() + " seconds";
+    quizinfotime.innerHTML = "&nbsp;" + delay.toString() + " " + M.str.moodle.seconds;
     activequiz.set('timeLeft', delay);
 
     activequiz.counter = setInterval(function () {
@@ -302,7 +302,7 @@ activequiz.waitfor_question = function (questionid, questiontime, delay) {
             clearInterval(activequiz.counter);
             activequiz.goto_question(questionid, questiontime);
         } else {
-            quizinfotime.innerHTML = "&nbsp;" + timeLeft.toString() + " seconds";
+            quizinfotime.innerHTML = "&nbsp;" + timeLeft.toString() + " " + M.str.moodle.seconds;
         }
     }, 1000);
 
@@ -352,7 +352,7 @@ activequiz.goto_question = function (questionid, questiontime) {
 
     } else { // otherwise set up the timer
         questiontimertext.innerHTML = M.util.get_string('timertext', 'activequiz');
-        questiontimer.innerHTML = "&nbsp;" + questiontime + ' seconds';
+        questiontimer.innerHTML = "&nbsp;" + questiontime + " " + M.str.moodle.seconds;
 
 
         var questionend = new Date();
@@ -381,7 +381,7 @@ activequiz.goto_question = function (questionid, questiontime) {
                 var timeLeft = (activequiz.get('questionendtime') - currenttimetime) / 1000;
                 timeLeft = number_format(timeLeft, 0, '.', ',');
 
-                questiontimer.innerHTML = "&nbsp;" + timeLeft.toString() + " seconds";
+                questiontimer.innerHTML = "&nbsp;" + timeLeft.toString() + " " + M.str.moodle.seconds;
             }
         }, 1000);
     }

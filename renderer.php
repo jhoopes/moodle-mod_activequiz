@@ -18,6 +18,9 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/questionlib.php');
 
+global $PAGE;
+$PAGE->requires->string_for_js('seconds', 'moodle');
+
 /**
  * Realtime quiz renderer
  *
