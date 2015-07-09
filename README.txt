@@ -36,7 +36,7 @@ student gave.  Students will also be able to view their attempts based on the di
 
 Changes:
 --------
-
+2015-07-08 - Fixing a missing strings issue, along with question category searching not working on Moodle 2.7 branch
 2015-06-01 - Fixing of missing CSS style "hidden" as some themes do not contain this style
 2015-05-27 - Some small minor changes from Moodle.org for plugin reviewing.  Also a large number of code style updates.
 2015-04-30 - Updates required to make the edit page work with the new question engine display classes.
