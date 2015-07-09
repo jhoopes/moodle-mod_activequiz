@@ -106,7 +106,7 @@ class responses {
             case 'regradeall':
 
                 $this->RTQ->get_grader()->save_all_grades();
-                $this->RTQ->get_renderer()->setMessage('success', 'Successfully re-graded quiz');
+                $this->RTQ->get_renderer()->setMessage('success', get_string('successregrade', 'activequiz'));
                 $sessions = $this->RTQ->get_sessions();
                 $this->RTQ->get_renderer()->responses_header();
                 $this->RTQ->get_renderer()->select_session($sessions);

@@ -666,6 +666,8 @@ EOD;
             'shownotresponded'
         ), 'activequiz');
 
+        $this->page->requires->strings_for_js('seconds', 'moodle');
+
 
         // finally allow question modifiers to add their own css/js
         $this->rtq->call_question_modifiers('add_js', null);
@@ -789,7 +791,8 @@ EOD;
         echo html_writer::start_div('row', array('id' => 'questionrow'));
 
         echo html_writer::start_div('span6');
-        echo html_writer::tag('h2', 'Question List');
+
+        echo html_writer::tag('h2', get_string('questionlist', 'activequiz'));
 
         echo $this->show_questionlist($questions);
 
@@ -972,7 +975,7 @@ EOD;
 
         $regradeurl = clone($this->pageurl);
         $regradeurl->param('action', 'regradeall');
-        $regradeall = new single_button($regradeurl, 'regrade all grades', 'GET');
+        $regradeall = new single_button($regradeurl, get_string('regradeallgrades', 'activequiz'), 'GET');
         $output .= html_writer::div($this->output->render($regradeall), '');
 
         $output = html_writer::div($output, 'activequizbox');

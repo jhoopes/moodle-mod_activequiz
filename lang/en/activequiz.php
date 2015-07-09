@@ -97,6 +97,7 @@ $string['manualcomment_help'] = 'The comment that instructors can add when gradi
 
 
 // edit page
+$string['questionlist'] = 'Question List';
 $string['addtoquiz'] = 'Add';
 $string['question'] = 'Question ';
 $string['addquestion'] = 'Add question';
@@ -261,6 +262,8 @@ $string['studentquizinst'] = '<p>Please wait for the instructor to start the qui
 $string['selectsession'] = 'Select session to view:&nbsp;&nbsp;&nbsp;&nbsp;';
 $string['activitygrades'] = 'Activity grades: ';
 $string['groupmembership'] = 'Group membership';
+$string['regradeallgrades'] = 'Regrade all grades';
+$string['successregrade'] = 'Successfully regraded quiz';
 
 // session attempts table
 $string['attemptno'] = 'Attempt Number';
