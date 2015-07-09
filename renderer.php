@@ -665,7 +665,7 @@ EOD;
             'shownotresponded'
         ), 'activequiz');
 
-        $this->page->requires->strings_for_js('seconds', 'moodle');
+        $this->page->requires->strings_for_js(array('seconds'), 'moodle');
 
 
         // finally allow question modifiers to add their own css/js
