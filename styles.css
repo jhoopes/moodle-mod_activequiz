@@ -99,6 +99,10 @@
     height: 30px;
 }
 
+.trycount{
+    margin-top: 20px;
+}
+
 @media (min-width: 480px) {
     .question_save {
         margin-left: 8em;
