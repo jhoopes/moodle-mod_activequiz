@@ -955,6 +955,12 @@ EOD;
 
     }
 
+    public function editpage_opensession(){
+
+        echo html_writer::tag('h3', get_string('editpage_opensession_error', 'activequiz'));
+
+    }
+
     /**
      * Ends the edit page with the footer of Moodle
      *
