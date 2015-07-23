@@ -1,160 +1,111 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/activequiz/db" VERSION="20150304" COMMENT="XMLDB file for Moodle mod/activequiz"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
-        >
-    <TABLES>
-        <TABLE NAME="activequiz" COMMENT="Defines realtime quizzes">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"
-                       COMMENT="id of the table, please edit me"/>
-                <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
-                <FIELD NAME="intro" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-                <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-                <FIELD NAME="graded" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"
-                       COMMENT="whether or not the quiz is graded"/>
-                <FIELD NAME="scale" TYPE="int" LENGTH="5" NOTNULL="true" SEQUENCE="false"
-                       COMMENT="The maximum amount of points to scale the end grade to"/>
-                <FIELD NAME="grademethod" TYPE="int" LENGTH="2" NOTNULL="true" SEQUENCE="false"
-                       COMMENT="The grading method for grading.  This only applies to grading with multiple sessions, not multiple attempts"/>
-                <FIELD NAME="workedingroups" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"
-                       COMMENT="Bit to specify if the activity is set up to work in groups"/>
-                <FIELD NAME="groupattendance" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"
-                       COMMENT="whether or not we want to have the user specify the group members present for the quiz"/>
-                <FIELD NAME="grouping" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"
-                       COMMENT="The grouping id that this activity is set up to use for groups"/>
-                <FIELD NAME="reviewoptions" TYPE="text" NOTNULL="false" SEQUENCE="false"
-                       COMMENT="JSON encoded string of the review options from the mod form"/>
-                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-                <FIELD NAME="defaultquestiontime" TYPE="int" LENGTH="3" NOTNULL="true" DEFAULT="30" SEQUENCE="false"
-                       COMMENT="How long do they get for each question?"/>
-                <FIELD NAME="waitforquestiontime" TYPE="int" LENGTH="11" NOTNULL="true" DEFAULT="5" SEQUENCE="false"
-                       COMMENT="The time to wait for a question before displaying students the question"/>
-                <FIELD NAME="questionorder" TYPE="text" NOTNULL="false" SEQUENCE="false"
-                       COMMENT="The question order for the activequiz"/>
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for activequiz"/>
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="activequiz_questions" COMMENT="table to hold question information for realtime quizzes">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-                <FIELD NAME="activequizid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"
-                       COMMENT="The realtime quiz this question instance is associated with"/>
-                <FIELD NAME="questionid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"
-                       COMMENT="The question id for the question in the question engine"/>
-                <FIELD NAME="notime" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"
-                       COMMENT="Bit field to signify there is no time limit for this question"/>
-                <FIELD NAME="questiontime" TYPE="int" LENGTH="11" NOTNULL="false" DEFAULT="0" SEQUENCE="false"
-                       COMMENT="Question time in seconds.  0 means default for the quiz"/>
-                <FIELD NAME="tries" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false"
-                       COMMENT="number of tries for the question"/>
-                <FIELD NAME="points" TYPE="number" LENGTH="10" NOTNULL="true" DEFAULT="1.00" SEQUENCE="false"
-                       DECIMALS="2" COMMENT="Number of points for this question"/>
-                <FIELD NAME="showhistoryduringquiz" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false"
-                       COMMENT="whether or not to show the question step data with a response during the quiz"/>
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="activequiz_sessions" COMMENT="table to hold activequiz sessions">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-                <FIELD NAME="activequizid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"
-                       COMMENT="the activequizid for the sessions"/>
-                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="the session name"/>
-                <FIELD NAME="sessionopen" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"
-                       COMMENT="whether or not the session is open"/>
-                <FIELD NAME="status" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false"
-                       COMMENT="the current status/state of the session"/>
-                <FIELD NAME="currentquestion" TYPE="int" LENGTH="11" NOTNULL="false" SEQUENCE="false"
-                       COMMENT="The current question that the session is on"/>
-                <FIELD NAME="currentqnum" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"
-                       COMMENT="the current question number we're on"/>
-                <FIELD NAME="currentquestiontime" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"
-                       COMMENT="the time the current question is allowed in seconds"/>
-                <FIELD NAME="classresult" TYPE="number" LENGTH="6" NOTNULL="false" SEQUENCE="false" DECIMALS="2"
-                       COMMENT="the overall class result for the session.   TODO: not sure if this will be needed or not"/>
-                <FIELD NAME="nextstarttime" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"
-                       COMMENT="the timestamp of the next start time"/>
-                <FIELD NAME="created" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"
-                       COMMENT="the timestamp that this was created"/>
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="activequiz_groupattendance"
-               COMMENT="table to specify users that were a part of the group when a realtime quiz session took place.">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-                <FIELD NAME="activequizid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
-                       COMMENT="The realtime quiz id that this particular matching matches to"/>
-                <FIELD NAME="sessionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
-                       COMMENT="The session id that this attendance item belongs to"/>
-                <FIELD NAME="attemptid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
-                       COMMENT="The realtime quiz attempt id that this group member is present for"/>
-                <FIELD NAME="groupid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
-                       COMMENT="The groupid that the attempt is for.  This is more for display purposes if we want to display this somewhere"/>
-                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
-                       COMMENT="The user that will get a grade for this attempt if they were added during the &quot;attendance check&quot; before a group user started their attempt"/>
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="activequiz_attempts"
-               COMMENT="The quiz attempts table to hold attempts for students within a particular session">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-                <FIELD NAME="sessionid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"
-                       COMMENT="The session this attempt belongs to"/>
-                <FIELD NAME="userid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"
-                       COMMENT="The userid for this attempt"/>
-                <FIELD NAME="attemptnum" TYPE="int" LENGTH="11" NOTNULL="false" SEQUENCE="false"
-                       COMMENT="The attempt number for this user, for this session"/>
-                <FIELD NAME="questionengid" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false"
-                       COMMENT="The unique id that is used for the question engine's usage for loading the activity by id."/>
-                <FIELD NAME="status" TYPE="int" LENGTH="5" NOTNULL="true" SEQUENCE="false"
-                       COMMENT="The status of the attempt"/>
-                <FIELD NAME="preview" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false"
-                       COMMENT="bit as to wether or not this is a preview attempt"/>
-                <FIELD NAME="responded" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false"
-                       COMMENT="whether or not the user responded for the particular sesson's current question"/>
-                <FIELD NAME="forgroupid" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"
-                       COMMENT="This is used when the activequiz is set up to be in groups.  The groupid will go here to signify that this attempt is for that group"/>
-                <FIELD NAME="timestart" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
-                       COMMENT="datetime/timestampe for when the attempt was started"/>
-                <FIELD NAME="timefinish" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"
-                       COMMENT="the datetime/timestamp for when the attempt was finished"/>
-                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
-                       COMMENT="the datetime/timestamp for when this attempt record was modified"/>
-                <FIELD NAME="qubalayout" TYPE="text" NOTNULL="false" SEQUENCE="false"
-                       COMMENT="the layout for this particular attempt"/>
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="activequiz_grades" COMMENT="activequiz grades table to hold grades for individual users">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-                <FIELD NAME="activequizid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
-                       COMMENT="the activequiz id"/>
-                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
-                       COMMENT="The userid that this grade is for"/>
-                <FIELD NAME="grade" TYPE="number" LENGTH="10" NOTNULL="true" DEFAULT="0.00000" SEQUENCE="false"
-                       DECIMALS="5" COMMENT="The grade for this user, for this activequiz"/>
-                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
-                       COMMENT="The time created/modified for this grade"/>
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-            </KEYS>
-        </TABLE>
-    </TABLES>
+<XMLDB PATH="mod/activequiz/db" VERSION="20150722" COMMENT="XMLDB file for Moodle mod/activequiz"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="activequiz" COMMENT="Defines active quizzes">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="id of the table, please edit me"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="intro" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="graded" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="whether or not the quiz is graded"/>
+        <FIELD NAME="scale" TYPE="int" LENGTH="5" NOTNULL="true" SEQUENCE="false" COMMENT="The maximum amount of points to scale the end grade to"/>
+        <FIELD NAME="grademethod" TYPE="int" LENGTH="2" NOTNULL="true" SEQUENCE="false" COMMENT="The grading method for grading.  This only applies to grading with multiple sessions, not multiple attempts"/>
+        <FIELD NAME="workedingroups" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Bit to specify if the activity is set up to work in groups"/>
+        <FIELD NAME="groupattendance" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="whether or not we want to have the user specify the group members present for the quiz"/>
+        <FIELD NAME="grouping" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The grouping id that this activity is set up to use for groups"/>
+        <FIELD NAME="reviewoptions" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="JSON encoded string of the review options from the mod form"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="anonymizeresponses" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="stores the bit value for whether or not we are showing student's names during the quiz"/>
+        <FIELD NAME="defaultquestiontime" TYPE="int" LENGTH="3" NOTNULL="true" DEFAULT="30" SEQUENCE="false" COMMENT="How long do they get for each question?"/>
+        <FIELD NAME="waitforquestiontime" TYPE="int" LENGTH="11" NOTNULL="true" DEFAULT="5" SEQUENCE="false" COMMENT="The time to wait for a question before displaying students the question"/>
+        <FIELD NAME="questionorder" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="The question order for the activequiz"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for activequiz"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="activequiz_questions" COMMENT="table to hold question information for active quizzes">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="activequizid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="The realtime quiz this question instance is associated with"/>
+        <FIELD NAME="questionid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="The question id for the question in the question engine"/>
+        <FIELD NAME="notime" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Bit field to signify there is no time limit for this question"/>
+        <FIELD NAME="questiontime" TYPE="int" LENGTH="11" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Question time in seconds.  0 means default for the quiz"/>
+        <FIELD NAME="tries" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="number of tries for the question"/>
+        <FIELD NAME="points" TYPE="number" LENGTH="10" NOTNULL="true" DEFAULT="1.00" SEQUENCE="false" DECIMALS="2" COMMENT="Number of points for this question"/>
+        <FIELD NAME="showhistoryduringquiz" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="whether or not to show the question step data with a response during the quiz"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="activequiz_sessions" COMMENT="table to hold activequiz sessions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="activequizid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="the activequizid for the sessions"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="the session name"/>
+        <FIELD NAME="sessionopen" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="whether or not the session is open"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="the current status/state of the session"/>
+        <FIELD NAME="currentquestion" TYPE="int" LENGTH="11" NOTNULL="false" SEQUENCE="false" COMMENT="The current question that the session is on"/>
+        <FIELD NAME="currentqnum" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="the current question number we're on"/>
+        <FIELD NAME="currentquestiontime" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="the time the current question is allowed in seconds"/>
+        <FIELD NAME="classresult" TYPE="number" LENGTH="6" NOTNULL="false" SEQUENCE="false" DECIMALS="2" COMMENT="the overall class result for the session.   TODO: not sure if this will be needed or not"/>
+        <FIELD NAME="nextstarttime" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="the timestamp of the next start time"/>
+        <FIELD NAME="created" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="the timestamp that this was created"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="activequiz_groupattendance" COMMENT="table to specify users that were a part of the group when a active quiz session took place.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="activequizid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The realtime quiz id that this particular matching matches to"/>
+        <FIELD NAME="sessionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The session id that this attendance item belongs to"/>
+        <FIELD NAME="attemptid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The realtime quiz attempt id that this group member is present for"/>
+        <FIELD NAME="groupid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The groupid that the attempt is for.  This is more for display purposes if we want to display this somewhere"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The user that will get a grade for this attempt if they were added during the &quot;attendance check&quot; before a group user started their attempt"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="activequiz_attempts" COMMENT="The quiz attempts table to hold attempts for students within a particular session">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="sessionid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="The session this attempt belongs to"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="The userid for this attempt"/>
+        <FIELD NAME="attemptnum" TYPE="int" LENGTH="11" NOTNULL="false" SEQUENCE="false" COMMENT="The attempt number for this user, for this session"/>
+        <FIELD NAME="questionengid" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="The unique id that is used for the question engine's usage for loading the activity by id."/>
+        <FIELD NAME="status" TYPE="int" LENGTH="5" NOTNULL="true" SEQUENCE="false" COMMENT="The status of the attempt"/>
+        <FIELD NAME="preview" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="bit as to wether or not this is a preview attempt"/>
+        <FIELD NAME="responded" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="whether or not the user responded for the particular sesson's current question"/>
+        <FIELD NAME="forgroupid" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="This is used when the activequiz is set up to be in groups.  The groupid will go here to signify that this attempt is for that group"/>
+        <FIELD NAME="timestart" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="datetime/timestampe for when the attempt was started"/>
+        <FIELD NAME="timefinish" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="the datetime/timestamp for when the attempt was finished"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="the datetime/timestamp for when this attempt record was modified"/>
+        <FIELD NAME="qubalayout" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="the layout for this particular attempt"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="activequiz_grades" COMMENT="activequiz grades table to hold grades for individual users">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="activequizid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="the activequiz id"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The userid that this grade is for"/>
+        <FIELD NAME="grade" TYPE="number" LENGTH="10" NOTNULL="true" DEFAULT="0.00000" SEQUENCE="false" DECIMALS="5" COMMENT="The grade for this user, for this activequiz"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The time created/modified for this grade"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
 </XMLDB>

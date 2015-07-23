@@ -68,6 +68,10 @@ class mod_activequiz_mod_form extends moodleform_mod {
         $mform->setType('waitforquestiontime', PARAM_INT);
         $mform->addHelpButton('waitforquestiontime', 'waitforquestiontime', 'activequiz');
 
+        $mform->addElement('checkbox', 'anonymizeresponses', get_string('anonymousresponses', 'activequiz'));
+        $mform->addHelpButton('anonymizeresponses', 'anonymousresponses', 'activequiz');
+        $mform->setDefault('anonymizeresponses', 0);
+
         $mform->addElement('header', 'gradesettings', get_string('gradesettings', 'activequiz'));
 
         $mform->addElement('checkbox', 'graded', get_string('assessed', 'activequiz'));
