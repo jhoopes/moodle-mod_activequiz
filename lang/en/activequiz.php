@@ -80,6 +80,8 @@ $string['grademethod'] = 'Session grading method';
 $string['grademethod_help'] = 'This is the method that is used when grading.  This method is for figuring out the grading with multiple sessions in the same activequiz';
 $string['assessed'] = 'Assessed';
 $string['assessed_help'] = 'Check this box to make your quiz assessed';
+$string['anonymousresponses'] = 'Anonymize student responses';
+$string['anonymousresponses_help'] = 'Anonymize student responses for the instructor\'s view so that if their screen is being shown, student\'s names or group names will not be shown';
 
 $string['groupworksettings'] = 'Group settings';
 $string['nochangegroups_label'] = '&nbsp;';

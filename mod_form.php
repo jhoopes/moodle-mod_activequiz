@@ -52,7 +52,7 @@ class mod_activequiz_mod_form extends moodleform_mod {
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-        $this->add_intro_editor(true, get_string('description'));
+        $this->standard_intro_elements(get_string('description'));
 
         //-------------------------------------------------------------------------------
 
@@ -67,6 +67,10 @@ class mod_activequiz_mod_form extends moodleform_mod {
         $mform->setDefault('waitforquestiontime', 5);
         $mform->setType('waitforquestiontime', PARAM_INT);
         $mform->addHelpButton('waitforquestiontime', 'waitforquestiontime', 'activequiz');
+
+        $mform->addElement('checkbox', 'anonymizeresponses', get_string('anonymousresponses', 'activequiz'));
+        $mform->addHelpButton('anonymizeresponses', 'anonymousresponses', 'activequiz');
+        $mform->setDefault('anonymizeresponses', 0);
 
         $mform->addElement('header', 'gradesettings', get_string('gradesettings', 'activequiz'));
 

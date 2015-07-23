@@ -112,5 +112,20 @@ function xmldb_activequiz_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2015030300, 'activequiz');
     }
 
+    if ($oldversion < 2015072200) {
+
+        // Define field anonymizeresponses to be added to activequiz.
+        $table = new xmldb_table('activequiz');
+        $field = new xmldb_field('anonymizeresponses', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'timemodified');
+
+        // Conditionally launch add field anonymizeresponses.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Activequiz savepoint reached.
+        upgrade_mod_savepoint(true, 2015072200, 'activequiz');
+    }
+
     return true;
 }

@@ -274,8 +274,7 @@
     width: 10em;
 }
 
-
 #quizview .hidden{
-    display: none;
-    visibility: hidden;
-}
+     display: none;
+     visibility: hidden;
+ }

@@ -677,21 +677,30 @@ EOD;
      * Renders a response for a specific question and attempt
      *
      * @param \mod_activequiz\activequiz_attempt $attempt
+     * @param int $responsecount The number of the response (used for anonymous mode)
      *
      * @return string HTML fragment for the response
      */
-    public function render_response($attempt) {
+    public function render_response($attempt, $responsecount) {
         global $DB;
 
 
         $response = html_writer::start_div('response');
 
         // check if group mode, if so, give the group name the attempt is for
-        if ($this->rtq->group_mode()) {
-            $name = $this->rtq->get_groupmanager()->get_group_name($attempt->forgroupid);
-        } else {
-            $user = $DB->get_record('user', array('id' => $attempt->userid));
-            $name = fullname($user);
+        if($this->rtq->getRTQ()->anonymizeresponses == 1){
+            if($this->rtq->group_mode()){
+                $name = get_string('group') . ' ' . $responsecount;
+            }else{
+                $name = get_string('user') . ' ' . $responsecount;
+            }
+        }else{
+            if ($this->rtq->group_mode()) {
+                $name = $this->rtq->get_groupmanager()->get_group_name($attempt->forgroupid);
+            } else {
+                $user = $DB->get_record('user', array('id' => $attempt->userid));
+                $name = fullname($user);
+            }
         }
 
         $response .= html_writer::tag('h3', $name, array('class' => 'responsename'));
@@ -721,10 +730,12 @@ EOD;
         $output .= html_writer::div('&nbsp;&nbsp;&nbsp;' . count($notresponded) . '/' . $total, 'inline');
         $output .= html_writer::end_div();
 
-        // output the list of students
-        $output .= html_writer::start_div();
-        $output .= html_writer::alist($notresponded, array('id' => 'notrespondedlist'));
-        $output .= html_writer::end_div();
+        // output the list of students, but only if we're not in anonymous mode
+        if($this->rtq->getRTQ()->anonymizeresponses == 0){
+            $output .= html_writer::start_div();
+            $output .= html_writer::alist($notresponded, array('id' => 'notrespondedlist'));
+            $output .= html_writer::end_div();
+        }
 
         $output .= html_writer::end_div();
 
