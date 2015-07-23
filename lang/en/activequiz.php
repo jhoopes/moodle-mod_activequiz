@@ -134,7 +134,7 @@ $string['questionedit'] = 'Edit question';
 $string['savequestion'] = 'Save question';
 
 $string['cantaddquestiontwice'] = 'You can not add the same question more than once to a quiz';
-
+$string['editpage_opensession_error'] = 'You cannot edit a quiz question or layout while a session is open.';
 
 // view page
 $string['quiznotrunning'] = 'Quiz not running at the moment - wait for your teacher to start it.  Use the reload button to reload this page to check again';
