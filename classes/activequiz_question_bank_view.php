@@ -93,6 +93,7 @@ class activequiz_question_bank_view extends \core_question\bank\view {
         array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));
         array_unshift($this->searchconditions, new \core_question\bank\search\category_condition(
             $cat, $recurse, $editcontexts, $this->baseurl, $this->course));
+        array_unshift($this->searchconditions, new activequiz_disabled_condition());
         $this->display_options_form($showquestiontext, '/mod/activequiz/edit.php');
 
         // Continues with list of questions.

@@ -290,4 +290,5 @@ $string['attemptview'] = 'View attempt';
 $string['countdatasetlabel'] = 'Number of Answers';
 $string['percentagedatasetlabel'] = 'Percentage of total answers';
 
-
+$string['enabledquestiontypes'] = 'Enable question types';
+$string['enabledquestiontypes_info'] = 'Question types that are enabled for use within instances of the active quiz activity.';
