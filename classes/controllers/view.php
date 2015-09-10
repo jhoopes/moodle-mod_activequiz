@@ -149,6 +149,10 @@ class view {
                     $cantakequiz = false;
                     if ($this->RTQ->group_mode()) {
 
+                        if(!$this->RTQ->is_instructor() && $this->pagevars['group'] == 0){
+                            print_error('invalidgroupid', 'mod_activequiz');
+                        }
+
                         // check if the user can take the quiz for the group
                         if ($this->session->can_take_quiz_for_group($this->pagevars['group'])) {
                             $cantakequiz = true;
@@ -344,7 +348,7 @@ class view {
     protected function get_parameters() {
 
         $this->pagevars['action'] = optional_param('action', '', PARAM_ALPHANUM);
-        $this->pagevars['group'] = optional_param('group', '', PARAM_INT);
+        $this->pagevars['group'] = optional_param('group', '0', PARAM_INT);
         $this->pagevars['groupmembers'] = optional_param('groupmembers', '', PARAM_RAW);
 
     }

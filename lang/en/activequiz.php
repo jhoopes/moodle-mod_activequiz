@@ -157,6 +157,7 @@ $string['joinquiz'] = 'Join Quiz';
 $string['select_group'] = 'Select your group';
 $string['attemptstartedalready'] = 'An attempt has already been started by one of your group members';
 $string['attemptstarted'] = 'An attempt has already been started by you, please click below to continue to your open attempt';
+$string['invalidgroupid'] = 'A valid group id is required for students';
 
 /** during quiz */
 $string['startquiz'] = 'Start quiz';
