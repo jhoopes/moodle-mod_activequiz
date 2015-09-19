@@ -118,7 +118,7 @@ $string['points_help'] = 'The number of points you\'d like this question to be w
 $string['invalid_points'] = 'Points are required and must be a number greater than 0';
 $string['showhistoryduringquiz'] = 'Show response history';
 $string['showhistoryduringquiz_help'] = 'Show the student/group response history for this question while reviewing responses to a question during a quiz.';
-
+$string['editpage_opensession_error'] = 'You cannot edit a quiz question or layout while a session is open.';
 
 $string['qmovesuccess'] = 'Successfully moved question';
 $string['qmoveerror'] = 'Couldn\'t move question';

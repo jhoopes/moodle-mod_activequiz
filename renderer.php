@@ -780,6 +780,11 @@ EOD;
         echo $this->output->box_start('generalbox boxaligncenter activequizbox');
     }
 
+    public function editpage_opensession(){
+
+        echo html_writer::tag('h3', get_string('editpage_opensession_error', 'activequiz'));
+    }
+
     /**
      * Render the list questions view for the edit page
      *

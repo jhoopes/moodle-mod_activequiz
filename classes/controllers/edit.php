@@ -185,8 +185,14 @@ class edit {
      *
      */
     public function handle_action() {
-        global $PAGE;
+        global $PAGE, $DB;
 
+        if($sessions = $DB->get_records('activequiz_sessions', array('activequizid' => $this->RTQ->getRTQ()->id, 'sessionopen'=> '1'))){
+            $this->RTQ->get_renderer()->print_editpage_header();
+            $this->RTQ->get_renderer()->editpage_opensession();
+            $this->RTQ->get_renderer()->end_editpage();
+            return; // return early to stop continuation.
+        }
 
         switch ($this->action) {
             case 'moveup':
