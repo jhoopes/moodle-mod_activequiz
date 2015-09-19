@@ -300,7 +300,7 @@ class edit {
         $qperpage = optional_param('qperpage', 10, PARAM_INT);
         $qpage = optional_param('qpage', 0, PARAM_INT);
 
-
+        $this->pageurl->param('courseid', $this->RTQ->getCourse()->id);
         ob_start(); // capture question bank display in buffer to have the renderer render output
 
         $questionbank = new \mod_activequiz\activequiz_question_bank_view($this->contexts, $this->pageurl, $this->RTQ->getCourse(), $this->RTQ->getCM());

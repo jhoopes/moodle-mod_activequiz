@@ -79,7 +79,7 @@ class activequiz_question_bank_view extends \question_bank_view {
         array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));
         array_unshift($this->searchconditions, new \core_question\bank\search\category_condition(
             $cat, $recurse, $editcontexts, $this->baseurl, $this->course));
-        $this->display_options_form($showquestiontext);
+        $this->display_options_form($showquestiontext, '');
 
         // continues with list of questions
         $this->display_question_list($this->contexts->having_one_edit_tab_cap($tabname),
