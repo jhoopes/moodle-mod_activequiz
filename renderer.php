@@ -665,6 +665,8 @@ EOD;
             'shownotresponded'
         ), 'activequiz');
 
+        $this->page->requires->strings_for_js(array('seconds'), 'moodle');
+
 
         // finally allow question modifiers to add their own css/js
         $this->rtq->call_question_modifiers('add_js', null);
@@ -675,21 +677,30 @@ EOD;
      * Renders a response for a specific question and attempt
      *
      * @param \mod_activequiz\activequiz_attempt $attempt
+     * @param int $responsecount The number of the response (used for anonymous mode)
      *
      * @return string HTML fragment for the response
      */
-    public function render_response($attempt) {
+    public function render_response($attempt, $responsecount) {
         global $DB;
 
 
         $response = html_writer::start_div('response');
 
         // check if group mode, if so, give the group name the attempt is for
-        if ($this->rtq->group_mode()) {
-            $name = $this->rtq->get_groupmanager()->get_group_name($attempt->forgroupid);
-        } else {
-            $user = $DB->get_record('user', array('id' => $attempt->userid));
-            $name = fullname($user);
+        if($this->rtq->getRTQ()->anonymizeresponses == 1){
+            if($this->rtq->group_mode()){
+                $name = get_string('group') . ' ' . $responsecount;
+            }else{
+                $name = get_string('user') . ' ' . $responsecount;
+            }
+        }else{
+            if ($this->rtq->group_mode()) {
+                $name = $this->rtq->get_groupmanager()->get_group_name($attempt->forgroupid);
+            } else {
+                $user = $DB->get_record('user', array('id' => $attempt->userid));
+                $name = fullname($user);
+            }
         }
 
         $response .= html_writer::tag('h3', $name, array('class' => 'responsename'));
@@ -719,10 +730,12 @@ EOD;
         $output .= html_writer::div('&nbsp;&nbsp;&nbsp;' . count($notresponded) . '/' . $total, 'inline');
         $output .= html_writer::end_div();
 
-        // output the list of students
-        $output .= html_writer::start_div();
-        $output .= html_writer::alist($notresponded, array('id' => 'notrespondedlist'));
-        $output .= html_writer::end_div();
+        // output the list of students, but only if we're not in anonymous mode
+        if($this->rtq->getRTQ()->anonymizeresponses == 0){
+            $output .= html_writer::start_div();
+            $output .= html_writer::alist($notresponded, array('id' => 'notrespondedlist'));
+            $output .= html_writer::end_div();
+        }
 
         $output .= html_writer::end_div();
 
@@ -789,7 +802,7 @@ EOD;
         echo html_writer::start_div('row', array('id' => 'questionrow'));
 
         echo html_writer::start_div('span6');
-        echo html_writer::tag('h2', 'Question List');
+        echo html_writer::tag('h2', get_string('questionlist', 'activequiz'));
         echo html_writer::div('', 'rtqstatusbox rtqhiddenstatus', array('id' => 'editstatus'));
 
         echo $this->show_questionlist($questions);
@@ -942,6 +955,12 @@ EOD;
 
     }
 
+    public function editpage_opensession(){
+
+        echo html_writer::tag('h3', get_string('editpage_opensession_error', 'activequiz'));
+
+    }
+
     /**
      * Ends the edit page with the footer of Moodle
      *
@@ -998,7 +1017,7 @@ EOD;
 
         $regradeurl = clone($this->pageurl);
         $regradeurl->param('action', 'regradeall');
-        $regradeall = new single_button($regradeurl, 'regrade all grades', 'GET');
+        $regradeall = new single_button($regradeurl, get_string('regradeallgrades', 'activequiz'), 'GET');
         $output .= html_writer::div($this->output->render($regradeall), '');
 
         $output = html_writer::div($output, 'activequizbox');

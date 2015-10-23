@@ -80,6 +80,8 @@ $string['grademethod'] = 'Session grading method';
 $string['grademethod_help'] = 'This is the method that is used when grading.  This method is for figuring out the grading with multiple sessions in the same activequiz';
 $string['assessed'] = 'Assessed';
 $string['assessed_help'] = 'Check this box to make your quiz assessed';
+$string['anonymousresponses'] = 'Anonymize student responses';
+$string['anonymousresponses_help'] = 'Anonymize student responses for the instructor\'s view so that if their screen is being shown, student\'s names or group names will not be shown';
 
 $string['groupworksettings'] = 'Group settings';
 $string['nochangegroups_label'] = '&nbsp;';
@@ -102,6 +104,7 @@ $string['manualcomment_help'] = 'The comment that instructors can add when gradi
 
 
 // edit page
+$string['questionlist'] = 'Question List';
 $string['addtoquiz'] = 'Add';
 $string['question'] = 'Question ';
 $string['addquestion'] = 'Add question';
@@ -133,7 +136,7 @@ $string['questionedit'] = 'Edit question';
 $string['savequestion'] = 'Save question';
 
 $string['cantaddquestiontwice'] = 'You can not add the same question more than once to a quiz';
-
+$string['editpage_opensession_error'] = 'You cannot edit a quiz question or layout while a session is open.';
 
 // view page
 $string['quiznotrunning'] = 'Quiz not running at the moment - wait for your teacher to start it.  Use the reload button to reload this page to check again';
@@ -154,6 +157,7 @@ $string['joinquiz'] = 'Join Quiz';
 $string['select_group'] = 'Select your group';
 $string['attemptstartedalready'] = 'An attempt has already been started by one of your group members';
 $string['attemptstarted'] = 'An attempt has already been started by you, please click below to continue to your open attempt';
+$string['invalidgroupid'] = 'A valid group id is required for students';
 
 /** during quiz */
 $string['startquiz'] = 'Start quiz';
@@ -266,6 +270,8 @@ $string['studentquizinst'] = '<p>Please wait for the instructor to start the qui
 $string['selectsession'] = 'Select session to view:&nbsp;&nbsp;&nbsp;&nbsp;';
 $string['activitygrades'] = 'Activity grades: ';
 $string['groupmembership'] = 'Group membership';
+$string['regradeallgrades'] = 'Regrade all grades';
+$string['successregrade'] = 'Successfully regraded quiz';
 
 // session attempts table
 $string['attemptno'] = 'Attempt Number';

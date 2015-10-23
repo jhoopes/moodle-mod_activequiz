@@ -341,7 +341,7 @@ class activequiz_session {
             if ($attempt->responded == 1) {
                 $responded++;
                 $attempt->summarize_response($this->session->currentquestion);
-                $totalresponsesummary .= $this->rtq->get_renderer()->render_response($attempt);
+                $totalresponsesummary .= $this->rtq->get_renderer()->render_response($attempt, $responded);
 
             }
         }
