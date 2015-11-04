@@ -93,6 +93,7 @@ class activequiz_question_bank_view extends \core_question\bank\view {
         array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));
         array_unshift($this->searchconditions, new \core_question\bank\search\category_condition(
             $cat, $recurse, $editcontexts, $this->baseurl, $this->course));
+        array_unshift($this->searchconditions, new activequiz_disabled_condition());
         $this->display_options_form($showquestiontext, '/mod/activequiz/edit.php');
 
         // Continues with list of questions.
@@ -122,5 +123,57 @@ class activequiz_question_bank_view extends \core_question\bank\view {
 
     }
 
+    /*
+     * This has been taken from the base class to allow us to call our own version of
+     * create_new_question_button.
+     *
+     * @param $category
+     * @param $canadd
+     * @throws \coding_exception
+     */
+    protected function create_new_question_form($category, $canadd) {
+        global $CFG;
+        echo '<div class="createnewquestion">';
+        if ($canadd) {
+            $this->create_new_question_button($category->id, $this->editquestionurl->params(),
+                get_string('createnewquestion', 'question'));
+        } else {
+            print_string('nopermissionadd', 'question');
+        }
+        echo '</div>';
+    }
 
+    /**
+     * Print a button for creating a new question. This will open question/addquestion.php,
+     * which in turn goes to question/question.php before getting back to $params['returnurl']
+     * (by default the question bank screen).
+     *
+     * This has been taken from question/editlib.php and adapted to allow us to use the $allowedqtypes
+     * param on print_choose_qtype_to_add_form
+     *
+     * @param int $categoryid The id of the category that the new question should be added to.
+     * @param array $params Other paramters to add to the URL. You need either $params['cmid'] or
+     *      $params['courseid'], and you should probably set $params['returnurl']
+     * @param string $caption the text to display on the button.
+     * @param string $tooltip a tooltip to add to the button (optional).
+     * @param bool $disabled if true, the button will be disabled.
+     */
+    private function create_new_question_button($categoryid, $params, $caption, $tooltip = '', $disabled = false) {
+        global $CFG, $PAGE, $OUTPUT;
+        static $choiceformprinted = false;
+
+        $config = get_config('activequiz');
+        $enabledtypes = explode(',', $config->enabledqtypes);
+
+        $params['category'] = $categoryid;
+        $url = new \moodle_url('/question/addquestion.php', $params);
+        echo $OUTPUT->single_button($url, $caption, 'get', array('disabled'=>$disabled, 'title'=>$tooltip));
+
+        if (!$choiceformprinted) {
+            echo '<div id="qtypechoicecontainer">';
+            echo print_choose_qtype_to_add_form(array(), $enabledtypes);
+            echo "</div>\n";
+            $choiceformprinted = true;
+        }
+    }
 }
