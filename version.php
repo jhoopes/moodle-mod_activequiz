@@ -23,10 +23,10 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2015072201;  // The current module version (Date: YYYYMMDDXX)
+$plugin->version = 2015120300;  // The current module version (Date: YYYYMMDDXX)
 $plugin->requires = 2015051100;  // Moodle 2.9 (or above)
 $plugin->cron = 0;           // Period for cron to check this module (secs)
 $plugin->component = 'mod_activequiz';
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '3.6.3 (Build: 2015072200)';
+$plugin->release = '3.6.4 (Build: 2015120300)';
 
