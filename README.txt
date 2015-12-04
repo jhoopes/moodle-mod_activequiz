@@ -16,6 +16,8 @@ The original plugin was written by Davo Smith, to which the University of Wiscon
 use the question engine integration as well as a bunch of other new features.
 
 
+This plugin is maintained by John Hoopes separately from the University.
+
 What is it?
 -----------
 This is a type of quiz designed to be used in face-to-face lessons, with a classroom full of computers/tablets/phones.
@@ -85,7 +87,7 @@ Delete the module from the 'Activities' module list in the admin section.
 Feedback:
 ---------
 
-You can contact me (John Hoopes) at hoopes AT wisc DOT edu
+You can contact me (John Hoopes) at john DOT z DOT hoopes AT gmail DOT com
 You can contact Davo Smith on 'moodle AT davosmith DOT co DOT uk, or at http://www.davosmith.co.uk/contact.php
 
 This module is provided as is by the University of Wisconsin released under the same license of Moodle (GPL v3)
