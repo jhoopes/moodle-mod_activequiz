@@ -97,7 +97,7 @@ class responses {
      *
      */
     public function handle_request() {
-        global $DB;
+        global $DB, $PAGE;
 
         switch ($this->pagevars['action']) {
             case 'regradeall':
@@ -120,7 +120,7 @@ class responses {
                 }
 
                 $session = $this->RTQ->get_session($sessionid);
-                $this->pageurl->param('sessionid');
+                $this->pageurl->param('sessionid', $sessionid);
                 $sessionattempts = new \mod_activequiz\tableviews\sessionattempts('sessionattempts', $this->RTQ,
                     $session, $this->pageurl);
 
@@ -132,6 +132,8 @@ class responses {
 
                 break;
             default:
+
+                $report_renderer = $PAGE->get_renderer('mod_activequiz', 'report');
 
                 // default view is to show a report with the list of sessions
                 // to select for showing the session's attempts
