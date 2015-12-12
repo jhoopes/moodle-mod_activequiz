@@ -18,6 +18,8 @@ use the question engine integration as well as a bunch of other new features.
 This plugin is maintained by John Hoopes separately from the University.
 
 
+This plugin is maintained by John Hoopes separately from the University.
+
 What is it?
 -----------
 This is a type of quiz designed to be used in face-to-face lessons, with a classroom full of computers/tablets/phones.
@@ -38,6 +40,7 @@ student gave.  Students will also be able to view their attempts based on the di
 
 Changes:
 --------
+2015-12-03 - Fixing sortablejs to not try to attach to moodle's AMD loader so that it will work, otherwise the plugin works as it should for 3.0
 2015-07-22 - Adding anonymize responses for the instructor view during a quiz.  This feature does not anonymize for grading or student/group review
 2015-07-08 - Fixing a missing strings issue, along with question category searching not working on Moodle 2.7 branch
 2015-06-01 - Fixing of missing CSS style "hidden" as some themes do not contain this style, also adding "standard_intro_elements"
