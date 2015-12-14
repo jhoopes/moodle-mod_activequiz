@@ -45,7 +45,7 @@ function activequiz_view_tabs($RTQ, $currenttab) {
         $row[] = new tabobject('edit', new moodle_url('/mod/activequiz/edit.php', array('cmid' => $RTQ->getCM()->id)), get_string('edit', 'activequiz'));
     }
     if ($RTQ->has_capability('mod/activequiz:seeresponses')) {
-        $row[] = new tabobject('responses', new moodle_url('/mod/activequiz/responses.php', array('id' => $RTQ->getCM()->id)), get_string('responses', 'activequiz'));
+        $row[] = new tabobject('reports', new moodle_url('/mod/activequiz/reports.php', array('id' => $RTQ->getCM()->id)), get_string('responses', 'activequiz'));
     }
 
     if ($currenttab == 'view' && count($row) == 1) {
@@ -55,8 +55,8 @@ function activequiz_view_tabs($RTQ, $currenttab) {
         $tabs[] = $row;
     }
 
-    if ($currenttab == 'responses') {
-        $activated[] = 'responses';
+    if ($currenttab == 'reports') {
+        $activated[] = 'reports';
     }
 
     if ($currenttab == 'edit') {

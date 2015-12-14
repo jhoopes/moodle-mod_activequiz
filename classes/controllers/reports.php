@@ -19,17 +19,17 @@ namespace mod_activequiz\controllers;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * The responses controller
+ * The reports controller
  *
  * @package     mod_activequiz
  * @author      John Hoopes <hoopes@wisc.edu>
  * @copyright   2014 University of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class responses {
+class reports {
 
-    /** @var \mod_activequiz\activequiz Realtime quiz class */
-    protected $RTQ;
+    /** @var \mod_activequiz\activequiz Active quiz class */
+    protected $activequiz;
 
     /** @var \mod_activequiz\activequiz_session $session The session class for the activequiz view */
     protected $session;
@@ -70,21 +70,21 @@ class responses {
 
         require_login($course->id, false, $cm);
 
-
         $this->pageurl->param('id', $cm->id);
         $this->pageurl->param('quizid', $quiz->id);
+        $this->pageurl->param('reporttype', $this->pagevars['report_type']);
         $this->pageurl->param('action', $this->pagevars['action']);
         $this->pagevars['pageurl'] = $this->pageurl;
 
-        $this->RTQ = new \mod_activequiz\activequiz($cm, $course, $quiz, $this->pagevars);
-        $this->RTQ->require_capability('mod/activequiz:seeresponses');
+        $this->activequiz = new \mod_activequiz\activequiz($cm, $course, $quiz, $this->pagevars);
+        $this->activequiz->require_capability('mod/activequiz:seeresponses');
 
         // set up renderer
-        $this->RTQ->get_renderer()->init($this->RTQ, $this->pageurl, $this->pagevars);
+        $this->activequiz->get_renderer()->init($this->activequiz, $this->pageurl, $this->pagevars);
 
 
         $PAGE->set_pagelayout('incourse');
-        $PAGE->set_context($this->RTQ->getContext());
+        $PAGE->set_context($this->activequiz->getContext());
         $PAGE->set_title(strip_tags($course->shortname . ': ' . get_string("modulename", "activequiz") . ': ' .
             format_string($quiz->name, true)));
         $PAGE->set_heading($course->fullname);
@@ -100,15 +100,15 @@ class responses {
         global $DB, $PAGE;
 
         switch ($this->pagevars['action']) {
-            case 'regradeall':
+            /*case 'regradeall':
 
-                $this->RTQ->get_grader()->save_all_grades();
-                $this->RTQ->get_renderer()->setMessage('success', get_string('successregrade', 'activequiz'));
-                $sessions = $this->RTQ->get_sessions();
-                $this->RTQ->get_renderer()->responses_header();
-                $this->RTQ->get_renderer()->select_session($sessions);
-                $this->RTQ->get_renderer()->report_home();
-                $this->RTQ->get_renderer()->responses_footer();
+                $this->activequiz->get_grader()->save_all_grades();
+                $this->activequiz->get_renderer()->setMessage('success', get_string('successregrade', 'activequiz'));
+                $sessions = $this->activequiz->get_sessions();
+                $this->activequiz->get_renderer()->responses_header();
+                $this->activequiz->get_renderer()->select_session($sessions);
+                $this->activequiz->get_renderer()->report_home();
+                $this->activequiz->get_renderer()->responses_footer();
 
                 break;
             case 'viewsession':
@@ -119,29 +119,28 @@ class responses {
                     redirect($this->pageurl, null, 0);
                 }
 
-                $session = $this->RTQ->get_session($sessionid);
+                $session = $this->activequiz->get_session($sessionid);
                 $this->pageurl->param('sessionid', $sessionid);
-                $sessionattempts = new \mod_activequiz\tableviews\sessionattempts('sessionattempts', $this->RTQ,
+                $sessionattempts = new \mod_activequiz\tableviews\sessionattempts('sessionattempts', $this->activequiz,
                     $session, $this->pageurl);
 
-                $sessions = $this->RTQ->get_sessions();
-                $this->RTQ->get_renderer()->responses_header();
-                $this->RTQ->get_renderer()->select_session($sessions, $sessionid);
-                $this->RTQ->get_renderer()->view_session_attempts($sessionattempts);
-                $this->RTQ->get_renderer()->responses_footer();
+                $sessions = $this->activequiz->get_sessions();
+                $this->activequiz->get_renderer()->responses_header();
+                $this->activequiz->get_renderer()->select_session($sessions, $sessionid);
+                $this->activequiz->get_renderer()->view_session_attempts($sessionattempts);
+                $this->activequiz->get_renderer()->responses_footer();
 
-                break;
+                break;*/
             default:
 
                 $report_renderer = $PAGE->get_renderer('mod_activequiz', 'report');
+                $report_renderer->init($this->activequiz);
+                $report = $this->resolve_report_class();
 
-                // default view is to show a report with the list of sessions
-                // to select for showing the session's attempts
-                $sessions = $this->RTQ->get_sessions();
-                $this->RTQ->get_renderer()->responses_header();
-                $this->RTQ->get_renderer()->select_session($sessions);
-                $this->RTQ->get_renderer()->report_home();
-                $this->RTQ->get_renderer()->responses_footer();
+
+                $report_renderer->report_header($this->pageurl, $this->pagevars);
+                $report->handle_request($this->pageurl, $this->pagevars);
+                $report_renderer->report_footer();
         }
     }
 
@@ -151,7 +150,22 @@ class responses {
      */
     protected function get_parameters() {
 
+        $this->pagevars['report_type'] = optional_param('reporttype', 'overview', PARAM_ALPHA);
         $this->pagevars['action'] = optional_param('action', '', PARAM_ALPHANUM);
+
+    }
+
+    /**
+     * Returns an instance of report based on the report type.  All report classes must implement the ireport interface
+     *
+     * @return \mod_activequiz\reports\ireport
+     */
+    protected function resolve_report_class() {
+
+        if(class_exists('\\mod_activequiz\\reports\\' . $this->pagevars['report_type'] . '\\report_' . $this->pagevars['report_type'])){
+            $class = '\\mod_activequiz\\reports\\' . $this->pagevars['report_type'] . '\\report_' . $this->pagevars['report_type'];
+            return new $class($this->activequiz);
+        }
 
     }
 }

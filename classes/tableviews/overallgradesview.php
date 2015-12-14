@@ -17,7 +17,7 @@
 namespace mod_activequiz\tableviews;
 
 defined('MOODLE_INTERNAL') || die();
-
+global $CFG;
 require_once($CFG->libdir . '/tablelib.php');
 
 /**
@@ -31,19 +31,19 @@ require_once($CFG->libdir . '/tablelib.php');
 class overallgradesview extends \flexible_table implements \renderable {
 
 
-    /** @var \mod_activequiz\activequiz $rtq */
-    protected $rtq;
+    /** @var \mod_activequiz\activequiz $activequiz */
+    protected $activequiz;
 
     /**
      * Contstruct this table class
      *
      * @param string                     $uniqueid The unique id for the table
-     * @param \mod_activequiz\activequiz $rtq
+     * @param \mod_activequiz\activequiz $activequiz
      * @param \moodle_url                $pageurl
      */
-    public function __construct($uniqueid, $rtq, $pageurl) {
+    public function __construct($uniqueid, $activequiz, $pageurl) {
 
-        $this->rtq = $rtq;
+        $this->rtq = $activequiz;
         $this->baseurl = $pageurl;
 
         parent::__construct($uniqueid);

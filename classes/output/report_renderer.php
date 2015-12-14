@@ -20,15 +20,49 @@ namespace mod_activequiz\output;
  * Renderer outputting the quiz editing UI.
  *
  * @package mod_activequiz
- * @copyright 2015 John Hoope <john.z.hoopes@gmail.com>
+ * @copyright 2015 John Hoopes <john.z.hoopes@gmail.com>
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+use mod_activequiz\traits\renderer_base;
 
 defined('MOODLE_INTERNAL') || die();
 
 class report_renderer extends \plugin_renderer_base {
 
 
+    use renderer_base;
 
+    /**
+     * @var \mod_activequiz\activequiz $activequiz
+     */
+    protected $activequiz;
+
+    /**
+     * @param \mod_activequiz\activequiz $activequiz
+     */
+    public function init($activequiz) {
+        $this->activequiz = $activequiz;
+    }
+
+    public function report_header($pageurl, $pagevars) {
+
+        $this->base_header('reports');
+
+        $options = [
+            'overview' => 'Overview Report'
+        ];
+
+        echo $this->output->single_select($pageurl, 'report_type', $options, $pagevars['report_type']);
+
+    }
+
+    /**
+     * Basic footer for the responses page
+     *
+     */
+    public function report_footer() {
+        $this->base_footer();
+    }
 
 }

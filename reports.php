@@ -26,7 +26,7 @@
  */
 
 require_once("../../config.php");
-
+global $CFG;
 require_once($CFG->libdir . '/questionlib.php');
 require_once($CFG->dirroot . '/mod/activequiz/locallib.php');
 require_once($CFG->dirroot . '/question/editlib.php');
@@ -34,8 +34,8 @@ require_once($CFG->dirroot . '/mod/activequiz/lib.php');
 require_once($CFG->libdir . '/tablelib.php');
 
 
-$responses = new \mod_activequiz\controllers\responses();
+$reports = new \mod_activequiz\controllers\reports();
 
-$responses->setup_page('/mod/activequiz/responses.php');
-$responses->handle_request();
+$reports->setup_page('/mod/activequiz/reports.php');
+$reports->handle_request();
 
