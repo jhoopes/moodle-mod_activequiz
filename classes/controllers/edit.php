@@ -100,8 +100,7 @@ class edit {
 
 
         // setup classes needed for the edit page
-        $this->RTQ = new \mod_activequiz\activequiz($cm, $course, $quiz, $this->pagevars);
-        $this->RTQ->get_renderer()->init($this->RTQ, $this->pageurl, $this->pagevars);
+        $this->RTQ = new \mod_activequiz\activequiz($cm, $course, $quiz, $this->pageurl, $this->pagevars);
 
     }
 

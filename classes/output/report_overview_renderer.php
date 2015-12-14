@@ -34,26 +34,6 @@ class report_overview_renderer extends \plugin_renderer_base {
     use renderer_base;
 
     /**
-     * @var \mod_activequiz\activequiz $activequiz
-     */
-    protected $activequiz;
-
-    /**
-     * @var \moodle_url $pageurl
-     */
-    protected $pageurl;
-
-    /**
-     * @param $actvequiz
-     * @param $pageurl
-     */
-    public function init($actvequiz, $pageurl) {
-        $this->activequiz = $actvequiz;
-        $this->pageurl = $pageurl;
-    }
-
-
-    /**
      * renders and echos the home page fore the responses section
      *
      * @param array      $sessions

@@ -57,23 +57,23 @@ class quizdata {
     public function setup_page() {
         global $DB, $PAGE;
 
-        // no page url as this is just a callback
+        // no page url as this is just a callback.
         $this->pageurl = null;
         $this->jsonlib = new \mod_activequiz\utils\jsonlib();
 
 
-        // first check if this is a jserror, if so, log it and end execution so we're not wasting time
+        // first check if this is a jserror, if so, log it and end execution so we're not wasting time.
         $jserror = optional_param('jserror', '', PARAM_ALPHANUMEXT);
         if (!empty($jserror)) {
             // log the js error on the apache error logs
             error_log($jserror);
 
-            // set a status and send it saying that we logged the error
+            // set a status and send it saying that we logged the error.
             $this->jsonlib->set('status', 'loggedjserror');
             $this->jsonlib->send_response();
         }
 
-        // use try/catch in order to catch errors and not display them on a javascript callback
+        // use try/catch in order to catch errors and not display them on a javascript callback.
         try {
             $rtqid = required_param('rtqid', PARAM_INT);
             $sessionid = required_param('sessionid', PARAM_INT);
@@ -81,7 +81,7 @@ class quizdata {
             $this->action = required_param('action', PARAM_ALPHANUMEXT);
             $this->pagevars['inquesetion'] = optional_param('inquestion', '', PARAM_ALPHAEXT);
 
-            // only load things asked for, don't assume that we're loading whatever
+            // only load things asked for, don't assume that we're loading whatever.
             $quiz = $DB->get_record('activequiz', array('id' => $rtqid), '*', MUST_EXIST);
             $course = $DB->get_record('course', array('id' => $quiz->course), '*', MUST_EXIST);
             $cm = get_coursemodule_from_instance('activequiz', $quiz->id, $course->id, false, MUST_EXIST);
@@ -89,14 +89,14 @@ class quizdata {
 
             require_login($course->id, false, $cm, false, true);
         } catch(\moodle_exception $e) {
-            if (debugging()) { // if debugging throw error as normal
+            if (debugging()) { // if debugging throw error as normal.
                 throw new $e;
             } else {
                 $this->jsonlib->send_error('invalid request');
             }
-            exit(); // stop execution
+            exit(); // stop execution.
         }
-        // check to make sure asked for session is open
+        // check to make sure asked for session is open.
         if ((int)$session->sessionopen !== 1) {
             $this->jsonlib->send_error('invalidsession');
         }
@@ -105,22 +105,17 @@ class quizdata {
         $this->pagevars['action'] = $this->action;
 
 
-        $this->RTQ = new \mod_activequiz\activequiz($cm, $course, $quiz, $this->pagevars);
-        // set up renderer
-
-        $this->RTQ->get_renderer()->init($this->RTQ, $this->pageurl, $this->pagevars);
-
-        // finally set up the question manager and the possible activequiz session
+        $this->RTQ = new \mod_activequiz\activequiz($cm, $course, $quiz, $this->pageurl, $this->pagevars);
 
         $this->session = new \mod_activequiz\activequiz_session($this->RTQ, $this->pageurl, $this->pagevars, $session);
 
-        // get and validate the attempt
+        // get and validate the attempt.
         $attempt = $this->session->get_user_attempt($attemptid);
 
         if ($attempt->getStatus() != 'inprogress') {
             $this->jsonlib->send_error('invalidattempt');
         }
-        // if the attempt validates, make it the open attempt on the session
+        // if the attempt validates, make it the open attempt on the session.
         $this->session->set_open_attempt($attempt);
 
 

@@ -76,11 +76,8 @@ class reports {
         $this->pageurl->param('action', $this->pagevars['action']);
         $this->pagevars['pageurl'] = $this->pageurl;
 
-        $this->activequiz = new \mod_activequiz\activequiz($cm, $course, $quiz, $this->pagevars);
+        $this->activequiz = new \mod_activequiz\activequiz($cm, $course, $quiz, $this->pageurl, $this->pagevars, 'report');
         $this->activequiz->require_capability('mod/activequiz:seeresponses');
-
-        // set up renderer
-        $this->activequiz->get_renderer()->init($this->activequiz, $this->pageurl, $this->pagevars);
 
 
         $PAGE->set_pagelayout('incourse');
@@ -99,49 +96,13 @@ class reports {
     public function handle_request() {
         global $DB, $PAGE;
 
-        switch ($this->pagevars['action']) {
-            /*case 'regradeall':
-
-                $this->activequiz->get_grader()->save_all_grades();
-                $this->activequiz->get_renderer()->setMessage('success', get_string('successregrade', 'activequiz'));
-                $sessions = $this->activequiz->get_sessions();
-                $this->activequiz->get_renderer()->responses_header();
-                $this->activequiz->get_renderer()->select_session($sessions);
-                $this->activequiz->get_renderer()->report_home();
-                $this->activequiz->get_renderer()->responses_footer();
-
-                break;
-            case 'viewsession':
-                $sessionid = required_param('sessionid', PARAM_INT);
-
-                if (empty($sessionid)) { // if no session id just go to the home page
-                    $this->pageurl->param('action', '');
-                    redirect($this->pageurl, null, 0);
-                }
-
-                $session = $this->activequiz->get_session($sessionid);
-                $this->pageurl->param('sessionid', $sessionid);
-                $sessionattempts = new \mod_activequiz\tableviews\sessionattempts('sessionattempts', $this->activequiz,
-                    $session, $this->pageurl);
-
-                $sessions = $this->activequiz->get_sessions();
-                $this->activequiz->get_renderer()->responses_header();
-                $this->activequiz->get_renderer()->select_session($sessions, $sessionid);
-                $this->activequiz->get_renderer()->view_session_attempts($sessionattempts);
-                $this->activequiz->get_renderer()->responses_footer();
-
-                break;*/
-            default:
-
-                $report_renderer = $PAGE->get_renderer('mod_activequiz', 'report');
-                $report_renderer->init($this->activequiz);
-                $report = $this->resolve_report_class();
+            $report = $this->resolve_report_class();
 
 
-                $report_renderer->report_header($this->pageurl, $this->pagevars);
-                $report->handle_request($this->pageurl, $this->pagevars);
-                $report_renderer->report_footer();
-        }
+            $this->activequiz->get_renderer()->report_header($this->pageurl, $this->pagevars);
+            $report->handle_request($this->pageurl, $this->pagevars);
+            $this->activequiz->get_renderer()->report_footer();
+
     }
 
     /**

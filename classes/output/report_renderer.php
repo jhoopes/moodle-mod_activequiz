@@ -33,19 +33,7 @@ class report_renderer extends \plugin_renderer_base {
 
     use renderer_base;
 
-    /**
-     * @var \mod_activequiz\activequiz $activequiz
-     */
-    protected $activequiz;
-
-    /**
-     * @param \mod_activequiz\activequiz $activequiz
-     */
-    public function init($activequiz) {
-        $this->activequiz = $activequiz;
-    }
-
-    public function report_header($pageurl, $pagevars) {
+    public function report_header() {
 
         $this->base_header('reports');
 
@@ -53,7 +41,7 @@ class report_renderer extends \plugin_renderer_base {
             'overview' => 'Overview Report'
         ];
 
-        echo $this->output->single_select($pageurl, 'report_type', $options, $pagevars['report_type']);
+        echo $this->output->single_select($this->pageurl, 'report_type', $options, $this->pagevars['report_type']);
 
     }
 

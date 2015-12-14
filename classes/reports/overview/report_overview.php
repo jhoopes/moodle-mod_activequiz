@@ -39,7 +39,7 @@ class report_overview extends \mod_activequiz\reports\activequiz_report_base imp
      */
     public function handle_request($pageurl, $pagevars) {
 
-        $this->renderer->init($this->activequiz, $pageurl);
+        $this->renderer->init($this->activequiz, $pageurl, $pagevars);
 
         // switch the action
         switch($pagevars['action']) {
