@@ -81,7 +81,7 @@ $string['grademethod_help'] = 'This is the method that is used when grading.  Th
 $string['assessed'] = 'Assessed';
 $string['assessed_help'] = 'Check this box to make your quiz assessed';
 $string['anonymousresponses'] = 'Anonymize student responses';
-$string['anonymousresponses_help'] = 'Anonymize student responses for the instructor\'s view so that if their screen is being shown, student\'s names or group names will not be shown';
+$string['anonymousresponses_help'] = 'Fully anonymize student responses to make it difficult to match them back to the users who gave those responses.<br>The gradebook will never be updated for students who take the quiz whilst this setting is on.';
 
 $string['groupworksettings'] = 'Group settings';
 $string['nochangegroups_label'] = '&nbsp;';
@@ -180,6 +180,7 @@ $string['reload_results'] = 'Reload Results';
 $string['notresponded'] = 'Number not responded out of attempts';
 $string['trycount'] = 'You have {$a->tries} tries left.';
 $string['waitforrevewingend'] = 'The instructor is currently reviewing the previous question.  Please wait for the next question to start';
+$string['isanonymous'] = 'All responses to this active quiz are anonymous';
 
 $string['show_correct_answer'] = 'Show correct answer';
 $string['hide_correct_answer'] = 'Hide correct answer';
@@ -272,6 +273,7 @@ $string['activitygrades'] = 'Activity grades: ';
 $string['groupmembership'] = 'Group membership';
 $string['regradeallgrades'] = 'Regrade all grades';
 $string['successregrade'] = 'Successfully regraded quiz';
+$string['anonymoususer'] = 'Anonymous user';
 
 // session attempts table
 $string['attemptno'] = 'Attempt Number';

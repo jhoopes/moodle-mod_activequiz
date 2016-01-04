@@ -115,14 +115,21 @@ class sessionattempts extends \flexible_table implements \renderable {
 
             if (!$download) {
 
+                if ($item->userid > 0) {
+                    $userlink = '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$item->userid.
+                        '&amp;course='.$this->rtq->getCourse()->id.'">';
+                    $userlinkend = '</a>';
+                } else {
+                    $userlink = '';
+                    $userlinkend = '';
+                }
+
                 if ($this->rtq->group_mode()) {
 
-                    $userlink = $item->groupname . ' (<a href="' . $CFG->wwwroot . '/user/view.php?id=' . $item->userid .
-                        '&amp;course=' . $this->rtq->getCourse()->id . '">' . $item->takenby . '</a>)';
+                    $userlink = $item->groupname . ' (' .$userlink . $item->takenby . $userlinkend . ')';
 
                 } else {
-                    $userlink = '<a href="' . $CFG->wwwroot . '/user/view.php?id=' . $item->userid .
-                        '&amp;course=' . $this->rtq->getCourse()->id . '">' . $item->username . '</a>';
+                    $userlink = $userlink . $item->username . $userlinkend;
                 }
                 $row[] = $userlink;
             } else {
@@ -186,7 +193,9 @@ class sessionattempts extends \flexible_table implements \renderable {
         $attempts = $this->session->getall_attempts(true);
         $userids = array();
         foreach ($attempts as $attempt) {
-            $userids[] = $attempt->userid;
+            if ($attempt->userid > 0) {
+                $userids[] = $attempt->userid;
+            }
         }
 
         // get user records to get the full name
@@ -203,16 +212,22 @@ class sessionattempts extends \flexible_table implements \renderable {
             $ditem = new \stdClass();
             $ditem->attemptid = $attempt->id;
             $ditem->sessionid = $attempt->sessionid;
+            if (isset($userrecs[$attempt->userid])) {
+                $name = fullname($userrecs[$attempt->userid]);
+                $userid = $attempt->userid;
+            } else {
+                $name = get_string('anonymoususer', 'mod_activequiz');
+                $userid = null;
+            }
             if ($this->rtq->group_mode()) {
 
-                $ditem->userid = $attempt->userid;
-                $ditem->takenby = fullname($userrecs[ $attempt->userid ]);
+                $ditem->userid = $userid;
+                $ditem->takenby = $name;
                 $ditem->groupname = $this->rtq->get_groupmanager()->get_group_name($attempt->forgroupid);
 
             } else {
-                $ditem->userid = $attempt->userid;
-                $userrec = $userrecs[ $attempt->userid ];
-                $ditem->username = fullname($userrec);
+                $ditem->userid = $userid;
+                $ditem->username = $name;
             }
 
             $ditem->attemptno = $attempt->attemptnum;

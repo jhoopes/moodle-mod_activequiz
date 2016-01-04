@@ -169,6 +169,9 @@ class viewquizattempt {
                             'sessionid'    => $attempt->sessionid
                         )
                     );
+                    if ($params['relateduserid'] < 0) {
+                        $params['relateduserid'] = 0; // Blank out anonymous users.
+                    }
 
                     $event = \mod_activequiz\event\attempt_viewed::create($params);
                     $event->add_record_snapshot('activequiz_attempts', $attempt->get_attempt());

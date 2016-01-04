@@ -284,6 +284,15 @@ class activequiz {
     }
 
     /**
+     * Are the responses anonymous?
+     *
+     * @return bool
+     */
+    public function is_anonymous() {
+        return (bool)$this->activequiz->anonymizeresponses;
+    }
+
+    /**
      * Gets the review options for the specified time
      *
      * @param string $whenname The review options time that we want to get the options for

@@ -38,6 +38,7 @@ student gave.  Students will also be able to view their attempts based on the di
 
 Changes:
 --------
+2016-01-04 - Anonymize option now anonymizes the data stored in the database - it is not available for review or to update the gradebook
 2015-12-03 - Fixing sortablejs to not try to attach to moodle's AMD loader so that it will work, otherwise the plugin works as it should for 3.0
 2015-07-22 - Adding anonymize responses for the instructor view during a quiz.  This feature does not anonymize for grading or student/group review
 2015-07-08 - Fixing a missing strings issue, along with question category searching not working on Moodle 2.7 branch

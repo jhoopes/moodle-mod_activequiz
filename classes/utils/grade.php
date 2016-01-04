@@ -158,6 +158,9 @@ class grade {
     protected function process_sessions($sessions, $userid = null) {
         global $DB;
 
+        if ($userid && $userid < 0) {
+            return true; // Ignore attempts to update the grades for an anonymous user.
+        }
 
         $sessionsgrades = array();
         foreach ($sessions as $session) {
@@ -186,6 +189,9 @@ class grade {
 
                 foreach ($session->get_session_users() as $user) {
                     $uid = $user->userid;
+                    if ($uid < 0) {
+                        continue; // Ignore anonymous users.
+                    }
                     if (!isset($sessionsgrades[ $uid ])) { // add the userid to the sessions grade as an array
                         $sessionsgrades[ $uid ] = array();
                     }

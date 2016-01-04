@@ -134,7 +134,9 @@ class restore_activequiz_activity_structure_step extends restore_questions_activ
         $oldid = $data->id;
         $data->sessionid = $this->get_new_parentid('activequiz_session');
 
-        $data->userid = $this->get_mappingid('user', $data->userid);
+        if ($data->userid > 0) {
+            $data->userid = $this->get_mappingid('user', $data->userid);
+        }
         $data->forgroupid = $this->get_mappingid('group', $data->forgroupid);
 
         $data->timestart = $this->apply_date_offset($data->timestart);
