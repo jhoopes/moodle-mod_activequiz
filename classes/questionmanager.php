@@ -156,9 +156,9 @@ class questionmanager {
 
         } else {
             // display the form
-            $this->renderer->print_editpage_header();
-            $this->renderer->editrender_addquestionform($mform);
-            $this->renderer->end_editpage();
+            $this->renderer->print_header();
+            $this->renderer->addquestionform($mform);
+            $this->renderer->footer();
         }
     }
 
@@ -214,9 +214,9 @@ class questionmanager {
         } else {
             // display the form
             $mform->set_data(array('indvquestiontime' => $rtqquestion->questiontime, 'notime' => $rtqquestion->notime, 'numberoftries' => $rtqquestion->tries, 'points' => $rtqquestion->points));
-            $this->renderer->print_editpage_header();
-            $this->renderer->editrender_addquestionform($mform);
-            $this->renderer->end_editpage();
+            $this->renderer->print_header();
+            $this->renderer->addquestionform($mform);
+            $this->renderer->footer();
         }
     }
 

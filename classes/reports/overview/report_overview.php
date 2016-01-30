@@ -45,7 +45,7 @@ class report_overview extends \mod_activequiz\reports\activequiz_report_base imp
         switch($pagevars['action']) {
             case 'regradeall':
 
-                if($this->activequiz->get_grader()->save_all_grades()) {
+                if($this->activequiz->get_grader()->save_all_grades(true)) {
                     $this->renderer->setMessage('success',  get_string('successregrade', 'activequiz'));
                 }else {
                     $this->renderer->setMessage('error',  get_string('errorregrade', 'activequiz'));

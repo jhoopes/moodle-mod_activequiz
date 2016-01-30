@@ -40,6 +40,9 @@ class reports {
     /** @var array $this ->pagevars An array of page options for the page load */
     protected $pagevars;
 
+    /** @var  \mod_activequiz\output\report_renderer $renderer */
+    protected $renderer;
+
     /**
      * set up the class for the view page
      *
@@ -79,6 +82,8 @@ class reports {
         $this->activequiz = new \mod_activequiz\activequiz($cm, $course, $quiz, $this->pageurl, $this->pagevars, 'report');
         $this->activequiz->require_capability('mod/activequiz:seeresponses');
 
+        $this->renderer = $this->activequiz->get_renderer();
+
 
         $PAGE->set_pagelayout('incourse');
         $PAGE->set_context($this->activequiz->getContext());
@@ -99,9 +104,9 @@ class reports {
             $report = $this->resolve_report_class();
 
 
-            $this->activequiz->get_renderer()->report_header($this->pageurl, $this->pagevars);
+            $this->renderer->report_header($this->pageurl, $this->pagevars);
             $report->handle_request($this->pageurl, $this->pagevars);
-            $this->activequiz->get_renderer()->report_footer();
+            $this->renderer->report_footer();
 
     }
 
