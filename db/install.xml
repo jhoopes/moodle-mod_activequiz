@@ -81,7 +81,7 @@
         <FIELD NAME="sessionid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="The session this attempt belongs to"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="The userid for this attempt"/>
         <FIELD NAME="attemptnum" TYPE="int" LENGTH="11" NOTNULL="false" SEQUENCE="false" COMMENT="The attempt number for this user, for this session"/>
-        <FIELD NAME="questionengid" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="The unique id that is used for the question engine's usage for loading the activity by id."/>
+        <FIELD NAME="questionengid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The unique id that is used for the question engine's usage for loading the activity by id."/>
         <FIELD NAME="status" TYPE="int" LENGTH="5" NOTNULL="true" SEQUENCE="false" COMMENT="The status of the attempt"/>
         <FIELD NAME="preview" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="bit as to wether or not this is a preview attempt"/>
         <FIELD NAME="responded" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="whether or not the user responded for the particular sesson's current question"/>
