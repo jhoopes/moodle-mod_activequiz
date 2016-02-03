@@ -136,6 +136,10 @@ activequiz.handle_question = function (questionid) {
 
     this.loading(M.util.get_string('gatheringresults', 'activequiz'), 'show');
 
+    if (typeof tinyMCE !== 'undefined') {
+        tinyMCE.triggerSave();
+    }
+
     // will only work on Modern browsers
     // of course the problem child is always IE...
     var qform = document.forms.namedItem('q' + questionid);
