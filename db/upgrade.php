@@ -127,5 +127,15 @@ function xmldb_activequiz_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2015072200, 'activequiz');
     }
 
+    if ($oldversion < 2016013100) {
+        $table = new xmldb_table('activequiz_attempts');
+        $field = new xmldb_field('questionengid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, 'attemptnum');
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->change_field_type($table, $field);
+        }
+        // Activequiz savepoint reached.
+        upgrade_mod_savepoint(true, 2016013100, 'activequiz');
+    }
+
     return true;
 }
