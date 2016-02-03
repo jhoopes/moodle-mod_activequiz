@@ -118,6 +118,7 @@ activequiz.start_quiz = function () {
             // disable the next question button
             var nextquestionbtn = document.getElementById('nextquestion');
             nextquestionbtn.disabled = true;
+            activequiz.set('lastquestion', 'true');
         }
 
         activequiz.waitfor_question(response.questionid, response.questiontime, response.delay, response.nextstarttime);
