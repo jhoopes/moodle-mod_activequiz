@@ -84,12 +84,9 @@ class view {
         $this->pageurl->param('action', $this->pagevars['action']);
         $this->pagevars['pageurl'] = $this->pageurl;
 
-        $this->RTQ = new \mod_activequiz\activequiz($cm, $course, $quiz, $this->pagevars);
+        $this->RTQ = new \mod_activequiz\activequiz($cm, $course, $quiz, $this->pageurl, $this->pagevars);
         $this->RTQ->require_capability('mod/activequiz:attempt');
         $this->pagevars['isinstructor'] = $this->RTQ->is_instructor(); // set this up in the page vars so it can be passed to things like the renderer
-
-        // set up renderer
-        $this->RTQ->get_renderer()->init($this->RTQ, $this->pageurl, $this->pagevars);
 
         // finally set up the question manager and the possible activequiz session
         $this->session = new \mod_activequiz\activequiz_session($this->RTQ, $this->pageurl, $this->pagevars);

@@ -272,6 +272,7 @@ $string['activitygrades'] = 'Activity grades: ';
 $string['groupmembership'] = 'Group membership';
 $string['regradeallgrades'] = 'Regrade all grades';
 $string['successregrade'] = 'Successfully regraded quiz';
+$string['errorregrade'] = 'Sorry, there was an error in trying to re-grade all of the quizzes';
 
 // session attempts table
 $string['attemptno'] = 'Attempt Number';

@@ -17,8 +17,7 @@
 namespace mod_activequiz\controllers;
 
 defined('MOODLE_INTERNAL') || die();
-
-
+global $CFG;
 require_once($CFG->libdir . '/questionlib.php');
 require_once($CFG->dirroot . '/question/editlib.php');
 
@@ -31,23 +30,26 @@ require_once($CFG->dirroot . '/question/editlib.php');
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class edit {
-    /** @var \mod_activequiz\activequiz Realtime quiz class */
-    protected $RTQ;
+    /** @var \mod_activequiz\activequiz Realtime quiz class. */
+    protected $activequiz;
 
-    /** @var string $action The specified action to take */
+    /** @var string $action The specified action to take. */
     protected $action;
 
-    /** @var object $context The specific context for this activity */
+    /** @var object $context The specific context for this activity. */
     protected $context;
 
-    /** @var \question_edit_contexts $contexts and array of contexts that has all parent contexts from the RTQ context */
+    /** @var \question_edit_contexts $contexts and array of contexts that has all parent contexts from the RTQ context. */
     protected $contexts;
 
-    /** @var \moodle_url $pageurl The page url to base other calls on */
+    /** @var \moodle_url $pageurl The page url to base other calls on. */
     protected $pageurl;
 
-    /** @var array $this ->pagevars An array of page options for the page load */
+    /** @var array $this ->pagevars An array of page options for the page load. */
     protected $pagevars;
+
+    /** @var  \mod_activequiz\output\edit_renderer $renderer. */
+    protected $renderer;
 
     /**
      * Sets up the edit page
@@ -67,7 +69,7 @@ class edit {
         $id = optional_param('cmid', false, PARAM_INT);
         $quizid = optional_param('quizid', false, PARAM_INT);
 
-        // get necessary records from the DB
+        // get necessary records from the DB.
         if ($id) {
             $cm = get_coursemodule_from_id('activequiz', $id, 0, false, MUST_EXIST);
             $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
@@ -77,7 +79,7 @@ class edit {
             $course = $DB->get_record('course', array('id' => $quiz->course), '*', MUST_EXIST);
             $cm = get_coursemodule_from_instance('activequiz', $quiz->id, $course->id, false, MUST_EXIST);
         }
-        $this->get_parameters(); // get the rest of the parameters and set them in the class
+        $this->get_parameters(); // get the rest of the parameters and set them in the class.
 
         if ($CFG->version < 2011120100) {
             $this->context = get_context_instance(CONTEXT_MODULE, $cm->id);
@@ -85,7 +87,7 @@ class edit {
             $this->context = \context_module::instance($cm->id);
         }
 
-        // set up question lib
+        // set up question lib.
 
         list($this->pageurl, $this->contexts, $cmid, $cm, $quiz, $this->pagevars) =
             question_edit_setup('editq', '/mod/activequiz/edit.php', true);
@@ -100,8 +102,8 @@ class edit {
 
 
         // setup classes needed for the edit page
-        $this->RTQ = new \mod_activequiz\activequiz($cm, $course, $quiz, $this->pagevars);
-        $this->RTQ->get_renderer()->init($this->RTQ, $this->pageurl, $this->pagevars);
+        $this->activequiz = new \mod_activequiz\activequiz($cm, $course, $quiz, $this->pageurl, $this->pagevars, 'edit');
+        $this->renderer = $this->activequiz->get_renderer(); // set the renderer for this controller.  Done really for code completion.
 
     }
 
@@ -113,16 +115,16 @@ class edit {
         global $PAGE, $DB;
 
         // check if a session is open.  If so display error.
-        if($sessions = $DB->get_records('activequiz_sessions', array('activequizid' => $this->RTQ->getRTQ()->id, 'sessionopen'=> '1'))){
-            $this->RTQ->get_renderer()->print_editpage_header();
-            $this->RTQ->get_renderer()->editpage_opensession();
-            $this->RTQ->get_renderer()->end_editpage();
+        if($sessions = $DB->get_records('activequiz_sessions', array('activequizid' => $this->activequiz->getRTQ()->id, 'sessionopen'=> '1'))){
+            $this->renderer->print_header();
+            $this->renderer->opensession();
+            $this->renderer->footer();
             return; // return early to stop continuation.
         }
 
 
         switch ($this->action) {
-            case 'dragdrop': // this is a javascript callack case for the drag and drop of questions using ajax
+            case 'dragdrop': // this is a javascript callack case for the drag and drop of questions using ajax.
                 $jsonlib = new \mod_activequiz\utils\jsonlib();
 
                 $questionorder = optional_param('questionorder', '', PARAM_RAW);
@@ -133,7 +135,7 @@ class edit {
 
                 $questionorder = explode(',', $questionorder);
 
-                if ($this->RTQ->get_questionmanager()->set_full_order($questionorder) === true) {
+                if ($this->activequiz->get_questionmanager()->set_full_order($questionorder) === true) {
                     $jsonlib->set('success', 'true');
                     $jsonlib->send_response();
                 } else {
@@ -145,7 +147,7 @@ class edit {
 
                 $questionid = required_param('questionid', PARAM_INT);
 
-                if ($this->RTQ->get_questionmanager()->move_question('up', $questionid)) {
+                if ($this->activequiz->get_questionmanager()->move_question('up', $questionid)) {
                     $type = 'success';
                     $message = get_string('qmovesuccess', 'activequiz');
                 } else {
@@ -153,17 +155,17 @@ class edit {
                     $message = get_string('qmoveerror', 'activequiz');
                 }
 
-                $this->RTQ->get_renderer()->setMessage($type, $message);
-                $this->RTQ->get_renderer()->print_editpage_header($this->RTQ);
+                $this->renderer->setMessage($type, $message);
+                $this->renderer->print_header();
                 $this->list_questions();
-                $this->RTQ->get_renderer()->end_editpage();
+                $this->renderer->footer();
 
                 break;
             case 'movedown':
 
                 $questionid = required_param('questionid', PARAM_INT);
 
-                if ($this->RTQ->get_questionmanager()->move_question('down', $questionid)) {
+                if ($this->activequiz->get_questionmanager()->move_question('down', $questionid)) {
                     $type = 'success';
                     $message = get_string('qmovesuccess', 'activequiz');
                 } else {
@@ -171,28 +173,28 @@ class edit {
                     $message = get_string('qmoveerror', 'activequiz');
                 }
 
-                $this->RTQ->get_renderer()->setMessage($type, $message);
-                $this->RTQ->get_renderer()->print_editpage_header($this->RTQ);
+                $this->renderer->setMessage($type, $message);
+                $this->renderer->print_header();
                 $this->list_questions();
-                $this->RTQ->get_renderer()->end_editpage();
+                $this->renderer->footer();
 
                 break;
             case 'addquestion':
 
                 $questionid = required_param('questionid', PARAM_INT);
-                $this->RTQ->get_questionmanager()->add_question($questionid);
+                $this->activequiz->get_questionmanager()->add_question($questionid);
 
                 break;
             case 'editquestion':
 
                 $questionid = required_param('rtqquestionid', PARAM_INT);
-                $this->RTQ->get_questionmanager()->edit_question($questionid);
+                $this->activequiz->get_questionmanager()->edit_question($questionid);
 
                 break;
             case 'deletequestion':
 
                 $questionid = required_param('questionid', PARAM_INT);
-                if ($this->RTQ->get_questionmanager()->delete_question($questionid)) {
+                if ($this->activequiz->get_questionmanager()->delete_question($questionid)) {
                     $type = 'success';
                     $message = get_string('qdeletesucess', 'activequiz');
                 } else {
@@ -200,17 +202,17 @@ class edit {
                     $message = get_string('qdeleteerror', 'activequiz');
                 }
 
-                $this->RTQ->get_renderer()->setMessage($type, $message);
-                $this->RTQ->get_renderer()->print_editpage_header($this->RTQ);
+                $this->renderer->setMessage($type, $message);
+                $this->renderer->print_header();
                 $this->list_questions();
-                $this->RTQ->get_renderer()->end_editpage();
+                $this->renderer->footer();
 
                 break;
             case 'listquestions':
-                // default is to list the questions
-                $this->RTQ->get_renderer()->print_editpage_header($this->RTQ);
+                // default is to list the questions.
+                $this->renderer->print_header();
                 $this->list_questions();
-                $this->RTQ->get_renderer()->end_editpage();
+                $this->renderer->footer();
                 break;
         }
     }
@@ -221,23 +223,23 @@ class edit {
      * @return \mod_activequiz\activequiz
      */
     public function getRTQ() {
-        return $this->RTQ;
+        return $this->activequiz;
     }
 
     /**
-     * Echos the list of questions using the renderer for activequiz
+     * Echos the list of questions using the renderer for activequiz.
      *
      */
     protected function list_questions() {
 
         $questionbankview = $this->get_questionbank_view();
-        $questions = $this->RTQ->get_questionmanager()->get_questions();
-        $this->RTQ->get_renderer()->editrender_listquestions($questions, $questionbankview);
+        $questions = $this->activequiz->get_questionmanager()->get_questions();
+        $this->renderer->listquestions($questions, $questionbankview);
 
     }
 
     /**
-     * Gets the question bank view based on the options passed in at the page setup
+     * Gets the question bank view based on the options passed in at the page setup.
      *
      * @return string
      */
@@ -247,9 +249,9 @@ class edit {
         $qpage = optional_param('qpage', 0, PARAM_INT);
 
 
-        ob_start(); // capture question bank display in buffer to have the renderer render output
+        ob_start(); // capture question bank display in buffer to have the renderer render output.
 
-        $questionbank = new \mod_activequiz\activequiz_question_bank_view($this->contexts, $this->pageurl, $this->RTQ->getCourse(), $this->RTQ->getCM());
+        $questionbank = new \mod_activequiz\activequiz_question_bank_view($this->contexts, $this->pageurl, $this->activequiz->getCourse(), $this->activequiz->getCM());
         $questionbank->display('editq', $qpage, $qperpage, $this->pagevars['cat'], true, true, true);
 
         return ob_get_clean();

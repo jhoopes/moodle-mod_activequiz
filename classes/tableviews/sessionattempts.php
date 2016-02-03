@@ -15,9 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace mod_activequiz\tableviews;
-
 defined('MOODLE_INTERNAL') || die();
-
+global $CFG;
 require_once($CFG->libdir . '/tablelib.php');
 
 /**
@@ -83,7 +82,7 @@ class sessionattempts extends \flexible_table implements \renderable {
         $this->define_columns(array_keys($columns));
         $this->define_headers(array_values($columns));
 
-        $this->sortable(true, 'timestart');
+        //$this->sortable(true, 'timestart');
         $this->collapsible(true);
 
         $this->column_class('fullname', 'bold');

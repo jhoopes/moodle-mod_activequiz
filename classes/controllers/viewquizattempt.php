@@ -78,13 +78,9 @@ class viewquizattempt {
         $this->pageurl->params($this->pagevars); // add the page vars variable to the url
         $this->pagevars['pageurl'] = $this->pageurl;
 
-        $this->RTQ = new \mod_activequiz\activequiz($cm, $course, $quiz, $this->pagevars);
+        $this->RTQ = new \mod_activequiz\activequiz($cm, $course, $quiz, $this->pageurl, $this->pagevars);
 
         $this->RTQ->require_capability('mod/activequiz:viewownattempts');
-
-        // set up renderer
-        $this->RTQ->get_renderer()->init($this->RTQ, $this->pageurl, $this->pagevars);
-
 
         $PAGE->set_pagelayout('popup');
         $PAGE->set_context($this->RTQ->getContext());

@@ -102,10 +102,12 @@ class activequiz {
      * @param object $cm The course module instance
      * @param object $course The course object the activity is contained in
      * @param object $quiz The specific real time quiz record for this activity
+     * @param \moodle_url $pageurl The page url
      * @param array  $pagevars The variables and options for the page
+     * @param string $renderer_subtype Renderer sub-type to load if requested
      *
      */
-    public function __construct($cm, $course, $quiz, $pagevars = array()) {
+    public function __construct($cm, $course, $quiz, $pageurl, $pagevars = array(), $renderer_subtype = null) {
         global $CFG, $PAGE;
 
         $this->cm = $cm;
@@ -116,10 +118,12 @@ class activequiz {
         $this->context = \context_module::instance($cm->id);
         $PAGE->set_context($this->context);
 
-        $this->renderer = $PAGE->get_renderer('mod_activequiz');
+        $this->renderer = $PAGE->get_renderer('mod_activequiz', $renderer_subtype);
         $this->questionmanager = new \mod_activequiz\questionmanager($this, $this->renderer, $this->pagevars);
         $this->grader = new \mod_activequiz\utils\grade($this);
         $this->groupmanager = new \mod_activequiz\utils\groupmanager($this);
+
+        $this->renderer->init($this, $pageurl, $pagevars);
     }
 
     /** Get functions */

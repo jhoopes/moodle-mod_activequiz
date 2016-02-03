@@ -121,9 +121,9 @@ class add_question_form extends \moodleform {
             $errors['numberoftries'] = get_string('invalid_numberoftries', 'activequiz');
         }
 
-        if (!filter_var($data['points'], FILTER_VALIDATE_FLOAT) && $data['points'] !== 0) {
+        if (!filter_var($data['points'], FILTER_VALIDATE_FLOAT) && filter_var($data['points'], FILTER_VALIDATE_FLOAT) != 0) {
             $errors['points'] = get_string('invalid_points', 'activequiz');
-        } else if ($data['points'] <= 0) {
+        } else if (filter_var($data['points'], FILTER_VALIDATE_FLOAT) < 0) {
             $errors['points'] = get_string('invalid_points', 'activequiz');
         }
 

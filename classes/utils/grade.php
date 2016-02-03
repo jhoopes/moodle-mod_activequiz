@@ -79,36 +79,42 @@ class grade {
     /**
      * Construct for the grade utility class
      *
-     * @param \mod_activequiz\activequiz
+     * @param \mod_activequiz\activequiz $activequiz
      */
-    public function __construct($rtq) {
-        $this->rtq = $rtq;
+    public function __construct($activequiz) {
+        $this->rtq = $activequiz;
     }
 
     /**
      * Save and (re)calculate grades for this RTQ
      *
+     * @param bool $regrade_attempts Regrade the question attempts themselves through the question engine
      * @return bool
      */
-    public function save_all_grades() {
+    public function save_all_grades($regrade_attempts = false) {
 
         $sessions = $this->rtq->get_sessions();
 
         if (empty($sessions)) {
-            return true; // return true if the sessions are empty
+            return true; // return true if the sessions are empty.
         }
 
-        // check grading methods
+        // If we're regrading attempts, send them off to be re-graded before processing all sessions.
+        if($regrade_attempts) {
+            $this->process_attempt_regrade($sessions);
+        }
+
+        // check which grading method tos end the right sessions to process.
         if ($this->rtq->getRTQ()->grademethod == \mod_activequiz\utils\scaletypes::activequiz_FIRSTSESSION) {
-            // only grading first session
+            // only grading first session.
             return $this->process_sessions(array($sessions[0]));
         } else if ($this->rtq->getRTQ()->grademethod == \mod_activequiz\utils\scaletypes::REALTIMQUIZ_LASTSESSION) {
-            // only grading last session
+            // only grading last session.
 
             return $this->process_sessions(array(end($sessions)));
         } else {
-            // otherwise do all sessions
-            // other grading methods are processed later
+            // otherwise do all sessions.
+            // other grading methods are processed later.
 
             return $this->process_sessions($sessions);
         }
@@ -126,26 +132,52 @@ class grade {
         $sessions = $this->rtq->get_sessions();
 
         if (empty($sessions)) {
-            return true; // return true if the sessions are empty
+            return true; // return true if the sessions are empty.
         }
 
         // check grading methods
         if ($this->rtq->getRTQ()->grademethod == \mod_activequiz\utils\scaletypes::activequiz_FIRSTSESSION) {
-            // only grading first session
+            // only grading first session.
             return $this->process_sessions(array($sessions[0]), $userid);
         } else if ($this->rtq->getRTQ()->grademethod == \mod_activequiz\utils\scaletypes::REALTIMQUIZ_LASTSESSION) {
-            // only grading last session
+            // only grading last session.
 
             return $this->process_sessions(array(end($sessions)), $userid);
         } else {
-            // otherwise do all sessions
-            // other grading methods are processed later
+            // otherwise do all sessions.
+            // other grading methods are processed later.
 
             return $this->process_sessions($sessions, $userid);
         }
 
     }
 
+    /**
+     * Regrade all question usage attempts for the given sessions.
+     *
+     * @param $sessions
+     */
+    protected function process_attempt_regrade($sessions) {
+
+        foreach($sessions as $session) {
+            /** @var \mod_activequiz\activequiz_session $session */
+
+            if($session->get_session()->sessionopen === 1) {
+                continue;  // don't regrade attempts for an open session.
+            }
+
+            $session_attempts = $session->getall_attempts(true);
+
+            foreach($session_attempts as $attempt) {
+                /** @var \mod_activequiz\activequiz_attempt $attempt */
+
+                // regrade all questions for the question usage for this attempt.
+                $attempt->get_quba()->regrade_all_questions();
+                $attempt->save();
+            }
+
+        }
+    }
 
     /**
      * Separated function to process grading for the provided sessions
