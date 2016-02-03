@@ -31,7 +31,7 @@ use \mod_activequiz\forms\edit\add_question_form;
  * class.
  *
  * @package     mod_activequiz
- * @author      John Hoopes <hoopes@wisc.edu>
+ * @author      John Hoopes <moodle@madisoncreativeweb.com>
  * @copyright   2014 University of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

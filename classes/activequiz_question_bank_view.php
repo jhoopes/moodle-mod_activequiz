@@ -24,7 +24,7 @@ use mod_activequiz\qbanktypes\question_bank_add_to_rtq_action_column;
  * Subclass of the question bank view class to change the way it works/looks
  *
  * @package     mod_activequiz
- * @author      John Hoopes <hoopes@wisc.edu>
+ * @author      John Hoopes <moodle@madisoncreativeweb.com>
  * @copyright   2014 University of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

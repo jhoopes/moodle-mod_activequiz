@@ -18,7 +18,7 @@
  * The mod_activequiz attempt ended event.
  *
  * @package    mod_activequiz
- * @author     John Hoopes <hoopes@wisc.edu>
+ * @author     John Hoopes <moodle@madisoncreativeweb.com>
  * @copyright  2015 University of Wisconsin - Madison
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -31,7 +31,7 @@ defined('MOODLE_INTERNAL') || die();
  *
  * @package    mod_activequiz
  * @since      Moodle 2.8
- * @author     John Hoopes <hoopes@wisc.edu>
+ * @author     John Hoopes <moodle@madisoncreativeweb.com>
  * @copyright  2015 University of Wisconsin - Madison
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

@@ -22,7 +22,7 @@ defined('MOODLE_INTERNAL') || die();
  * Custom action column for adding a question to the realtime quiz from the question bank view
  *
  * @package     mod_activequiz
- * @author      John Hoopes <hoopes@wisc.edu>
+ * @author      John Hoopes <moodle@madisoncreativeweb.com>
  * @copyright   2014 University of Wisconsin - Madison
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

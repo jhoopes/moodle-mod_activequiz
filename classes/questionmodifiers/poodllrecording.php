@@ -24,7 +24,7 @@ require_once($CFG->dirroot . '/question/engine/lib.php');
  * Poodll Recording question modifier class
  *
  * @package   mod_activequiz
- * @author    John Hoopes <hoopes@wisc.edu>
+ * @author    John Hoopes <moodle@madisoncreativeweb.com>
  * @copyright 2015 University of Wisconsin - madison
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

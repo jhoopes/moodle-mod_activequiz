@@ -17,7 +17,7 @@
  * Edit quiz javascript to implement drag and drop on the page
  *
  * @package    mod_activequiz
- * @author     John Hoopes <hoopes@wisc.edu>
+ * @author     John Hoopes <moodle@madisoncreativeweb.com>
  * @copyright  2015 University of Wisconsin - Madison
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

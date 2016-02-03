@@ -24,7 +24,7 @@ require_once($CFG->libdir . '/tablelib.php');
  *
  *
  * @package   mod_realtimquiz
- * @author    John Hoopes <hoopes@wisc.edu>
+ * @author    John Hoopes <moodle@madisoncreativeweb.com>
  * @copyright 2014 University of Wisconsin - madison
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
