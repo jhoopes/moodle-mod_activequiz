@@ -118,6 +118,7 @@ activequiz.start_quiz = function () {
             // disable the next question button
             var nextquestionbtn = document.getElementById('nextquestion');
             nextquestionbtn.disabled = true;
+            activequiz.set('lastquestion', 'true');
         }
 
         activequiz.waitfor_question(response.questionid, response.questiontime, response.delay, response.nextstarttime);
@@ -135,6 +136,10 @@ activequiz.start_quiz = function () {
 activequiz.handle_question = function (questionid) {
 
     this.loading(M.util.get_string('gatheringresults', 'activequiz'), 'show');
+
+    if (typeof tinyMCE !== 'undefined') {
+        tinyMCE.triggerSave();
+    }
 
     // will only work on Modern browsers
     // of course the problem child is always IE...
