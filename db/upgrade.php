@@ -137,5 +137,38 @@ function xmldb_activequiz_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2016013100, 'activequiz');
     }
 
+    if( $oldversion < 2016022800 ) {
+
+        // Define field anonymizeresponses to be dropped from activequiz.
+        $table = new xmldb_table('activequiz');
+        $field = new xmldb_field('anonymizeresponses');
+
+        // Conditionally launch drop field anonymizeresponses.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Define field anonymize_responses to be added to activequiz_sessions.
+        $table = new xmldb_table('activequiz_sessions');
+        $field = new xmldb_field('anonymize_responses', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '1', 'name');
+
+        // Conditionally launch add field anonymize_responses.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field fully_anonymize to be added to activequiz_sessions.
+        $table = new xmldb_table('activequiz_sessions');
+        $field = new xmldb_field('fully_anonymize', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'anonymize_responses');
+
+        // Conditionally launch add field fully_anonymize.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Activequiz savepoint reached.
+        upgrade_mod_savepoint(true, 2016022800, 'activequiz');
+    }
+
     return true;
 }

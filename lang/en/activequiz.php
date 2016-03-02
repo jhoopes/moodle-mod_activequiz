@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// General Strings
+// General Strings.
 $string['modulename'] = 'Active quiz';
 $string['modulename_help'] = '
 <p>The Active quiz activity enables an instructor to create and administer quizzes in real-time.  All regular quiz question types can be used in the Active Quiz.</p>
@@ -50,20 +50,20 @@ $string['activequiz:viewownattempts'] = 'Allows students to see their own attemp
 
 $string['invalidattemptaccess'] = 'You do not have permission to access this attempt';
 
-// event strings
+// event strings.
 $string['eventattemptstarted'] = 'Attempt started';
 $string['eventattemptviewed'] = 'Attempt viewed';
 $string['eventquestionmanuallygraded'] = 'Question manually graded';
 $string['eventquestionanswered'] = 'Question answered for attempt';
 
-// Scale types
+// Scale types.
 $string['firstsession'] = 'First session';
 $string['lastsession'] = 'Last session';
 $string['sessionaverage'] = 'Session average';
 $string['highestsessiongrade'] = 'Highest session grade';
 
 
-// Mod form strings
+// Mod form strings.
 $string['activequizsettings'] = 'General Active quiz settings';
 $string['activequizintro'] = 'Introduction';
 $string['defaultquestiontime'] = 'Default question time';
@@ -80,8 +80,14 @@ $string['grademethod'] = 'Session grading method';
 $string['grademethod_help'] = 'This is the method that is used when grading.  This method is for figuring out the grading with multiple sessions in the same activequiz';
 $string['assessed'] = 'Assessed';
 $string['assessed_help'] = 'Check this box to make your quiz assessed';
+
+// Anonymous strings.
 $string['anonymousresponses'] = 'Anonymize student responses';
 $string['anonymousresponses_help'] = 'Anonymize student responses for the instructor\'s view so that if their screen is being shown, student\'s names or group names will not be shown';
+$string['fullanonymize'] = 'Fully anonymize student responses';
+$string['fullanonymize_help'] = 'Fully anonymize student responses.  Please note, that if you select this option, this session\'s responses will not be graded and applied to students.';
+$string['anonymoususer'] = 'Anonymous user';
+$string['isanonymous'] = 'All responses to this active quiz are anonymous';
 
 $string['groupworksettings'] = 'Group settings';
 $string['nochangegroups_label'] = '&nbsp;';
@@ -103,7 +109,7 @@ $string['manualcomment'] = 'Manual Comment';
 $string['manualcomment_help'] = 'The comment that instructors can add when grading an attempt';
 
 
-// edit page
+// edit page.
 $string['questionlist'] = 'Question List';
 $string['addtoquiz'] = 'Add';
 $string['question'] = 'Question ';
@@ -138,7 +144,7 @@ $string['savequestion'] = 'Save question';
 $string['cantaddquestiontwice'] = 'You can not add the same question more than once to a quiz';
 $string['editpage_opensession_error'] = 'You cannot edit a quiz question or layout while a session is open.';
 
-// view page
+// view page.
 $string['quiznotrunning'] = 'Quiz not running at the moment - wait for your teacher to start it.  Use the reload button to reload this page to check again';
 $string['teacherjoinquizinstruct'] = 'Use this if you want to try out a quiz yourself<br />(you will also need to start the quiz in a separate window)';
 $string['teacherstartinstruct'] = 'Use this to start a quiz for the students to take<br />Use the textbox to define a name for this session (to help when looking through the results at a later date).';
@@ -159,7 +165,7 @@ $string['attemptstartedalready'] = 'An attempt has already been started by one o
 $string['attemptstarted'] = 'An attempt has already been started by you, please click below to continue to your open attempt';
 $string['invalidgroupid'] = 'A valid group id is required for students';
 
-/** during quiz */
+// during quiz.
 $string['startquiz'] = 'Start quiz';
 $string['waitforquestion'] = 'Waiting for the question to be sent in:';
 $string['waitstudent'] = 'Waiting for students to connect';
@@ -191,7 +197,7 @@ $string['hidestudentresponses'] = 'Hide responses';
 $string['hidenotresponded'] = 'Hide not responded';
 $string['shownotresponded'] = 'Show not responded';
 
-// Instructions
+// Instructions.
 $string['instructorquizinst'] = '<p>Please wait on this page until students have connected.  Once <b>start quiz</b> is clicked, the quiz will start the first question</p>
     <p>
 <p>Controls:</p>
@@ -266,7 +272,7 @@ $string['instructorquizinst'] = '<p>Please wait on this page until students have
 
 $string['studentquizinst'] = '<p>Please wait for the instructor to start the quiz.  Once started you will see a timer counting down to the first question start</p>';
 
-/** responses page */
+// Responses page.
 $string['selectsession'] = 'Select session to view:&nbsp;&nbsp;&nbsp;&nbsp;';
 $string['activitygrades'] = 'Activity grades: ';
 $string['groupmembership'] = 'Group membership';
@@ -274,7 +280,7 @@ $string['regradeallgrades'] = 'Regrade all grades';
 $string['successregrade'] = 'Successfully regraded quiz';
 $string['errorregrade'] = 'Sorry, there was an error in trying to re-grade all of the quizzes';
 
-// session attempts table
+// session attempts table.
 $string['attemptno'] = 'Attempt Number';
 $string['startedon'] = 'Started on';
 $string['timecompleted'] = 'Time completed';
@@ -282,13 +288,13 @@ $string['attempt_grade'] = 'Attempt grade';
 $string['response_attempt_controls'] = 'Edit/View Attempt';
 $string['timemodified'] = 'Time modified';
 
-// view own attempts table and related strings
+// view own attempts table and related strings.
 $string['sessionname'] = 'Session name';
 $string['attemptview'] = 'View attempt';
 
-// Question modifier strings
+// Question modifier strings.
 
-// Multi-Choice
+// Multi-Choice.
 $string['countdatasetlabel'] = 'Number of Answers';
 $string['percentagedatasetlabel'] = 'Percentage of total answers';
 

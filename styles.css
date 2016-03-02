@@ -278,3 +278,7 @@
     display: none;
     visibility: hidden;
 }
+
+.activequizbox.isanonymous {
+    background-color: #d7f5d7;
+}

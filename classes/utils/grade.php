@@ -190,16 +190,19 @@ class grade {
     protected function process_sessions($sessions, $userid = null) {
         global $DB;
 
+        if ($userid && $userid < 0) {
+            return true; // Ignore attempts to update the grades for an anonymous user.
+        }
 
         $sessionsgrades = array();
         foreach ($sessions as $session) {
             /** @var \mod_activequiz\activequiz_session $session */
 
             if ($session->get_session()->sessionopen === 1) {
-                continue; // don't calculate grades for open sessions
+                continue; // don't calculate grades for open sessions.
             }
 
-            // process grades when userid is present
+            // process grades when userid is present.
             if (!is_null($userid)) {
                 if (!isset($sessionsgrades[ $userid ])) {
                     $sessionsgrades[ $userid ] = array();
@@ -212,13 +215,16 @@ class grade {
                 } else {
                     $sessionsgrades[ $userid ][ $session->get_session()->id ] = $grade;
                 }
-            } else { // extra processing to get user grades into it separately
+            } else { // extra processing to get user grades into it separately.
 
-                // get and loop through the users for this session to get their grade
+                // get and loop through the users for this session to get their grade.
 
                 foreach ($session->get_session_users() as $user) {
                     $uid = $user->userid;
-                    if (!isset($sessionsgrades[ $uid ])) { // add the userid to the sessions grade as an array
+                    if ($uid < 0) {
+                        continue; // Ignore anonymous users.
+                    }
+                    if (!isset($sessionsgrades[ $uid ])) { // add the userid to the sessions grade as an array.
                         $sessionsgrades[ $uid ] = array();
                     }
                     list($forgroupid, $grade) = $this->get_session_grade($session, $uid);
@@ -234,14 +240,13 @@ class grade {
 
         $grades = $this->calculate_grade($sessionsgrades);
 
-        // run the whole thing on a transaction (persisting to our table and gradebook updates)
+        // run the whole thing on a transaction (persisting to our table and gradebook updates).
         $transaction = $DB->start_delegated_transaction();
 
-        // now that we have the final grades persist the grades to activequiz grades table
+        // now that we have the final grades persist the grades to activequiz grades table.
         $this->persist_grades($grades, $transaction);
 
-        // update grades to gradebookapi
-
+        // update grades to gradebookapi.
         $updated = activequiz_update_grades($this->rtq->getRTQ(), array_keys($grades));
 
 

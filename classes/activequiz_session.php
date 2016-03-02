@@ -87,18 +87,20 @@ class activequiz_session {
     /**
      * Creates a new session
      *
-     * @param string $name The name for the session
+     * @param \stdClass $data The data object from moodle form
      *
      * @return bool returns true/false on success or failure
      */
-    public function create_session($name) {
+    public function create_session($data) {
         global $DB;
 
         $newSession = new \stdClass();
-        $newSession->name = $name;
+        $newSession->name = $data->sessionname;
         $newSession->activequizid = $this->rtq->getRTQ()->id;
         $newSession->sessionopen = 1;
         $newSession->status = 'notrunning';
+        $newSession->anonymize_responses = $data->anonymizeresponses;
+        $newSession->fully_anonymize = $data->fullanonymize;
         $newSession->created = time();
 
         try {
@@ -341,7 +343,11 @@ class activequiz_session {
             if ($attempt->responded == 1) {
                 $responded++;
                 $attempt->summarize_response($this->session->currentquestion);
-                $totalresponsesummary .= $this->rtq->get_renderer()->render_response($attempt, $responded);
+                $anonymous = true;
+                if($this->session->anonymize_responses == 0 && $this->session->fully_anonymize == 0) {
+                    $anonymous = false;
+                }
+                $totalresponsesummary .= $this->rtq->get_renderer()->render_response($attempt, $responded, $anonymous);
 
             }
         }
@@ -391,7 +397,12 @@ class activequiz_session {
             }
         }
 
-        $notrespondedbox = $this->rtq->get_renderer()->respondedbox($notresponded, count($attempts));
+        $anonymous = true;
+        if($this->session->anonymize_responses == 0 && $this->session->fully_anonymize == 0) {
+            $anonymous = false;
+        }
+
+        $notrespondedbox = $this->rtq->get_renderer()->respondedbox($notresponded, count($attempts), $anonymous);
 
         return $notrespondedbox;
 
@@ -452,7 +463,7 @@ class activequiz_session {
 
             $attempt = new activequiz_attempt($this->rtq->get_questionmanager());
             $attempt->sessionid = $this->session->id;
-            $attempt->userid = $USER->id;
+            $attempt->userid = $this->get_current_userid();
             $attempt->attemptnum = count($this->attempts) + 1;
             $attempt->status = activequiz_attempt::NOTSTARTED;
             $attempt->preview = $preview;
@@ -469,18 +480,19 @@ class activequiz_session {
             }
 
             $attempt->save();
-
-            // create attempt_created event
-            $params = array(
-                'objectid'      => $attempt->id,
-                'relateduserid' => $attempt->userid,
-                'courseid'      => $this->rtq->getCourse()->id,
-                'context'       => $this->rtq->getContext()
-            );
-            $event = \mod_activequiz\event\attempt_started::create($params);
-            $event->add_record_snapshot('activequiz', $this->rtq->getRTQ());
-            $event->add_record_snapshot('activequiz_attempts', $attempt->get_attempt());
-            $event->trigger();
+            if(!$this->session->fully_anonymize) {
+                // create attempt_created event
+                $params = array(
+                    'objectid'      => $attempt->id,
+                    'relateduserid' => $attempt->userid,
+                    'courseid'      => $this->rtq->getCourse()->id,
+                    'context'       => $this->rtq->getContext()
+                );
+                $event = \mod_activequiz\event\attempt_started::create($params);
+                $event->add_record_snapshot('activequiz', $this->rtq->getRTQ());
+                $event->add_record_snapshot('activequiz_attempts', $attempt->get_attempt());
+                $event->trigger();
+            }
 
             if ($this->rtq->group_mode() && $this->rtq->getRTQ()->groupattendance == 1) {
                 // if we're doing group attendance add group members to group attendance table
@@ -514,6 +526,28 @@ class activequiz_session {
         }
 
         return true; // return true if we get to here
+    }
+
+    /**
+    * With anonymisation off, just returns the real userid.
+    * With anonymisation on, returns a random, negative userid instead.
+    * @return int
+    */
+    public function get_current_userid() {
+        global $USER;
+        if (!$this->session->fully_anonymize) {
+                return $USER->id;
+        }
+        if ($this->rtq->is_instructor()) {
+                return $USER->id; // Do not anonymize the instructors.
+        }
+
+        // Full Anonymisation is on, so generate a random ID and store it in the USER variable (kept until the user logs out).
+        if (empty($USER->mod_activequiz_anon_userid)) {
+            $USER->mod_activequiz_anon_userid = -mt_rand(100000);
+        }
+
+        return $USER->mod_activequiz_anon_userid;
     }
 
 
@@ -590,7 +624,7 @@ class activequiz_session {
      *                    This is so it's easier to catch this bug if it does happen in another case
      */
     public function can_take_quiz_for_group($groupid) {
-        global $USER, $DB;
+        global $DB;
 
         // return false if there is no session
         if (empty($this->session)) {
@@ -614,7 +648,7 @@ class activequiz_session {
             // if there is an open attempt for the group, see if it's for the current user, if it is, they can take the quiz
             // if they are not the same user then they cannot take the quiz
             $attempt = current($attempts);
-            if ($USER->id != $attempt->userid) {
+            if ($this->get_current_userid() != $attempt->userid) {
                 return false;
             } else {
                 return true;
@@ -670,11 +704,10 @@ class activequiz_session {
      * @return \mod_activequiz\activequiz_attempt|bool Returns the open attempt or false if there is none
      */
     public function get_open_attempt_for_current_user() {
-        global $USER;
 
         // use the getall attempts with the specified options
         // skip checking for groups since we only want to initialize attempts for the actual current user
-        $this->attempts = $this->getall_attempts(true, 'all', $USER->id, true);
+        $this->attempts = $this->getall_attempts(true, 'all', $this->get_current_userid(), true);
 
         // go through each attempt and see if any are open.  if not, create a new one.
         $openAttempt = false;
