@@ -544,7 +544,7 @@ class activequiz_session {
 
         // Full Anonymisation is on, so generate a random ID and store it in the USER variable (kept until the user logs out).
         if (empty($USER->mod_activequiz_anon_userid)) {
-            $USER->mod_activequiz_anon_userid = -mt_rand(100000);
+            $USER->mod_activequiz_anon_userid = -mt_rand(100000, mt_getrandmax());
         }
 
         return $USER->mod_activequiz_anon_userid;
