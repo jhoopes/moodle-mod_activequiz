@@ -10,8 +10,8 @@
     * Initial structure so that reports are more "pluggable" so that new ones can be added in the future
     * Anonymization of Quiz responses (including fully anonymization of responses).  Many Thanks to Davo Smith @davosmith for help with this feature
     * Fix for enforcement of number of tries left on a quiz "resume" / refresh of the page.  (#39)
-    * Fix for bug with tinyMCE not saving correctly when a question ends.
-    * Fix for bug with last question flag if there is only 1 question within the 
+    * Fix for bug with tinyMCE not saving correctly when a question ends. (Thanks to @aolley for this fix)
+    * Fix for bug with last question flag if there is only 1 question within the active quiz (Thanks to @aolley for this fix)
 * 2015-12-03
     * Fixing sortablejs to not try to attach to moodle's AMD loader so that it will work, otherwise the plugin works as it should for 3.0
 * 2015-07-22 
