@@ -627,6 +627,9 @@ EOD;
                         $timeLeft = $nextQuestion->getQuestionTime() - $timeelapsed;
                         $jsinfo->resumequizquestiontime = $timeLeft;
                     }
+
+                    // next check how many tries left
+                    $jsinfo->resumequestiontries = $attempt->check_tries_left($session->get_session()->currentqnum, $nextQuestion->getTries());
                 }
             } else if ($sessionstatus == 'reviewing' || $sessionstatus == 'endquestion') {
 
@@ -659,6 +662,7 @@ EOD;
             'closingsession',
             'sessionclosed',
             'trycount',
+            'notries',
             'timertext',
             'waitforrevewingend',
             'show_correct_answer',

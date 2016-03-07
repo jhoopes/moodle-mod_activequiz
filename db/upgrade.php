@@ -137,7 +137,7 @@ function xmldb_activequiz_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2016013100, 'activequiz');
     }
 
-    if( $oldversion < 2016022800 ) {
+    if( $oldversion < 2016030601 ) {
 
         // Define field anonymizeresponses to be dropped from activequiz.
         $table = new xmldb_table('activequiz');
@@ -166,8 +166,18 @@ function xmldb_activequiz_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
+        // Define field responded_count to be added to activequiz_attempts.
+        $table = new xmldb_table('activequiz_attempts');
+        $field = new xmldb_field('responded_count', XMLDB_TYPE_INTEGER, '11', null, null, null, '0', 'responded');
+
+        // Conditionally launch add field responded_count.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+
         // Activequiz savepoint reached.
-        upgrade_mod_savepoint(true, 2016022800, 'activequiz');
+        upgrade_mod_savepoint(true, 2016030601, 'activequiz');
     }
 
     return true;

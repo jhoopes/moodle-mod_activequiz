@@ -200,6 +200,24 @@ class activequiz_attempt {
     }
 
     /**
+     * @param int $slotnum The slot number to check
+     * @param int $tottries The total tries
+     *
+     * @return int The number of tries left
+     */
+    public function check_tries_left($slotnum, $tottries) {
+
+
+        if( empty($this->attempt->responded_count) ){
+            $this->attempt->responded_count = 0;
+        }
+
+        $left = $tottries - $this->attempt->responded_count;
+
+        return $left;
+    }
+
+    /**
      * sets up the display options for the question
      *
      * @return \question_display_options
@@ -448,6 +466,12 @@ class activequiz_attempt {
         }
         $this->attempt->timemodified = time();
         $this->attempt->responded = 1;
+
+        if(empty($this->attempt->responded_count)){
+            $this->attempt->responded_count = 0;
+        }
+        $this->attempt->responded_count = $this->attempt->responded_count + 1;
+
         $this->save();
 
         $transaction->allow_commit();

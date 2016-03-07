@@ -185,6 +185,7 @@ $string['sessionclosed'] = 'Session is now closed';
 $string['reload_results'] = 'Reload Results';
 $string['notresponded'] = 'Number not responded out of attempts';
 $string['trycount'] = 'You have {$a->tries} tries left.';
+$string['notries'] = 'You have no tries left for this question';
 $string['waitforrevewingend'] = 'The instructor is currently reviewing the previous question.  Please wait for the next question to start';
 
 $string['show_correct_answer'] = 'Show correct answer';

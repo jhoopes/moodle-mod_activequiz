@@ -112,7 +112,9 @@ activequiz.handle_question = function (questionid, hide) {
     // if there are multiple tries for this question then don't hide the question container
     if (hide) {
         var qbox = document.getElementById('q' + questionid + '_container');
-        qbox.classList.add('hidden');
+        if(typeof qbox !== 'undefined') {
+            qbox.classList.add('hidden');
+        }
     }
 
 

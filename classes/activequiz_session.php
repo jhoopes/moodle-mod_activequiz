@@ -312,6 +312,7 @@ class activequiz_session {
             /** @var \mod_activequiz\activequiz_attempt $attempt */
 
             $attempt->responded = 0;
+            $attempt->responded_count = 0;
             $attempt->save();
         }
 
@@ -470,6 +471,7 @@ class activequiz_session {
             $attempt->timemodified = time();
             $attempt->timestart = time();
             $attempt->responded = null;
+            $attempt->responded_count = 0;
             $attempt->timefinish = null;
 
             // add forgroupid to attempt if we're in group mode
