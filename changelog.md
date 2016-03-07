@@ -1,13 +1,17 @@
 
 # Active Quiz Changelog 
 
-* 2015-1-31
+* 2015-3-6
     * "Regrade all grades" no forces the refresh of all question attempts.  
         * This is so that if you change the answer on a question, or other aspects of the question, clicking this button will re-run student's attempts
     * Points on a question can now be 0
     * Updating points on a question will now also auto regrade all attempts with the new maximum point value
     * Moving of many of the renderers to "sub-renderers" so that it's easier to maintain going forward
     * Initial structure so that reports are more "pluggable" so that new ones can be added in the future
+    * Anonymization of Quiz responses (including fully anonymization of responses).  Many Thanks to Davo Smith @davosmith for help with this feature
+    * Fix for enforcement of number of tries left on a quiz "resume" / refresh of the page.  (#39)
+    * Fix for bug with tinyMCE not saving correctly when a question ends.
+    * Fix for bug with last question flag if there is only 1 question within the 
 * 2015-12-03
     * Fixing sortablejs to not try to attach to moodle's AMD loader so that it will work, otherwise the plugin works as it should for 3.0
 * 2015-07-22 
