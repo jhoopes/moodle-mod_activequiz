@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/activequiz/db" VERSION="20150722" COMMENT="XMLDB file for Moodle mod/activequiz"
+<XMLDB PATH="mod/activequiz/db" VERSION="20160306" COMMENT="XMLDB file for Moodle mod/activequiz"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -20,7 +20,6 @@
         <FIELD NAME="reviewoptions" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="JSON encoded string of the review options from the mod form"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="anonymizeresponses" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="stores the bit value for whether or not we are showing student's names during the quiz"/>
         <FIELD NAME="defaultquestiontime" TYPE="int" LENGTH="3" NOTNULL="true" DEFAULT="30" SEQUENCE="false" COMMENT="How long do they get for each question?"/>
         <FIELD NAME="waitforquestiontime" TYPE="int" LENGTH="11" NOTNULL="true" DEFAULT="5" SEQUENCE="false" COMMENT="The time to wait for a question before displaying students the question"/>
         <FIELD NAME="questionorder" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="The question order for the activequiz"/>
@@ -49,6 +48,8 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="activequizid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="the activequizid for the sessions"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="the session name"/>
+        <FIELD NAME="anonymize_responses" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Anonymize student names within a session"/>
+        <FIELD NAME="fully_anonymize" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Fully anonymize the session, meaning that userids will not be kept for attempts and therefore grading will not be possible for the session"/>
         <FIELD NAME="sessionopen" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="whether or not the session is open"/>
         <FIELD NAME="status" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="the current status/state of the session"/>
         <FIELD NAME="currentquestion" TYPE="int" LENGTH="11" NOTNULL="false" SEQUENCE="false" COMMENT="The current question that the session is on"/>
@@ -85,6 +86,7 @@
         <FIELD NAME="status" TYPE="int" LENGTH="5" NOTNULL="true" SEQUENCE="false" COMMENT="The status of the attempt"/>
         <FIELD NAME="preview" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="bit as to wether or not this is a preview attempt"/>
         <FIELD NAME="responded" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="whether or not the user responded for the particular sesson's current question"/>
+        <FIELD NAME="responded_count" TYPE="int" LENGTH="11" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Number of times the current question had been responded to for the attempt"/>
         <FIELD NAME="forgroupid" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="This is used when the activequiz is set up to be in groups.  The groupid will go here to signify that this attempt is for that group"/>
         <FIELD NAME="timestart" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="datetime/timestampe for when the attempt was started"/>
         <FIELD NAME="timefinish" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="the datetime/timestamp for when the attempt was finished"/>

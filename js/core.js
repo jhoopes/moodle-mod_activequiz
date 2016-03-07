@@ -236,7 +236,7 @@ activequiz.resume_quiz = function () {
 
             }
 
-            this.goto_question(this.get('resumequizcurrentquestion'), this.get('resumequizquestiontime'));
+            this.goto_question(this.get('resumequizcurrentquestion'), this.get('resumequizquestiontime'), this.get('resumequestiontries'));
             activequiz.set('inquestion', 'true');
             activequiz.getQuizInfo();
             this.loading(null, 'hide');
@@ -319,21 +319,44 @@ activequiz.waitfor_question = function (questionid, questiontime, delay) {
 };
 
 
-activequiz.goto_question = function (questionid, questiontime) {
+activequiz.goto_question = function (questionid, questiontime, tries) {
 
     this.clear_and_hide_qinfobox();
 
     var questionbox = document.getElementById('q' + questionid + '_container');
     questionbox.classList.remove('hidden');
 
-    // make sure the trycount is always correct (this is for repolling of questions for students
+    var settryno = false;
+
+    // make sure the trycount is always correct (this is for re-polling of questions for students, and for resuming of a quiz.
     if (activequiz.get('isinstructor') == 'false') {
+
         var questions = activequiz.get('questions');
         var question = questions[questionid];
         var tottries = question.tries;
-        if (tottries > 1) {
-            this.update_tries((tottries), questionid);
+
+        if(tries != null) {
+            if( tries > 0 && tottries > 1) {
+
+                var tryno = (tottries - tries) + 1;
+                activequiz.set('tryno', tryno);
+                settryno = true; // setting to true so we don't overwrite later as the try number being 1
+
+                this.update_tries(tries, questionid);
+            }else if (tries > 0 && tottries == 1) {
+                // let the question proceed for their first try on a 1 try question
+            }else {
+                this.hide_all_questionboxes();
+                this.quiz_info(M.util.get_string('notries', 'activequiz'));
+                activequiz.set('currentquestion', questionid);
+                return; // return early so that we don't start any questions when there are no tries left.
+            }
+        }else { // there's no resuming tries to set to, so just set to the total tries, if it's greater than 1.
+            if(tottries > 1) {
+                this.update_tries(tottries, questionid);
+            }
         }
+
     }
 
     // check to see if questiontime is 0.  If it is 0, then we want to have no timer for this question
@@ -386,13 +409,14 @@ activequiz.goto_question = function (questionid, questiontime) {
         }, 1000);
     }
 
-    activequiz.set('tryno', 1);
+    if(settryno == false) {
+        activequiz.set('tryno', 1);
+    }
     activequiz.set('currentquestion', questionid);
 };
 
 /**
  * Wrapper for handle_question when the user clicks save
- *
  *
  */
 activequiz.save_question = function () {
@@ -411,7 +435,6 @@ activequiz.save_question = function () {
             tryno = activequiz.get('tryno');
             // set the new tryno as the next one
             tryno++;
-            console.log('newtryno: ' + tryno);
             activequiz.set('tryno', tryno);
             this.update_tries((tottries - tryno) + 1, currentquestion);
         } else {

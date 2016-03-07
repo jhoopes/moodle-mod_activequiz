@@ -200,6 +200,24 @@ class activequiz_attempt {
     }
 
     /**
+     * @param int $slotnum The slot number to check
+     * @param int $tottries The total tries
+     *
+     * @return int The number of tries left
+     */
+    public function check_tries_left($slotnum, $tottries) {
+
+
+        if( empty($this->attempt->responded_count) ){
+            $this->attempt->responded_count = 0;
+        }
+
+        $left = $tottries - $this->attempt->responded_count;
+
+        return $left;
+    }
+
+    /**
      * sets up the display options for the question
      *
      * @return \question_display_options
@@ -441,15 +459,70 @@ class activequiz_attempt {
 
         $timenow = time();
         $transaction = $DB->start_delegated_transaction();
-
-        $this->quba->process_all_actions($timenow);
+        if($this->attempt->userid < 0) {
+            $this->process_anonymous_response($timenow);
+        }else {
+            $this->quba->process_all_actions($timenow);
+        }
         $this->attempt->timemodified = time();
         $this->attempt->responded = 1;
+
+        if(empty($this->attempt->responded_count)){
+            $this->attempt->responded_count = 0;
+        }
+        $this->attempt->responded_count = $this->attempt->responded_count + 1;
+
         $this->save();
 
         $transaction->allow_commit();
 
         return true; // return true if we get to here
+    }
+
+    protected function process_anonymous_response($timenow) {
+
+
+        foreach ($this->get_slots_in_request() as $slot) {
+            if (!$this->quba->validate_sequence_number($slot)) {
+                continue;
+            }
+            $submitteddata = $this->quba->extract_responses($slot);
+            //$this->quba->process_action($slot, $submitteddata, $timestamp);
+            $qa = $this->quba->get_question_attempt($slot);
+            $qa->process_action($submitteddata, $timenow, $this->attempt->userid);
+            $this->quba->get_observer()->notify_attempt_modified($qa);
+        }
+        $this->quba->update_question_flags();
+
+    }
+
+    /**
+     * COPY FROM QUBA IN ORDER TO RUN ANONYMOUS RESPONSES
+     *
+     *
+     * Get the list of slot numbers that should be processed as part of processing
+     * the current request.
+     * @param array $postdata optional, only intended for testing. Use this data
+     * instead of the data from $_POST.
+     * @return array of slot numbers.
+     */
+    protected function get_slots_in_request($postdata = null) {
+        // Note: we must not use "question_attempt::get_submitted_var()" because there is no attempt instance!!!
+        if (is_null($postdata)) {
+            $slots = optional_param('slots', null, PARAM_SEQUENCE);
+        } else if (array_key_exists('slots', $postdata)) {
+            $slots = clean_param($postdata['slots'], PARAM_SEQUENCE);
+        } else {
+            $slots = null;
+        }
+        if (is_null($slots)) {
+            $slots = $this->quba->get_slots();
+        } else if (!$slots) {
+            $slots = array();
+        } else {
+            $slots = explode(',', $slots);
+        }
+        return $slots;
     }
 
     /**

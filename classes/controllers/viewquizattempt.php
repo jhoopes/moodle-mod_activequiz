@@ -166,6 +166,10 @@ class viewquizattempt {
                         )
                     );
 
+                    if( $attempt->userid < 0) {
+                        $params['relateduserid'] = 0;
+                    }
+
                     $event = \mod_activequiz\event\attempt_viewed::create($params);
                     $event->add_record_snapshot('activequiz_attempts', $attempt->get_attempt());
                     $event->trigger();

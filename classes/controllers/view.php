@@ -264,7 +264,7 @@ class view {
                             $this->RTQ->get_renderer()->view_footer();
                             break;
                         } else {
-                            if (!$this->session->create_session($data->sessionname)) {
+                            if (!$this->session->create_session($data)) {
                                 // error handling
                                 $this->RTQ->get_renderer()->setMessage(get_string('unabletocreate_session', 'activequiz'), 'error');
                                 $this->RTQ->get_renderer()->view_header();

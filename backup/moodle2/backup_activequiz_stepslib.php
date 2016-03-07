@@ -61,8 +61,8 @@ class backup_activequiz_activity_structure_step extends backup_questions_activit
 
         $sessions = new backup_nested_element('sessions');
         $session = new backup_nested_element('session', array('id'), array(
-            'name', 'sessionopen', 'status', 'currentquestion', 'currentqnum', 'currentquestiontime',
-            'classresult', 'nextstarttime', 'created'
+            'name', 'anonymize_responses', 'fully_anonymize', 'sessionopen', 'status', 'currentquestion',
+            'currentqnum', 'currentquestiontime', 'classresult', 'nextstarttime', 'created'
         ));
 
         $attempts = new backup_nested_element('attempts');

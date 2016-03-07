@@ -126,7 +126,6 @@ class quizdata {
      *
      */
     public function handle_request() {
-        global $USER;
 
         switch ($this->action) {
             case 'startquiz':
@@ -178,7 +177,7 @@ class quizdata {
                 $qattempt = $this->session->get_open_attempt();
 
                 // make sure the attempt belongs to the current user
-                if ($qattempt->userid != $USER->id) {
+                if ($qattempt->userid != $this->session->get_current_userid()) {
                     $this->jsonlib->send_error('invalid user');
                 }
 
