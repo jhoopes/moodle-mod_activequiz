@@ -1,6 +1,6 @@
 <?php
 
-namespace mod_activequiz\traits;
+namespace mod_activequiz\local\traits;
 
 
 trait renderer_base {

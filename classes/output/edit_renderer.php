@@ -24,7 +24,7 @@ namespace mod_activequiz\output;
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use mod_activequiz\traits\renderer_base;
+use mod_activequiz\local\traits\renderer_base;
 
 defined('MOODLE_INTERNAL') || die();
 

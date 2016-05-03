@@ -23,8 +23,5 @@ class activequiz_report_base {
     {
         $this->activequiz = $activequiz;
     }
-
-
-
-
+    
 }
