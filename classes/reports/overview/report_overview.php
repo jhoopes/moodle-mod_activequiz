@@ -62,8 +62,12 @@ class report_overview extends \mod_activequiz\reports\activequiz_report_base imp
                 $session_id = required_param('sessionid', PARAM_INT);
 
                 if (empty($session_id)) { // if no session id just go to the home page
-                    $this->pageurl->param('action', '');
-                    redirect($this->pageurl, null, 0);
+
+                    $redirecturl = new \moodle_url('/mod/activequiz/reports.php', [
+                        'id' => $this->activequiz->getCM()->id,
+                        'quizid' => $this->activequiz->getRTQ()->id
+                    ]);
+                    redirect($redirecturl, null, 3);
                 }
 
                 $session = $this->activequiz->get_session($session_id);
