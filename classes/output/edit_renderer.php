@@ -54,7 +54,7 @@ class edit_renderer extends \plugin_renderer_base {
 
         echo \html_writer::start_div('row', array('id' => 'questionrow'));
 
-        echo \html_writer::start_div('span6');
+        echo \html_writer::start_div('inline-block span6');
         echo \html_writer::tag('h2', get_string('questionlist', 'activequiz'));
         echo \html_writer::div('', 'rtqstatusbox rtqhiddenstatus', array('id' => 'editstatus'));
 
@@ -62,7 +62,7 @@ class edit_renderer extends \plugin_renderer_base {
 
         echo \html_writer::end_div();
 
-        echo \html_writer::start_div('span6');
+        echo \html_writer::start_div('inline-block span6');
         echo $questionbankview;
         echo \html_writer::end_div();
 
