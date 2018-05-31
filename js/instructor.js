@@ -89,6 +89,12 @@ activequiz.getQuizInfo = function () {
                 activequiz.set('inquestion', 'false');
 
             }
+        } else if (status == 403 && response.errorcode == 'invalidsesskey') {
+            // The users session to Moodle has timed out - or they logged out.
+            window.alert(response.error);
+            // Stop here so we stop polling Moodle, until they refresh the page
+            // and have a new sesskey, these polls will fail.
+            return;
         }
 
         var time = 3000 + Math.floor(Math.random() * (100 + 100) - 100);
