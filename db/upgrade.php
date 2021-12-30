@@ -137,7 +137,7 @@ function xmldb_activequiz_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2016013100, 'activequiz');
     }
 
-    if( $oldversion < 2016030601 ) {
+    if ($oldversion < 2016030601) {
 
         // Define field anonymizeresponses to be dropped from activequiz.
         $table = new xmldb_table('activequiz');
@@ -174,7 +174,6 @@ function xmldb_activequiz_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
 
         // Activequiz savepoint reached.
         upgrade_mod_savepoint(true, 2016030601, 'activequiz');

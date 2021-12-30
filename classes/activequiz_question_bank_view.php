@@ -81,7 +81,7 @@ class activequiz_question_bank_view extends \core_question\bank\view {
      * displayoptions Sets display options
      */
     public function display($tabname, $page, $perpage, $cat,
-                            $recurse, $showhidden, $showquestiontext) {
+                            $recurse, $showhidden, $showquestiontext, $tagids = []) {
         global $PAGE, $OUTPUT;
 
         if ($this->process_actions_needing_ui()) {
