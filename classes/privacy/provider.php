@@ -151,7 +151,7 @@ class provider implements
             'modulename'    => 'activequiz',
         ];
 
-        $sql = "SELECT d.userid
+        $sql = "SELECT g.userid
                   FROM {course_modules} cm
                   JOIN {modules} m ON m.id = cm.module AND m.name = :modulename
                   JOIN {activequiz} a ON a.id = cm.instance
@@ -159,16 +159,16 @@ class provider implements
                  WHERE cm.id = :instanceid";
         $userlist->add_from_sql('userid', $sql, $params);
 
-        $sql = "SELECT p.userid
+        $sql = "SELECT ats.userid
                   FROM {course_modules} cm
                   JOIN {modules} m ON m.id = cm.module AND m.name = :modulename
                   JOIN {activequiz} a ON a.id = cm.instance
                   JOIN {activequiz_sessions} s ON s.activequizid = a.id
-                  JOIN {activequiz_attempts} at ON at.sessionid = s.id
+                  JOIN {activequiz_attempts} ats ON ats.sessionid = s.id
                  WHERE cm.id = :instanceid";
         $userlist->add_from_sql('userid', $sql, $params);
 
-        $sql = "SELECT dig.userid
+        $sql = "SELECT g.userid
                   FROM {course_modules} cm
                   JOIN {modules} m ON m.id = cm.module AND m.name = :modulename
                   JOIN {activequiz} a ON a.id = cm.instance
