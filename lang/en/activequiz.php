@@ -301,3 +301,23 @@ $string['percentagedatasetlabel'] = 'Percentage of total answers';
 
 $string['enabledquestiontypes'] = 'Enable question types';
 $string['enabledquestiontypes_info'] = 'Question types that are enabled for use within instances of the active quiz activity.';
+
+// Privacy API.
+$string['privacy:metadata:activequiz'] = 'The data stored by the Activequiz activity.';
+$string['privacy:metadata:activequiz_groupattendance:activequizid'] = 'The realtime quiz id that this particular matching matches to';
+$string['privacy:metadata:activequiz_groupattendance:userid'] = 'The user that will get a grade for this attempt if they were added during the &quot;attendance check&quot; before a group user started their attempt';
+$string['privacy:metadata:activequiz_groupattendance:attemptid'] = 'The realtime quiz attempt id that this group member is present for';
+$string['privacy:metadata:activequiz_groupattendance'] = 'Table to specify users that were a part of the group when a active quiz session took place.';
+$string['privacy:metadata:activequiz_attempts:userid'] = 'The userid for this attempt';
+$string['privacy:metadata:activequiz_attempts:attemptnum'] = 'The attempt number for this user, for this session';
+$string['privacy:metadata:activequiz_attempts:responded'] = 'whether or not the user responded for the particular sessions current question';
+$string['privacy:metadata:activequiz_attempts:responded_count'] = 'Number of times the current question had been responded to for the attempt';
+$string['privacy:metadata:activequiz_attempts:timestart'] = 'datetime/timestamp for when the attempt was started';
+$string['privacy:metadata:activequiz_attempts:timefinish'] = 'the datetime/timestamp for when the attempt was finished';
+$string['privacy:metadata:activequiz_attempts:timemodified'] = 'the datetime/timestamp for when this attempt record was modified';
+$string['privacy:metadata:activequiz_attempts'] = 'The quiz attempts table to hold attempts for students within a particular session';
+$string['privacy:metadata:activequiz_grades:activequizid'] = 'The realtime quiz id that this particular matching matches to';
+$string['privacy:metadata:activequiz_grades:userid'] = 'The userid that this grade is for';
+$string['privacy:metadata:activequiz_grades:grade'] = 'The grade for this user, for this activequiz';
+$string['privacy:metadata:activequiz_grades:timemodified'] = 'The time created/modified for this grade';
+$string['privacy:metadata:activequiz_grades'] = 'activequiz grades table to hold grades for individual users';
